@@ -1,14 +1,17 @@
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 import { format, addDays } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export function generateId(): string {
   const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const letters = Array.from({ length: 2 }, () => chars[Math.floor(Math.random() * 26)]).join("");
+  const letters = Array.from(
+    { length: 2 },
+    () => chars[Math.floor(Math.random() * 26)]
+  ).join("");
   const numbers = String(Math.floor(Math.random() * 9000) + 1000);
   return `${letters}${numbers}`;
 }
@@ -31,7 +34,9 @@ export function calcPaymentDue(createdAt: string, terms: number): string {
   }
 }
 
-export function calcTotal(items: { quantity: number; price: number }[]): number {
+export function calcTotal(
+  items: { quantity: number; price: number }[]
+): number {
   return items.reduce((sum, item) => sum + item.quantity * item.price, 0);
 }
 

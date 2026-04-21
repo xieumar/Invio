@@ -33,11 +33,11 @@ export default function Sidebar() {
       >
         <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-purple-light rounded-tl-[20px]" />
         {/* Replace "/logo.svg" with your actual logo filename in the public directory */}
-        <Image 
-          src="/logo.svg" 
-          alt="App Logo" 
-          width={28} 
-          height={26} 
+        <Image
+          src="/logo.svg"
+          alt="App Logo"
+          width={28}
+          height={26}
           className="relative z-10"
         />
       </div>
@@ -60,18 +60,16 @@ export default function Sidebar() {
         </Button>
 
         {/* Divider */}
-        <Separator 
+        <Separator
           decorative
-          className="w-px h-[72px] md:w-full md:h-px bg-[#494e6e]" 
+          className="w-px h-[72px] md:w-full md:h-px bg-[#494e6e]"
         />
 
         {/* Avatar */}
         <Avatar className="w-10 h-10 border-2 border-purple cursor-pointer">
           {/* Replace "/avatar.png" with your actual avatar filename in the public directory */}
           <AvatarImage src="/avatar.png" alt="User profile" />
-          <AvatarFallback 
-            className="bg-gradient-to-br from-purple to-purple-light text-white font-bold text-sm"
-          >
+          <AvatarFallback className="bg-gradient-to-br from-purple to-purple-light text-white font-bold text-sm">
             U
           </AvatarFallback>
         </Avatar>
