@@ -4,11 +4,13 @@ import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
+import { toast } from "sonner"; // <-- Imported Toasts
 
 import { useInvoices } from "@/context/InvoiceContext";
 import { Button } from "@/components/ui/button";
 import StatusBadge from "@/components/StatusBadge";
 import InvoiceForm from "@/components/InvoiceForm";
+import DeleteConfirmModal from "@/components/DeleteConfirmModal"; // <-- Imported Modal
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { InvoiceFormData, InvoiceStatus } from "@/lib/types";
 
@@ -16,11 +18,13 @@ export default function InvoiceDetailPage() {
   const params = useParams();
   const router = useRouter();
 
-  // Assuming your context exposes an update function. If it's called something else, adjust here!
-  const { invoices, loading, updateInvoice } = useInvoices();
+  // 1. Pulled deleteInvoice from your context
+  const { invoices, loading, updateInvoice, deleteInvoice } = useInvoices();
+  
   const [isEditing, setIsEditing] = useState(false);
+  // 2. Added state to control the modal
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); 
 
-  // Find the specific invoice based on the URL parameter
   const invoice = invoices.find((inv) => inv.id === params.id);
 
   if (loading) {
@@ -47,21 +51,36 @@ export default function InvoiceDetailPage() {
     );
   }
 
-  // Handler for saving the edited invoice
-  const handleEditSave = async (
-    data: InvoiceFormData,
-    status: InvoiceStatus
-  ) => {
+  // --- HANDLERS ---
+
+  const handleEditSave = async (data: InvoiceFormData, status: InvoiceStatus) => {
     if (updateInvoice) {
       await updateInvoice(invoice.id, data, status);
+      toast.success(`Invoice #${invoice.id} updated!`); // Toast success
     }
-    setIsEditing(false); // Close the slide-out panel
+    setIsEditing(false); 
+  };
+
+  // 3. Created the Delete Execution Handler
+  const handleDeleteConfirm = async () => {
+    if (deleteInvoice) {
+      await deleteInvoice(invoice.id);
+      toast.error(`Invoice #${invoice.id} deleted.`); // Toast deleted
+      router.push("/"); // Boot them back to the homepage
+    }
+  };
+
+  const handleMarkAsPaid = async () => {
+    if (updateInvoice && invoice.status !== "paid") {
+      const { id, status, total, ...formData } = invoice; 
+      await updateInvoice(invoice.id, formData as InvoiceFormData, "paid");
+      toast.success(`Invoice #${invoice.id} marked as paid!`);
+    }
   };
 
   return (
     <>
       <div className="w-full animate-in fade-in duration-300">
-        {/* Go Back Link */}
         <Link
           href="/"
           className="group inline-flex items-center gap-6 text-[15px] font-bold text-[var(--text-primary)] hover:text-[var(--text-secondary)] transition-colors mb-8 no-underline"
@@ -76,9 +95,7 @@ export default function InvoiceDetailPage() {
         {/* Action Bar (Top Card) */}
         <div className="bg-[var(--surface)] rounded-lg shadow-sm px-6 py-5 sm:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
           <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-4">
-            <span className="text-[13px] text-[var(--text-secondary)]">
-              Status
-            </span>
+            <span className="text-[13px] text-[var(--text-secondary)]">Status</span>
             <StatusBadge status={invoice.status} />
           </div>
 
@@ -90,13 +107,21 @@ export default function InvoiceDetailPage() {
             >
               Edit
             </Button>
+            
+            {/* 4. Wired the Delete Button to open the Modal */}
             <Button
               variant="destructive"
+              onClick={() => setIsDeleteDialogOpen(true)} 
               className="px-6 h-[48px] rounded-3xl text-[15px] font-bold bg-[var(--red)] hover:bg-[var(--red-hover)] text-white transition-colors border-none"
             >
               Delete
             </Button>
-            <Button className="px-6 h-[48px] rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none">
+            
+            <Button 
+              onClick={handleMarkAsPaid}
+              disabled={invoice.status === "paid"}
+              className="px-6 h-[48px] rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none disabled:opacity-50"
+            >
               Mark as Paid
             </Button>
           </div>
@@ -125,34 +150,20 @@ export default function InvoiceDetailPage() {
 
           {/* Grid: Dates, Client Info, Email */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-0">
-            {/* Column 1: Dates */}
             <div className="flex flex-col justify-between gap-8">
               <div className="flex flex-col gap-3">
-                <span className="text-[13px] text-[var(--text-secondary)]">
-                  Invoice Date
-                </span>
-                <span className="text-[15px] font-bold text-[var(--text-primary)]">
-                  {formatDate(invoice.createdAt)}
-                </span>
+                <span className="text-[13px] text-[var(--text-secondary)]">Invoice Date</span>
+                <span className="text-[15px] font-bold text-[var(--text-primary)]">{formatDate(invoice.createdAt)}</span>
               </div>
               <div className="flex flex-col gap-3">
-                <span className="text-[13px] text-[var(--text-secondary)]">
-                  Payment Due
-                </span>
-                <span className="text-[15px] font-bold text-[var(--text-primary)]">
-                  {formatDate(invoice.paymentDue)}
-                </span>
+                <span className="text-[13px] text-[var(--text-secondary)]">Payment Due</span>
+                <span className="text-[15px] font-bold text-[var(--text-primary)]">{formatDate(invoice.paymentDue)}</span>
               </div>
             </div>
 
-            {/* Column 2: Bill To */}
             <div className="flex flex-col">
-              <span className="text-[13px] text-[var(--text-secondary)] mb-3">
-                Bill To
-              </span>
-              <span className="text-[15px] font-bold text-[var(--text-primary)] mb-2">
-                {invoice.clientName}
-              </span>
+              <span className="text-[13px] text-[var(--text-secondary)] mb-3">Bill To</span>
+              <span className="text-[15px] font-bold text-[var(--text-primary)] mb-2">{invoice.clientName}</span>
               <div className="flex flex-col text-[13px] text-[var(--text-secondary)] leading-[18px]">
                 <span>{invoice.clientAddress.street}</span>
                 <span>{invoice.clientAddress.city}</span>
@@ -161,48 +172,27 @@ export default function InvoiceDetailPage() {
               </div>
             </div>
 
-            {/* Column 3: Sent To */}
             <div className="flex flex-col gap-3 col-span-2 sm:col-span-1">
-              <span className="text-[13px] text-[var(--text-secondary)]">
-                Sent to
-              </span>
-              <span className="text-[15px] font-bold text-[var(--text-primary)]">
-                {invoice.clientEmail}
-              </span>
+              <span className="text-[13px] text-[var(--text-secondary)]">Sent to</span>
+              <span className="text-[15px] font-bold text-[var(--text-primary)]">{invoice.clientEmail}</span>
             </div>
           </div>
 
           {/* Items Table Area */}
           <div className="rounded-lg overflow-hidden mt-4">
-            {/* Table Body */}
             <div className="bg-[var(--surface-alt)] p-6 sm:p-8">
-              {/* Desktop Header */}
               <div className="hidden sm:grid grid-cols-[1fr_auto_auto_auto] gap-4 mb-6">
-                <span className="text-[13px] text-[var(--text-secondary)]">
-                  Item Name
-                </span>
-                <span className="text-[13px] text-[var(--text-secondary)] text-center w-8">
-                  QTY.
-                </span>
-                <span className="text-[13px] text-[var(--text-secondary)] text-right w-24">
-                  Price
-                </span>
-                <span className="text-[13px] text-[var(--text-secondary)] text-right w-24">
-                  Total
-                </span>
+                <span className="text-[13px] text-[var(--text-secondary)]">Item Name</span>
+                <span className="text-[13px] text-[var(--text-secondary)] text-center w-8">QTY.</span>
+                <span className="text-[13px] text-[var(--text-secondary)] text-right w-24">Price</span>
+                <span className="text-[13px] text-[var(--text-secondary)] text-right w-24">Total</span>
               </div>
 
-              {/* Item Rows */}
               <div className="flex flex-col gap-6">
                 {invoice.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex sm:grid sm:grid-cols-[1fr_auto_auto_auto] gap-4 items-center justify-between"
-                  >
+                  <div key={item.id} className="flex sm:grid sm:grid-cols-[1fr_auto_auto_auto] gap-4 items-center justify-between">
                     <div className="flex flex-col sm:block gap-2">
-                      <span className="text-[15px] font-bold text-[var(--text-primary)]">
-                        {item.name}
-                      </span>
+                      <span className="text-[15px] font-bold text-[var(--text-primary)]">{item.name}</span>
                       <span className="text-[15px] font-bold text-[var(--text-secondary)] sm:hidden">
                         {item.quantity} x {formatCurrency(item.price)}
                       </span>
@@ -221,12 +211,9 @@ export default function InvoiceDetailPage() {
               </div>
             </div>
 
-            {/* Total Footer */}
             <div className="bg-[var(--sidebar)] px-6 py-6 sm:px-8 sm:py-6 flex justify-between items-center text-white">
               <span className="text-[13px]">Amount Due</span>
-              <span className="text-2xl font-bold">
-                {formatCurrency(invoice.total)}
-              </span>
+              <span className="text-2xl font-bold">{formatCurrency(invoice.total)}</span>
             </div>
           </div>
         </div>
@@ -240,6 +227,14 @@ export default function InvoiceDetailPage() {
           onDiscard={() => setIsEditing(false)}
         />
       )}
+
+      {/* 5. Appended the Delete Modal! */}
+      <DeleteConfirmModal 
+        invoiceId={invoice.id} 
+        isOpen={isDeleteDialogOpen} 
+        onClose={() => setIsDeleteDialogOpen(false)} 
+        onConfirm={handleDeleteConfirm} 
+      />
     </>
   );
 }

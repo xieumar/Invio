@@ -8,6 +8,7 @@ import { FilterState, InvoiceFormData, InvoiceStatus } from "@/lib/types";
 import InvoiceCard from "@/components/InvoiceCard";
 import FilterDropdown from "@/components/FilterDropdown";
 import InvoiceForm from "@/components/InvoiceForm";
+import { toast } from "sonner";
 
 const defaultFilter: FilterState = {
   draft: false,
@@ -29,6 +30,7 @@ export default function HomePage() {
 
   async function handleCreate(data: InvoiceFormData, status: InvoiceStatus) {
     await createInvoice(data, status);
+    toast.success("New invoice created!");
     setShowForm(false);
   }
 
@@ -38,11 +40,11 @@ export default function HomePage() {
         {/* Header */}
         <header className="flex items-center justify-between mb-10">
           <div>
-            <h1 className="text-3xl sm:text-[36px] font-extrabold tracking-tight text-[var(--text-primary)]">
+            <h1 className="text-3xl sm:text-[36px] font-extrabold tracking-tight text(--text-primary)">
               Invoices
             </h1>
             <p
-              className="text-[13px] text-[var(--text-secondary)] mt-1"
+              className="text-[13px] text(--text-secondary) mt-1"
               aria-live="polite"
             >
               {loading
@@ -52,7 +54,7 @@ export default function HomePage() {
                   : `There are ${filtered.length} total invoice${filtered.length !== 1 ? "s" : ""}`}
             </p>
           </div>
-          <div className="flex items-center gap-4 sm:gap-[18px]">
+          <div className="flex items-center gap-4 sm:gap-4.5">
             <FilterDropdown filter={filter} onChange={setFilter} />
 
             {/* Refactored Button */}
@@ -61,14 +63,14 @@ export default function HomePage() {
               aria-label="Create new invoice"
               className="
                 relative flex items-center gap-4
-                pl-[56px] pr-4 sm:pr-6 py-6 h-[48px]
+                pl-14 pr-4 sm:pr-6 py-6 h-12
                 bg-purple hover:bg-purple-light
                 text-white text-[15px] font-bold
                 rounded-3xl transition-colors border-0
               "
             >
-              <span className="absolute left-[6px] w-8 h-8 rounded-full bg-white flex items-center justify-center">
-                <Plus className="w-4 h-4 text-purple stroke-[3]" />
+              <span className="absolute left-1.5 w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                <Plus className="w-4 h-4 text-purple stroke-3" />
               </span>
               <span>
                 New <span className="hidden sm:inline">Invoice</span>
@@ -80,7 +82,7 @@ export default function HomePage() {
         {/* List */}
         {loading ? (
           <div
-            className="flex items-center justify-center h-48 text-[var(--text-secondary)]"
+            className="flex items-center justify-center h-48 text-(--text-secondary)"
             aria-busy="true"
           >
             Loading invoices...
