@@ -79,7 +79,6 @@ export default function HomePage() {
           </div>
         </header>
 
-        {/* List or Empty State */}
         {loading ? (
           <div
             className="flex items-center justify-center h-48 text-text-secondary"
@@ -88,9 +87,8 @@ export default function HomePage() {
             Loading invoices...
           </div>
         ) : filtered.length === 0 ? (
-          /* Centered Empty State */
           <div
-            className="flex flex-col items-center justify-center mt-20 sm:mt-40 text-center"
+            className="flex flex-col items-center justify-center mt-15 sm:mt-25 text-center"
             role="status"
           >
             <Image
@@ -98,10 +96,10 @@ export default function HomePage() {
               alt="No invoices found"
               width={242}
               height={200}
-              className="mb-16"
+              className="mb-10"
             />
 
-            <h3 className="text-2xl font-bold text-text-primary mb-6">
+            <h3 className="text-2xl font-bold text-text-primary mb-3">
               There is nothing here
             </h3>
             <p className="text-[13px] text-text-secondary max-w-[220px] leading-relaxed mx-auto">
