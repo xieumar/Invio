@@ -6,7 +6,15 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-sans: var(--font-sans);
+  --font-sans: "League Spartan", var(--font-sans);
+
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-purple: #7c5dfa;
+  --color-purple-light: #9277ff;
 
   --color-purple: #7c5dfa;
   --color-purple-light: #9277ff;
@@ -163,53 +171,44 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-family: "League Spartan", sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-
-body {
-  background-color: var(--bg);
-  color: var(--text-primary);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
-  min-height: 100vh;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-button {
-  font-family: inherit;
-  cursor: pointer;
-}
-input,
-select,
-textarea {
-  font-family: inherit;
-}
-ul {
-  list-style: none;
-}
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+
   html {
     @apply font-sans;
+    font-family: "League Spartan", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-color: var(--bg);
+    color: var(--text-primary);
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
+    min-height: 100vh;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  ul {
+    list-style: none;
   }
 }
