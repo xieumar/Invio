@@ -36,8 +36,8 @@ export default function Sidebar() {
         <Image
           src="/logo.svg"
           alt="App Logo"
-          width={28}
-          height={26}
+          width={103}
+          height={103}
           className="relative z-10"
         />
       </div>
