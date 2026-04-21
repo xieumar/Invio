@@ -17,12 +17,19 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className="antialiased">
         <ThemeProvider>
           <InvoiceProvider>
-            <div className="flex min-h-screen flex-col md:flex-row">
+            <div className="flex flex-col lg:flex-row min-h-screen">
               <Sidebar />
-              <main className="flex-1 flex justify-center md:pl-[103px]">
+
+              {/* This Spacer ensures the main content CANNOT go under the fixed Sidebar */}
+              <div
+                className="flex-shrink-0 h-[72px] md:h-[80px] lg:hidden"
+                aria-hidden="true"
+              />
+
+              <main className="flex-1 flex justify-center lg:pl-[103px]">
                 <div className="w-full max-w-[730px] px-6 py-8 sm:px-10 sm:py-14 lg:py-[72px]">
                   {children}
                 </div>
