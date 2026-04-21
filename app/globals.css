@@ -1,26 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: 'League Spartan', sans-serif;
+
+  --color-purple:       #7C5DFA;
+  --color-purple-light: #9277FF;
+
+  --color-bg-light:     #F8F8FB;
+  --color-bg-dark:      #141625;
+  --color-surface-light:#FFFFFF;
+  --color-surface-dark: #1E2139;
+  --color-surface-alt-light: #F9FAFE;
+  --color-surface-alt-dark:  #252945;
+  --color-navy:         #1E2139;
+  --color-navy-light:   #252945;
+  --color-text-primary-light:   #0C0E16;
+  --color-text-primary-dark:    #FFFFFF;
+  --color-text-secondary-light: #888EB0;
+  --color-text-secondary-dark:  #DFE3FA;
+  --color-text-muted:           #7E88C3;
+  --color-border-light: #DFE3FA;
+  --color-border-dark:  #252945;
+  --color-paid-bg:      #F3FDFA;
+  --color-paid-text:    #33D69F;
+  --color-pending-bg:   #FFF8F0;
+  --color-pending-text: #FF8F00;
+  --color-draft-bg-light:  #F4F4F5;
+  --color-draft-text-light: #373B53;
+  --color-draft-bg-dark:   #252945;
+  --color-draft-text-dark: #DFE3FA;
+  --color-red:          #EC5757;
+  --color-red-hover:    #FF9797;
+  --color-sidebar-light: #373B53;
+  --color-sidebar-dark:  #1E2139;
+  --shadow-card: 0px 10px 20px rgba(72, 84, 159, 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root {
+  --bg:             #F8F8FB;
+  --surface:        #FFFFFF;
+  --surface-alt:    #F9FAFE;
+  --text-primary:   #0C0E16;
+  --text-secondary: #888EB0;
+  --border:         #DFE3FA;
+  --sidebar:        #373B53;
+  --draft-bg:       #F4F4F5;
+  --draft-text:     #373B53;
+}
+
+.dark {
+  --bg:             #141625;
+  --surface:        #1E2139;
+  --surface-alt:    #252945;
+  --text-primary:   #FFFFFF;
+  --text-secondary: #DFE3FA;
+  --border:         #252945;
+  --sidebar:        #1E2139;
+  --draft-bg:       #252945;
+  --draft-text:     #DFE3FA;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: 'League Spartan', sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  min-height: 100vh;
 }
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+input, select, textarea { font-family: inherit; }
+ul { list-style: none; }
