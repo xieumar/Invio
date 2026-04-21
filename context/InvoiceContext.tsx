@@ -24,7 +24,11 @@ interface InvoiceContextValue {
     data: InvoiceFormData,
     status: InvoiceStatus
   ) => Promise<Invoice>;
-  updateInvoice: (id: string, data: InvoiceFormData) => Promise<void>;
+  updateInvoice: (
+    id: string,
+    data: InvoiceFormData,
+    status: InvoiceStatus
+  ) => Promise<void>;
   deleteInvoice: (id: string) => Promise<void>;
   markAsPaid: (id: string) => Promise<void>;
   getInvoice: (id: string) => Invoice | undefined;

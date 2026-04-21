@@ -159,7 +159,6 @@ function ItemList() {
             <Input
               type="number"
               min="1"
-              className="text-center"
               // valueAsNumber tells RHF to convert the HTML string back to a real number
               {...register(`items.${i}.quantity` as const, {
                 valueAsNumber: true,

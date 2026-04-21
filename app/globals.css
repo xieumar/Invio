@@ -13,8 +13,6 @@
   --color-surface-alt: var(--surface-alt);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
-  --color-purple: #7c5dfa;
-  --color-purple-light: #9277ff;
 
   --color-purple: #7c5dfa;
   --color-purple-light: #9277ff;
@@ -89,6 +87,7 @@
 }
 
 :root {
+  color-scheme: light;
   --bg: #f8f8fb;
   --surface: #ffffff;
   --surface-alt: #f9fafe;
@@ -128,9 +127,13 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --input-bg: #ffffff;
+  --input-border: #dfe3fa;
 }
 
 .dark {
+  color-scheme: dark;
   --bg: #141625;
   --surface: #1e2139;
   --surface-alt: #252945;
@@ -169,11 +172,17 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Input Specific Colors */
+  --input-bg: #1e2139;
+  --input-border: #252945;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
   }
 
   html {
@@ -210,5 +219,24 @@
 
   ul {
     list-style: none;
+  }
+
+  /* Custom Webkit Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
   }
 }
