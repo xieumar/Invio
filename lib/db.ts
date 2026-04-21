@@ -44,10 +44,16 @@ export async function deleteInvoice(id: string): Promise<void> {
 
 export async function seedInvoices(invoices: Invoice[]): Promise<void> {
   const db = await getDB();
-  const existing = await db.getAll(STORE_NAME);
-  if (existing.length === 0) {
-    const tx = db.transaction(STORE_NAME, "readwrite");
-    await Promise.all(invoices.map((inv) => tx.store.put(inv)));
-    await tx.done;
+
+  const hasSeeded = localStorage.getItem("invio_seeded");
+
+  if (!hasSeeded) {
+    const existing = await db.getAll(STORE_NAME);
+    if (existing.length === 0) {
+      const tx = db.transaction(STORE_NAME, "readwrite");
+      await Promise.all(invoices.map((inv) => tx.store.put(inv)));
+      await tx.done;
+    }
+    localStorage.setItem("invio_seeded", "true");
   }
 }

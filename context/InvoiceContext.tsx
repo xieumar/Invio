@@ -66,51 +66,61 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
         })),
         total: calcTotal(data.items),
       };
+
+      setInvoices((prev) => [invoice, ...prev]);
       await saveInvoice(invoice);
-      await refresh();
       return invoice;
     },
-    [refresh]
+    []
   );
 
   const updateInvoice = useCallback(
     async (id: string, data: InvoiceFormData) => {
-      const existing = invoices.find((inv) => inv.id === id);
-      if (!existing) return;
-      const updated: Invoice = {
-        ...existing,
-        ...data,
-        paymentDue: calcPaymentDue(data.createdAt, data.paymentTerms),
-        items: data.items.map((item) => ({
-          ...item,
-          total: item.quantity * item.price,
-        })),
-        total: calcTotal(data.items),
-        status: existing.status === "draft" ? "pending" : existing.status,
-      };
-      await saveInvoice(updated);
-      await refresh();
+      setInvoices((prev) => {
+        const index = prev.findIndex((inv) => inv.id === id);
+        if (index === -1) return prev;
+
+        const existing = prev[index];
+        const updated: Invoice = {
+          ...existing,
+          ...data,
+          paymentDue: calcPaymentDue(data.createdAt, data.paymentTerms),
+          items: data.items.map((item) => ({
+            ...item,
+            total: item.quantity * item.price,
+          })),
+          total: calcTotal(data.items),
+          status: existing.status === "draft" ? "pending" : existing.status,
+        };
+
+        saveInvoice(updated);
+
+        const newInvoices = [...prev];
+        newInvoices[index] = updated;
+        return newInvoices;
+      });
     },
-    [invoices, refresh]
+    []
   );
 
-  const deleteInvoice = useCallback(
-    async (id: string) => {
-      await dbDelete(id);
-      await refresh();
-    },
-    [refresh]
-  );
+  const deleteInvoice = useCallback(async (id: string) => {
+    setInvoices((prev) => prev.filter((inv) => inv.id !== id));
+    await dbDelete(id);
+  }, []);
 
-  const markAsPaid = useCallback(
-    async (id: string) => {
-      const existing = invoices.find((inv) => inv.id === id);
-      if (!existing) return;
-      await saveInvoice({ ...existing, status: "paid" });
-      await refresh();
-    },
-    [invoices, refresh]
-  );
+  const markAsPaid = useCallback(async (id: string) => {
+    setInvoices((prev) => {
+      const index = prev.findIndex((inv) => inv.id === id);
+      if (index === -1) return prev;
+
+      const updated = { ...prev[index], status: "paid" as InvoiceStatus };
+      saveInvoice(updated);
+
+      const newInvoices = [...prev];
+      newInvoices[index] = updated;
+      return newInvoices;
+    });
+  }, []);
 
   const getInvoice = useCallback(
     (id: string) => invoices.find((inv) => inv.id === id),
