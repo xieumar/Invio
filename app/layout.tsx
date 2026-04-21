@@ -3,14 +3,18 @@ import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { InvoiceProvider } from "@/context/InvoiceContext";
 import Sidebar from "@/components/Sidebar";
-import { Toaster } from "@/components/ui/sonner"; 
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Invio — Invoice Manager",
   description: "Create, manage and track your invoices",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>

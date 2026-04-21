@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Image from "next/image"; 
+import Image from "next/image";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useInvoices } from "@/context/InvoiceContext";
@@ -93,14 +93,14 @@ export default function HomePage() {
             className="flex flex-col items-center justify-center mt-20 sm:mt-40 text-center"
             role="status"
           >
-            <Image 
-              src="/empty-state.svg" 
-              alt="No invoices found" 
-              width={242} 
+            <Image
+              src="/empty-state.svg"
+              alt="No invoices found"
+              width={242}
               height={200}
               className="mb-16"
             />
-            
+
             <h3 className="text-2xl font-bold text-text-primary mb-6">
               There is nothing here
             </h3>
