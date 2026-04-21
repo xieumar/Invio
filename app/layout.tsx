@@ -22,15 +22,13 @@ export default function RootLayout({
           <InvoiceProvider>
             <div className="flex flex-col lg:flex-row min-h-screen">
               <Sidebar />
-
-              {/* This Spacer ensures the main content CANNOT go under the fixed Sidebar */}
               <div
-                className="flex-shrink-0 h-[72px] md:h-[80px] lg:hidden"
+                className="shrink-0 h-18 md:h-20 lg:hidden"
                 aria-hidden="true"
               />
 
-              <main className="flex-1 flex justify-center lg:pl-[103px]">
-                <div className="w-full max-w-[730px] px-6 py-8 sm:px-10 sm:py-14 lg:py-[72px]">
+              <main className="flex-1 flex justify-center lg:pl-25.5">
+                <div className="w-full max-w-182.5 px-6 py-8 sm:px-10 sm:py-14 lg:py-18">
                   {children}
                 </div>
               </main>

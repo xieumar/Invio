@@ -162,11 +162,11 @@ function ItemList() {
             {...register(`items.${i}.price` as const, { valueAsNumber: true })}
             error={!!errors.items?.[i]?.price}
           />
-          <div className="flex items-center justify-center h-[56px]">
+          <div className="flex items-center justify-center h-14">
             <button
               type="button"
               onClick={() => remove(i)}
-              className="text-[var(--text-secondary)] hover:text-red transition-colors"
+              className="text-text-secondary hover:text-red transition-colors"
             >
               <Trash2 className="w-5 h-5" />
             </button>
@@ -179,7 +179,7 @@ function ItemList() {
         onClick={() =>
           append({ id: nanoid(), name: "", quantity: 1, price: 0, total: 0 })
         }
-        className="w-full mt-4 h-[56px] rounded-3xl text-[15px] font-bold text-[var(--text-secondary)] bg-[var(--draft-bg)] hover:bg-[var(--border)] transition-colors"
+        className="w-full mt-4 h-14 rounded-3xl text-[15px] font-bold text-text-secondary bg-(--draft-bg) hover:bg-border transition-colors"
       >
         + Add New Item
       </button>
@@ -256,18 +256,18 @@ export default function InvoiceForm({
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 z-[150]" onClick={onDiscard} />
+      <div className="fixed inset-0 bg-black/50 z-150" onClick={onDiscard} />
 
       <div
         ref={panelRef}
-        className="fixed top-[72px] md:top-[80px] lg:top-0 left-0 lg:left-[103px] bottom-0 z-[151] flex flex-col w-full md:w-[719px] bg-[var(--bg)] lg:rounded-r-[20px] shadow-2xl transition-all"
+        className="fixed top-18 md:top-20 lg:top-0 left-0 lg:left-25.75 bottom-0 z-151 flex flex-col w-full md:w-179.75 bg-bg lg:rounded-r-[20px] shadow-2xl transition-all"
       >
         <div className="flex-1 overflow-y-auto px-6 pt-8 pb-8 md:px-14 md:pt-14">
-          <h2 className="text-2xl font-bold text-[var(--text-primary)] mb-12">
+          <h2 className="text-2xl font-bold text-text-primary mb-12">
             {isEdit ? (
               <>
                 {" "}
-                <span className="text-[var(--text-secondary)]">#</span>
+                <span className="text-text-secondary">#</span>
                 {invoice?.id}{" "}
               </>
             ) : (
@@ -345,11 +345,11 @@ export default function InvoiceForm({
           </FormProvider>
         </div>
 
-        <div className="px-6 py-6 md:px-14 border-t border-[var(--border)] bg-[var(--bg)] mt-auto flex justify-between items-center gap-4">
+        <div className="px-6 py-6 md:px-14 border-t border-border bg-bg mt-auto flex justify-between items-center gap-4">
           <button
             type="button"
             onClick={onDiscard}
-            className="px-6 h-[48px] rounded-3xl text-[15px] font-bold bg-[var(--draft-bg)] text-[var(--text-secondary)] hover:bg-[var(--border)] transition-colors"
+            className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-(--draft-bg) text-text-secondary hover:bg-border transition-colors"
           >
             {isEdit ? "Cancel" : "Discard"}
           </button>
@@ -359,7 +359,7 @@ export default function InvoiceForm({
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                className="px-6 h-[48px] rounded-3xl text-[15px] font-bold text-[var(--text-secondary)] bg-[#373b53] hover:bg-[#0c0e16] transition-colors"
+                className="px-6 h-12 rounded-3xl text-[15px] font-bold text-text-secondary bg-[#373b53] hover:bg-text-primary-light transition-colors"
               >
                 Save as Draft
               </button>
@@ -376,7 +376,7 @@ export default function InvoiceForm({
                     : "pending"
                 )
               )}
-              className="px-6 h-[48px] rounded-3xl text-[15px] font-bold bg-purple text-white hover:bg-purple-light transition-colors"
+              className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-purple text-white hover:bg-purple-light transition-colors"
             >
               {isEdit ? "Save Changes" : "Save & Send"}
             </button>

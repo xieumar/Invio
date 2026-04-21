@@ -102,7 +102,7 @@ export default function HomePage() {
             <h3 className="text-2xl font-bold text-text-primary mb-3">
               There is nothing here
             </h3>
-            <p className="text-[13px] text-text-secondary max-w-[220px] leading-relaxed mx-auto">
+            <p className="text-[13px] text-text-secondary max-w-55 leading-relaxed mx-auto">
               {anyActive
                 ? "No invoices match the selected filters. Change your status filter or create a new one."
                 : "Create an invoice by clicking the New Invoice button and get started."}

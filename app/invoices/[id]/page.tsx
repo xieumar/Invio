@@ -101,7 +101,7 @@ export default function InvoiceDetailPage() {
               variant="secondary"
               onClick={() => setIsEditing(true)}
               className="
-                px-6 h-[48px] rounded-3xl text-[15px] font-bold 
+                px-6 h-[48px] pt-1 rounded-3xl text-[15px] font-bold 
                 bg-[#F9FAFE] dark:bg-[#252945] 
                 text-[#7E88C3] dark:text-[#DFE3FA] 
                 hover:bg-[#DFE3FA] dark:hover:bg-white dark:hover:text-[#7E88C3]
@@ -114,7 +114,7 @@ export default function InvoiceDetailPage() {
             <Button
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
-              className="px-6 h-[48px] rounded-3xl text-[15px] font-bold bg-red hover:bg-red-hover text-white transition-colors border-none"
+              className="px-6 pt-1 h-[48px] rounded-3xl text-[15px] font-bold bg-red hover:bg-red-hover text-white transition-colors border-none"
             >
               Delete
             </Button>
@@ -122,7 +122,7 @@ export default function InvoiceDetailPage() {
             <Button
               onClick={handleMarkAsPaid}
               disabled={invoice.status === "paid"}
-              className="px-6 h-[48px] rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none disabled:opacity-50"
+              className="px-6 pt-1 h-[48px] rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none disabled:opacity-50"
             >
               Mark as Paid
             </Button>
