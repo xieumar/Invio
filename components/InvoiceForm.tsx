@@ -133,7 +133,7 @@ function ItemList() {
       </p>
       <div className="hidden sm:grid grid-cols-[1fr_64px_100px_40px] gap-4 mb-2">
         {["Item Name", "Qty.", "Price", "Total"].map((h) => (
-          <span key={h} className="text-[13px] text-[var(--text-secondary)]">
+          <span key={h} className="text-[13px] text-text-secondary">
             {h}
           </span>
         ))}

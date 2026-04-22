@@ -51,8 +51,10 @@ export default function HomePage() {
               {loading
                 ? "Loading..."
                 : filtered.length === 0
-                  ? "No invoices"
-                  : `There are ${filtered.length} total invoice${filtered.length !== 1 ? "s" : ""}`}
+                  ? "There are no invoices"
+                  : filtered.length === 1
+                    ? "There is 1 invoice"
+                    : `There are ${filtered.length} invoices`}
             </p>
           </div>
           <div className="flex items-center gap-4 sm:gap-10">
