@@ -41,7 +41,14 @@ export default function InvoiceCard({ invoice }: { invoice: Invoice }) {
         </div>
       </div>
 
-      <div className="hidden sm:grid grid-cols-[90px_150px_1fr_120px_140px_20px] items-center h-20 px-8 gap-4">
+      <div
+        className="
+        hidden sm:grid 
+        grid-cols-[4.5rem_7.5rem_1fr_auto_7.5rem_1rem] 
+        lg:grid-cols-[90px_150px_1fr_120px_140px_20px] 
+        items-center h-20 px-6 lg:px-8 gap-4 lg:gap-6
+      "
+      >
         <span className={idStyle}>
           <span className="text-text-muted">#</span>
           {invoice.id}
@@ -55,7 +62,7 @@ export default function InvoiceCard({ invoice }: { invoice: Invoice }) {
           {formatCurrency(invoice.total)}
         </span>
 
-        <div className="flex justify-center">
+        <div className="flex justify-center sm:justify-end lg:justify-center">
           <StatusBadge status={invoice.status} />
         </div>
 
