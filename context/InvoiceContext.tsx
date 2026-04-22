@@ -75,7 +75,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
   );
 
   const updateInvoice = useCallback(
-    async (id: string, data: InvoiceFormData) => {
+    async (id: string, data: InvoiceFormData, status?: InvoiceStatus) => {
       setInvoices((prev) => {
         const index = prev.findIndex((inv) => inv.id === id);
         if (index === -1) return prev;
@@ -90,7 +90,10 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
             total: item.quantity * item.price,
           })),
           total: calcTotal(data.items),
-          status: existing.status === "draft" ? "pending" : existing.status,
+          // Use explicit status if provided, otherwise promote draft→pending, keep everything else
+          status:
+            status ??
+            (existing.status === "draft" ? "pending" : existing.status),
         };
 
         saveInvoice(updated);

@@ -18,7 +18,8 @@ export default function InvoiceDetailPage() {
   const params = useParams();
   const router = useRouter();
 
-  const { invoices, loading, updateInvoice, deleteInvoice } = useInvoices();
+  const { invoices, loading, updateInvoice, deleteInvoice, markAsPaid } =
+    useInvoices();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
@@ -68,9 +69,8 @@ export default function InvoiceDetailPage() {
   };
 
   const handleMarkAsPaid = async () => {
-    if (updateInvoice && invoice.status !== "paid") {
-      const { id, status, total, ...formData } = invoice;
-      await updateInvoice(invoice.id, formData as InvoiceFormData, "paid");
+    if (invoice.status !== "paid") {
+      await markAsPaid(invoice.id);
       toast.success(`Invoice #${invoice.id} marked as paid!`);
     }
   };
