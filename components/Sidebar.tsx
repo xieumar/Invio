@@ -1,3 +1,4 @@
+// Sidebar.tsx
 "use client";
 
 import Image from "next/image";
@@ -5,7 +6,6 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 export default function Sidebar() {
   const { theme, toggleTheme } = useTheme();
@@ -15,15 +15,16 @@ export default function Sidebar() {
       className="
         flex flex-row lg:flex-col
         items-center justify-between
-        fixed top-0 left-0 z-[100]
+        fixed top-0 left-0 
+        z-200 
         transition-all duration-200
         bg-[#373B53] dark:bg-[#1E2139]
-        w-full h-[72px] md:h-[80px] lg:h-screen lg:w-[103px]
+        w-full h-18 md:h-20 lg:h-screen lg:w-25.75
         lg:rounded-r-[20px]
       "
       aria-label="Main navigation"
     >
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <Image
           src="/logo.svg"
           alt="App Logo"
@@ -31,9 +32,9 @@ export default function Sidebar() {
           height={103}
           priority
           className="
-            w-[72px] h-[72px]           
-            md:w-[80px] md:h-[80px]     
-            lg:w-[103px] lg:h-[103px]   
+            w-18 h-18           
+            md:w-20 md:h-20     
+            lg:w-25.75 lg:h-25.75   
             rounded-r-[20px]
           "
         />

@@ -89,7 +89,6 @@ export default function InvoiceDetailPage() {
           Go back
         </Link>
 
-        {/* Action Bar */}
         <div className="bg-surface rounded-lg shadow-sm px-6 py-5 sm:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
           <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-4">
             <span className="text-[13px] text-text-secondary">Status</span>
@@ -101,7 +100,7 @@ export default function InvoiceDetailPage() {
               variant="secondary"
               onClick={() => setIsEditing(true)}
               className="
-                px-6 h-[48px] pt-1 rounded-3xl text-[15px] font-bold 
+                px-6 h-12 pt-1 rounded-3xl text-[15px] font-bold 
                 bg-[#F9FAFE] dark:bg-[#252945] 
                 text-[#7E88C3] dark:text-[#DFE3FA] 
                 hover:bg-[#DFE3FA] dark:hover:bg-white dark:hover:text-[#7E88C3]
@@ -114,7 +113,7 @@ export default function InvoiceDetailPage() {
             <Button
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
-              className="px-6 pt-1 h-[48px] rounded-3xl text-[15px] font-bold bg-(--color-red) dark:bg-(--color-red) hover:bg-red-hover dark:hover:bg-red-hover text-white transition-colors border-none"
+              className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-(--color-red) dark:bg-(--color-red) hover:bg-red-hover dark:hover:bg-red-hover text-white transition-colors border-none"
             >
               Delete
             </Button>
@@ -122,16 +121,14 @@ export default function InvoiceDetailPage() {
             <Button
               onClick={handleMarkAsPaid}
               disabled={invoice.status === "paid"}
-              className="px-6 pt-1 h-[48px] rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none disabled:opacity-50"
+              className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none disabled:opacity-50"
             >
               Mark as Paid
             </Button>
           </div>
         </div>
 
-        {/* Main Details Card */}
         <div className="bg-surface rounded-lg shadow-sm p-6 sm:p-12 flex flex-col gap-10 sm:gap-12">
-          {/* Header */}
           <div className="flex flex-col sm:flex-row sm:justify-between gap-8">
             <div>
               <span className="text-[16px] font-bold text-text-primary mb-2">
@@ -143,7 +140,7 @@ export default function InvoiceDetailPage() {
               </p>
             </div>
 
-            <div className="text-[13px] text-text-secondary sm:text-right leading-[18px]">
+            <div className="text-[13px] text-text-secondary sm:text-right leading-4.5">
               <p>{invoice.senderAddress.street}</p>
               <p>{invoice.senderAddress.city}</p>
               <p>{invoice.senderAddress.postCode}</p>
@@ -151,7 +148,6 @@ export default function InvoiceDetailPage() {
             </div>
           </div>
 
-          {/* Info Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-0">
             <div className="flex flex-col gap-8">
               <div>
@@ -178,7 +174,7 @@ export default function InvoiceDetailPage() {
               <p className="text-[15px] font-bold text-text-primary mb-2">
                 {invoice.clientName}
               </p>
-              <div className="text-[13px] text-text-secondary leading-[18px]">
+              <div className="text-[13px] text-text-secondary leading-4.5">
                 <p>{invoice.clientAddress.street}</p>
                 <p>{invoice.clientAddress.city}</p>
                 <p>{invoice.clientAddress.postCode}</p>
@@ -194,7 +190,6 @@ export default function InvoiceDetailPage() {
             </div>
           </div>
 
-          {/* Responsive Items Table Area */}
           <div className="rounded-lg overflow-hidden mt-4">
             {/* Table Body */}
             <div className="bg-surface-alt p-6 sm:p-8">
@@ -214,7 +209,6 @@ export default function InvoiceDetailPage() {
                 </span>
               </div>
 
-              {/* Item Rows */}
               <div className="flex flex-col gap-6 sm:gap-8">
                 {invoice.items.map((item) => (
                   <div
@@ -247,8 +241,7 @@ export default function InvoiceDetailPage() {
               </div>
             </div>
 
-            {/* Total Footer */}
-            <div className="bg-[#373b53] dark:bg-[#0c0e16] px-6 py-6 sm:px-8 sm:py-8 flex justify-between items-center text-white">
+            <div className="bg-[#373b53] dark:bg-text-primary-light px-6 py-6 sm:px-8 sm:py-8 flex justify-between items-center text-white">
               <span className="text-[13px]">Amount Due</span>
               <span className="text-2xl sm:text-[32px] font-bold leading-none">
                 {formatCurrency(invoice.total)}
@@ -258,7 +251,6 @@ export default function InvoiceDetailPage() {
         </div>
       </div>
 
-      {/* Overlays */}
       {isEditing && (
         <InvoiceForm
           invoice={invoice}

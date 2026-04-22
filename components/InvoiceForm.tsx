@@ -41,7 +41,7 @@ function Field({
       <div className="flex justify-between items-center">
         <label
           className={`text-[13px] font-medium ${
-            error ? "text-red" : "text-[var(--text-secondary)]"
+            error ? "text-red" : "text-text-secondary"
           }`}
         >
           {label}
@@ -63,17 +63,15 @@ function Input({
 }: React.InputHTMLAttributes<HTMLInputElement> & { error?: boolean }) {
   return (
     <input
-      className={`w-full rounded px-5 py-4 text-[15px] font-bold text-[var(--text-primary)] outline-none transition-colors border
-        bg-[var(--input-bg)] border-[var(--input-border)]
-        hover:border-purple focus:border-purple h-[56px]
-        ${error ? "!border-red" : ""}
+      className={`w-full rounded px-5 py-4 text-[15px] font-bold text-text-primary outline-none transition-colors border
+        bg-(--input-bg) border-(--input-border)
+        hover:border-purple focus:border-purple h-14
+        ${error ? "border-red!" : ""}
       `}
       {...props}
     />
   );
 }
-
-// --- Form Sub-Components ---
 
 function AddressFields({ type }: { type: "senderAddress" | "clientAddress" }) {
   const {
@@ -187,8 +185,6 @@ function ItemList() {
   );
 }
 
-// --- Main Form Component ---
-
 export default function InvoiceForm({
   invoice,
   onSave,
@@ -218,7 +214,6 @@ export default function InvoiceForm({
     formState: { errors },
   } = methods;
 
-  // ESC to close
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") onDiscard();
@@ -227,7 +222,6 @@ export default function InvoiceForm({
     return () => document.removeEventListener("keydown", onKey);
   }, [onDiscard]);
 
-  // Draft Handler - Bypasses Zod
   const handleSaveDraft = () => {
     const values = getValues();
     const formattedData: InvoiceFormData = {
@@ -256,11 +250,19 @@ export default function InvoiceForm({
 
   return (
     <>
-      <div className="fixed inset-0 bg-black/50 z-150" onClick={onDiscard} />
+      <div
+        className="fixed inset-0 bg-black/50 z-150 lg:left-25.75"
+        onClick={onDiscard}
+      />
 
       <div
         ref={panelRef}
-        className="fixed top-18 md:top-20 lg:top-0 left-0 lg:left-25.75 bottom-0 z-151 flex flex-col w-full md:w-179.75 bg-bg lg:rounded-r-[20px] shadow-2xl transition-all"
+        className="
+          fixed bottom-0 z-151 flex flex-col w-full md:w-160 bg-bg transition-all
+          top-18 md:top-20 lg:top-0 
+          left-0 lg:left-25.75 
+          lg:rounded-r-[20px] shadow-2xl
+        "
       >
         <div className="flex-1 overflow-y-auto px-6 pt-8 pb-8 md:px-14 md:pt-14">
           <h2 className="text-2xl font-bold text-text-primary mb-12">
@@ -349,7 +351,7 @@ export default function InvoiceForm({
           <button
             type="button"
             onClick={onDiscard}
-            className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-(--draft-bg) text-text-secondary hover:bg-border transition-colors"
+            className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-[#F9FAFE] dark:bg-[#252945] text-text-secondary hover:bg-border transition-colors"
           >
             {isEdit ? "Cancel" : "Discard"}
           </button>
@@ -359,7 +361,7 @@ export default function InvoiceForm({
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                className="px-6 h-12 rounded-3xl text-[15px] font-bold text-text-secondary bg-[#373b53] hover:bg-text-primary-light transition-colors"
+                className="px-6 h-12 rounded-3xl text-[15px] font-bold text-[#888EB0] bg-[#373b53] hover:bg-[#0C0E16] transition-colors"
               >
                 Save as Draft
               </button>
