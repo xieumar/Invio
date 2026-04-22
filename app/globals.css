@@ -173,7 +173,6 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 
-  /* Input Specific Colors */
   --input-bg: #1e2139;
   --input-border: #252945;
 }
@@ -185,6 +184,96 @@
     scrollbar-color: var(--border) transparent;
   }
 
+  :root {
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+  }
+
+  .dark {
+    --popover: 233 30% 11%;
+    --popover-foreground: 210 40% 98%;
+  }
+
+  @layer utilities {
+    .shadow-dropdown {
+      box-shadow: 0px 10px 20px rgba(72, 84, 159, 0.25);
+    }
+  }
+
+  .shadow-dropdown {
+    box-shadow: 0px 10px 20px rgba(72, 84, 159, 0.25);
+  }
+
+  [data-radix-select-viewport] [role="menuitem"] svg,
+  [data-radix-select-viewport] [role="option"] svg {
+    display: none !important;
+  }
+
+  .dark .shadow-dropdown {
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .rdp-caption {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    position: relative !important;
+    margin-bottom: 24px !important;
+    padding: 0 8px !important;
+  }
+
+  .rdp-nav {
+    display: flex !important;
+    gap: 16px !important;
+  }
+
+  .rdp-caption_label {
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    color: var(--text-primary) !important;
+
+    position: absolute !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .rdp-day_selected,
+  .rdp-day_selected:hover,
+  .rdp-day_selected:focus {
+    background-color: transparent !important;
+    color: #7c5dfa !important;
+  }
+
+  .rdp-head_cell {
+    font-weight: 700 !important;
+    font-size: 12px !important;
+    color: var(--text-primary) !important;
+  }
+
+  .rdp-day_today,
+  .rdp-day_today:hover,
+  .rdp-day:focus {
+    background-color: transparent !important;
+    outline: none !important;
+  }
+
+  .rdp-button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+    background-color: transparent !important;
+  }
+
+  .rdp-caption {
+    position: relative !important;
+  }
+  .rdp-nav_button_previous {
+    position: absolute;
+    left: 0;
+  }
+  .rdp-nav_button_next {
+    position: absolute;
+    right: 0;
+  }
   html {
     @apply font-sans;
     font-family: "League Spartan", sans-serif;
@@ -238,5 +327,15 @@
 
   ::-webkit-scrollbar-thumb:hover {
     background: var(--text-secondary);
+  }
+
+  /* Remove number input spinners */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
 }

@@ -31,7 +31,7 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
     <Badge
       variant="secondary"
       className={`
-        gap-2 px-4 h-10 rounded-md text-[15px] font-bold 
+        gap-2 pt-1 px-4 h-10 rounded-md text-[15px] font-bold 
         min-w-26 justify-center border-none 
         ${bg} ${text}
       `}

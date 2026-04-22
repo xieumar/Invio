@@ -6,11 +6,14 @@ import {
   useFieldArray,
   FormProvider,
   useFormContext,
+  Controller,
+  useWatch,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
 import { nanoid } from "nanoid";
-import Image from "next/image";
+import { InvoiceDatePicker } from "@/components/InvoiceDatePicker";
+import { InvoicePaymentTerms } from "@/components/InvoicePaymentTerms";
 
 import { Invoice, InvoiceFormData, InvoiceStatus } from "@/lib/types";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
@@ -22,8 +25,6 @@ interface InvoiceFormProps {
 }
 
 const emptyAddress = { street: "", city: "", postCode: "", country: "" };
-
-// --- Reusable UI Wrappers ---
 
 function Field({
   label,
@@ -123,54 +124,69 @@ function ItemList() {
     formState: { errors },
   } = useFormContext<InvoiceFormValues>();
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
+  const watchedItems = useWatch({ control, name: "items" });
 
   return (
     <>
       <p className="text-[18px] font-bold text-[#777F98] mb-4 mt-10">
         Item List
       </p>
-      <div className="hidden sm:grid grid-cols-[1fr_64px_100px_40px] gap-4 mb-2">
-        {["Item Name", "Qty.", "Price", "Total"].map((h) => (
+
+      <div className="hidden sm:grid grid-cols-[1fr_60px_100px_72px_18px] gap-4 mb-2">
+        {["Item Name", "Qty.", "Price", "Total", ""].map((h) => (
           <span key={h} className="text-[13px] text-text-secondary">
             {h}
           </span>
         ))}
       </div>
 
-      {fields.map((field, i) => (
-        <div
-          key={field.id}
-          className="grid grid-cols-[1fr_64px_100px_40px] gap-4 items-start mb-4 sm:mb-3"
-        >
-          <Input
-            placeholder="Item name"
-            {...register(`items.${i}.name` as const)}
-            error={!!errors.items?.[i]?.name}
-          />
-          <Input
-            type="number"
-            {...register(`items.${i}.quantity` as const, {
-              valueAsNumber: true,
-            })}
-            error={!!errors.items?.[i]?.quantity}
-          />
-          <Input
-            type="number"
-            step="0.01"
-            {...register(`items.${i}.price` as const, { valueAsNumber: true })}
-            error={!!errors.items?.[i]?.price}
-          />
-          <div className="flex items-center justify-center h-14">
+      {fields.map((field, i) => {
+        const watched = watchedItems?.[i];
+        const qty = Number(watched?.quantity) || 0;
+        const price = Number(watched?.price) || 0;
+        const total = (qty * price).toFixed(2);
+
+        return (
+          <div
+            key={field.id}
+            className="grid grid-cols-[1fr_60px_100px_72px_18px] gap-4 items-center mb-4 sm:mb-3"
+          >
+            <Input
+              placeholder="Item name"
+              {...register(`items.${i}.name` as const)}
+              error={!!errors.items?.[i]?.name}
+            />
+
+            <Input
+              inputMode="numeric"
+              {...register(`items.${i}.quantity` as const, {
+                setValueAs: (v) => (v === "" ? 0 : Number(v)),
+              })}
+              error={!!errors.items?.[i]?.quantity}
+            />
+
+            <Input
+              inputMode="decimal"
+              {...register(`items.${i}.price` as const, {
+                setValueAs: (v) => (v === "" ? 0 : parseFloat(v) || 0),
+              })}
+              error={!!errors.items?.[i]?.price}
+            />
+
+            <span className="text-[15px] font-bold text-text-secondary tabular-nums">
+              {total}
+            </span>
+
             <button
               type="button"
               onClick={() => remove(i)}
-              className="text-text-secondary hover:text-red transition-colors"
+              className="text-[#888EB0] hover:text-red transition-colors flex items-center justify-center"
             >
-              <Trash2 className="w-5 h-5" />
+              <Trash2 className="w-4.5 h-4.5" />
             </button>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       <button
         type="button"
@@ -211,6 +227,7 @@ export default function InvoiceForm({
     register,
     handleSubmit,
     getValues,
+    control,
     formState: { errors },
   } = methods;
 
@@ -310,23 +327,31 @@ export default function InvoiceForm({
               <AddressFields type="clientAddress" />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 mt-12">
-                <Field label="Invoice Date" error={errors.createdAt?.message}>
-                  <Input
-                    type="date"
-                    {...register("createdAt")}
-                    error={!!errors.createdAt}
+                <Field label="Issue Date">
+                  <Controller
+                    control={control}
+                    name="createdAt"
+                    render={({ field }) => (
+                      <InvoiceDatePicker
+                        value={field.value ?? ""}
+                        onChange={(val) => field.onChange(val)}
+                        error={!!errors.createdAt}
+                      />
+                    )}
                   />
                 </Field>
+
                 <Field label="Payment Terms">
-                  <select
-                    className={`${inputBase} appearance-none cursor-pointer`}
-                    {...register("paymentTerms", { valueAsNumber: true })}
-                  >
-                    <option value={1}>Net 1 Day</option>
-                    <option value={7}>Net 7 Days</option>
-                    <option value={14}>Net 14 Days</option>
-                    <option value={30}>Net 30 Days</option>
-                  </select>
+                  <Controller
+                    control={control}
+                    name="paymentTerms"
+                    render={({ field }) => (
+                      <InvoicePaymentTerms
+                        value={Number(field.value)}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
                 </Field>
               </div>
 
