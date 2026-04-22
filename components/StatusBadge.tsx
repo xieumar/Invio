@@ -29,10 +29,10 @@ export default function StatusBadge({ status }: StatusBadgeProps) {
 
   return (
     <Badge
-      variant="secondary" // Use secondary as a neutral base
+      variant="secondary"
       className={`
-        gap-2 px-4 py-3 rounded-md text-[15px] font-bold 
-        min-w-[104px] justify-center border-none 
+        gap-2 px-4 h-10 rounded-md text-[15px] font-bold 
+        min-w-26 justify-center border-none 
         ${bg} ${text}
       `}
       aria-label={`Status: ${status}`}

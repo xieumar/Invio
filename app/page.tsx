@@ -39,7 +39,7 @@ export default function HomePage() {
     <>
       <div className="w-full">
         {/* Header */}
-        <header className="flex items-center justify-between mb-16 sm:mb-20">
+        <header className="flex items-center justify-between mb-8 sm:mb-10">
           <div>
             <h1 className="text-3xl sm:text-[36px] font-extrabold tracking-tight text-text-primary">
               Invoices
