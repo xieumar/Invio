@@ -114,7 +114,7 @@ export default function InvoiceDetailPage() {
             <Button
               variant="destructive"
               onClick={() => setIsDeleteDialogOpen(true)}
-              className="px-6 pt-1 h-[48px] rounded-3xl text-[15px] font-bold bg-red hover:bg-red-hover text-white transition-colors border-none"
+              className="px-6 pt-1 h-[48px] rounded-3xl text-[15px] font-bold bg-(--color-red) dark:bg-(--color-red) hover:bg-red-hover dark:hover:bg-red-hover text-white transition-colors border-none"
             >
               Delete
             </Button>
