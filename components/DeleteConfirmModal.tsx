@@ -82,7 +82,7 @@ export default function DeleteConfirmModal({
       px-6 h-12 rounded-full text-[15px] font-bold 
       flex items-center justify-center 
       pt-1 
-      bg-red hover:bg-red-hover text-white border-none shadow-none
+      bg-red dark:bg-red hover:bg-red-hover dark:hover:bg-red-hover text-white border-none shadow-none
     "
           >
             Delete

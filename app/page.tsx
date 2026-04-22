@@ -41,20 +41,20 @@ export default function HomePage() {
         {/* Header */}
         <header className="flex items-center justify-between mb-8 sm:mb-10">
           <div>
-            <h1 className="text-3xl sm:text-[36px] font-extrabold tracking-tight text-text-primary">
+            <h1 className="text-2xl sm:text-[36px] font-extrabold tracking-tight text-text-primary">
               Invoices
             </h1>
             <p
-              className="text-[13px] text-text-secondary mt-1"
+              className="text-[13px] text-text-secondary -mt-1"
               aria-live="polite"
             >
               {loading
                 ? "Loading..."
                 : filtered.length === 0
-                  ? "There are no invoices"
+                  ? "No invoices"
                   : filtered.length === 1
-                    ? "There is 1 invoice"
-                    : `There are ${filtered.length} invoices`}
+                    ? "1 invoice"
+                    : `${filtered.length} invoices`}
             </p>
           </div>
           <div className="flex items-center gap-4 sm:gap-10">

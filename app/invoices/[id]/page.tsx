@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
@@ -35,13 +36,23 @@ export default function InvoiceDetailPage() {
 
   if (!invoice) {
     return (
-      <div className="w-full flex flex-col items-center py-20">
-        <h2 className="text-2xl font-bold text-text-primary mb-4">
+      <div className="flex flex-col items-center justify-center mt-15 sm:mt-25 text-center">
+        <Image
+          src="/empty-state.svg"
+          alt="Invoice not found"
+          width={242}
+          height={200}
+          className="mb-10"
+        />
+        <h2 className="text-2xl font-bold text-text-primary mb-3">
           Invoice Not Found
         </h2>
+        <p className="text-[13px] text-text-secondary max-w-55 leading-relaxed mx-auto mb-6">
+          This invoice doesn&apos;t exist or may have been deleted.
+        </p>
         <Button
           onClick={() => router.push("/")}
-          className="bg-purple hover:bg-purple-light rounded-3xl"
+          className="px-6 pt-1 h-12 bg-purple hover:bg-purple-light rounded-3xl text-white border-none"
         >
           Go Back Home
         </Button>
@@ -62,9 +73,9 @@ export default function InvoiceDetailPage() {
 
   const handleDeleteConfirm = async () => {
     if (deleteInvoice) {
-      await deleteInvoice(invoice.id);
-      toast.error(`Invoice #${invoice.id} deleted.`);
       router.push("/");
+      toast.error(`Invoice #${invoice.id} deleted.`);
+      await deleteInvoice(invoice.id);
     }
   };
 
@@ -75,72 +86,68 @@ export default function InvoiceDetailPage() {
     }
   };
 
+  const ActionButtons = ({ className = "" }: { className?: string }) => (
+    <div className={`flex items-center gap-2 ${className}`}>
+      <Button
+        variant="secondary"
+        onClick={() => setIsEditing(true)}
+        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none"
+      >
+        Edit
+      </Button>
+
+      <Button
+        variant="destructive"
+        onClick={() => setIsDeleteDialogOpen(true)}
+        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold dark:bg-red bg-red dark:hover:bg-red-hover hover:bg-red-hover text-white transition-colors border-none"
+      >
+        Delete
+      </Button>
+
+      {invoice.status !== "paid" && (
+        <Button
+          onClick={handleMarkAsPaid}
+          className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none"
+        >
+          Mark as Paid
+        </Button>
+      )}
+    </div>
+  );
+
   return (
     <>
-      <div className="w-full animate-in fade-in duration-300">
+      <div className="w-full animate-in fade-in duration-300 pb-32 sm:pb-0">
         <Link
           href="/"
           className="group inline-flex items-center gap-6 text-[15px] font-bold text-text-primary hover:text-text-secondary transition-colors mb-8 no-underline"
         >
-          <ChevronLeft
-            className="w-4 h-4 text-purple transition-transform group-hover:-translate-x-1"
-            strokeWidth={3}
-          />
+          <ChevronLeft className="w-4 h-4 text-purple stroke-[3px]" />
           Go back
         </Link>
 
-        <div className="bg-surface rounded-lg shadow-sm px-6 py-5 sm:px-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 mb-6">
-          <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-4">
+        <div className="bg-surface rounded-lg shadow-sm px-6 py-6 sm:px-8 sm:py-5 flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-5">
             <span className="text-[13px] text-text-secondary">Status</span>
             <StatusBadge status={invoice.status} />
           </div>
 
-          <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto">
-            <Button
-              variant="secondary"
-              onClick={() => setIsEditing(true)}
-              className="
-                px-6 h-12 pt-1 rounded-3xl text-[15px] font-bold 
-                bg-[#F9FAFE] dark:bg-[#252945] 
-                text-[#7E88C3] dark:text-[#DFE3FA] 
-                hover:bg-[#DFE3FA] dark:hover:bg-white dark:hover:text-[#7E88C3]
-                transition-colors border-none
-  "
-            >
-              Edit
-            </Button>
-
-            <Button
-              variant="destructive"
-              onClick={() => setIsDeleteDialogOpen(true)}
-              className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-(--color-red) dark:bg-(--color-red) hover:bg-red-hover dark:hover:bg-red-hover text-white transition-colors border-none"
-            >
-              Delete
-            </Button>
-
-            <Button
-              onClick={handleMarkAsPaid}
-              disabled={invoice.status === "paid"}
-              className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none disabled:opacity-50"
-            >
-              Mark as Paid
-            </Button>
-          </div>
+          <ActionButtons className="hidden sm:flex" />
         </div>
 
         <div className="bg-surface rounded-lg shadow-sm p-6 sm:p-12 flex flex-col gap-10 sm:gap-12">
           <div className="flex flex-col sm:flex-row sm:justify-between gap-8">
             <div>
-              <span className="text-[16px] font-bold text-text-primary mb-2">
+              <h2 className="text-[16px] font-bold text-text-primary mb-1">
                 <span className="text-text-secondary">#</span>
                 {invoice.id}
-              </span>
+              </h2>
               <p className="text-[13px] text-text-secondary">
                 {invoice.description}
               </p>
             </div>
 
-            <div className="text-[13px] text-text-secondary sm:text-right leading-4.5">
+            <div className="text-[13px] text-text-secondary sm:text-right leading-6">
               <p>{invoice.senderAddress.street}</p>
               <p>{invoice.senderAddress.city}</p>
               <p>{invoice.senderAddress.postCode}</p>
@@ -158,7 +165,6 @@ export default function InvoiceDetailPage() {
                   {formatDate(invoice.createdAt)}
                 </p>
               </div>
-
               <div>
                 <p className="text-[13px] text-text-secondary mb-3">
                   Payment Due
@@ -174,7 +180,7 @@ export default function InvoiceDetailPage() {
               <p className="text-[15px] font-bold text-text-primary mb-2">
                 {invoice.clientName}
               </p>
-              <div className="text-[13px] text-text-secondary leading-4.5">
+              <div className="text-[13px] text-text-secondary leading-6">
                 <p>{invoice.clientAddress.street}</p>
                 <p>{invoice.clientAddress.city}</p>
                 <p>{invoice.clientAddress.postCode}</p>
@@ -190,10 +196,8 @@ export default function InvoiceDetailPage() {
             </div>
           </div>
 
-          <div className="rounded-lg overflow-hidden mt-4">
-            {/* Table Body */}
-            <div className="bg-surface-alt p-6 sm:p-8">
-              {/* Desktop Header */}
+          <div className="rounded-lg overflow-hidden mt-4 bg-surface-alt">
+            <div className="p-6 sm:p-8">
               <div className="hidden sm:grid grid-cols-[1fr_auto_auto_auto] gap-4 mb-8">
                 <span className="text-[13px] text-text-secondary">
                   Item Name
@@ -219,20 +223,16 @@ export default function InvoiceDetailPage() {
                       <span className="text-[15px] font-bold text-text-primary">
                         {item.name}
                       </span>
-                      {/* Mobile Qty x Price Sub-text */}
                       <span className="text-[15px] font-bold text-text-secondary sm:hidden">
                         {item.quantity} x {formatCurrency(item.price)}
                       </span>
                     </div>
-
                     <span className="hidden sm:block text-[15px] font-bold text-text-secondary text-center w-8">
                       {item.quantity}
                     </span>
-
                     <span className="hidden sm:block text-[15px] font-bold text-text-secondary text-right w-24">
                       {formatCurrency(item.price)}
                     </span>
-
                     <span className="text-[15px] font-bold text-text-primary text-right w-24">
                       {formatCurrency(item.total)}
                     </span>
@@ -241,7 +241,7 @@ export default function InvoiceDetailPage() {
               </div>
             </div>
 
-            <div className="bg-[#373b53] dark:bg-text-primary-light px-6 py-6 sm:px-8 sm:py-8 flex justify-between items-center text-white">
+            <div className="bg-sidebar-light dark:bg-text-primary-light px-6 py-6 sm:px-8 sm:py-8 flex justify-between items-center text-white">
               <span className="text-[13px]">Amount Due</span>
               <span className="text-2xl sm:text-[32px] font-bold leading-none">
                 {formatCurrency(invoice.total)}
@@ -251,6 +251,11 @@ export default function InvoiceDetailPage() {
         </div>
       </div>
 
+      <div className="fixed bottom-0 left-0 w-full bg-surface p-6 flex justify-center sm:hidden shadow-[0_-10px_20px_rgba(72,84,159,0.05)] z-10">
+        <ActionButtons />
+      </div>
+
+      {/* Modals */}
       {isEditing && (
         <InvoiceForm
           invoice={invoice}

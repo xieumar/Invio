@@ -71,7 +71,7 @@ export default function FilterDropdown({
               >
                 <div
                   className={`
-                    flex items-center justify-center w-4 h-4 rounded-[2px] shrink-0
+                    flex items-center justify-center w-4 h-4 rounded-xs shrink-0
                     transition-colors
                     ${
                       checked

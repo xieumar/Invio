@@ -124,7 +124,7 @@ function ItemList() {
     formState: { errors },
   } = useFormContext<InvoiceFormValues>();
   const { fields, append, remove } = useFieldArray({ control, name: "items" });
-  const watchedItems = useWatch({ control, name: "items" });
+  const watchedItems = useFormContext().watch("items");
 
   return (
     <>
@@ -132,6 +132,7 @@ function ItemList() {
         Item List
       </p>
 
+      {/* Desktop Headers */}
       <div className="hidden sm:grid grid-cols-[1fr_60px_100px_72px_18px] gap-4 mb-2">
         {["Item Name", "Qty.", "Price", "Total", ""].map((h) => (
           <span key={h} className="text-[13px] text-text-secondary">
@@ -140,60 +141,97 @@ function ItemList() {
         ))}
       </div>
 
-      {fields.map((field, i) => {
-        const watched = watchedItems?.[i];
-        const qty = Number(watched?.quantity) || 0;
-        const price = Number(watched?.price) || 0;
-        const total = (qty * price).toFixed(2);
+      <div className="flex flex-col gap-12 sm:gap-3">
+        {fields.map((field, i) => {
+          const watched = watchedItems?.[i];
+          const qty = Number(watched?.quantity) || 0;
+          const price = Number(watched?.price) || 0;
+          const total = (qty * price).toFixed(2);
 
-        return (
-          <div
-            key={field.id}
-            className="grid grid-cols-[1fr_60px_100px_72px_18px] gap-4 items-center mb-4 sm:mb-3"
-          >
-            <Input
-              placeholder="Item name"
-              {...register(`items.${i}.name` as const)}
-              error={!!errors.items?.[i]?.name}
-            />
-
-            <Input
-              inputMode="numeric"
-              {...register(`items.${i}.quantity` as const, {
-                setValueAs: (v) => (v === "" ? 0 : Number(v)),
-              })}
-              error={!!errors.items?.[i]?.quantity}
-            />
-
-            <Input
-              inputMode="decimal"
-              {...register(`items.${i}.price` as const, {
-                setValueAs: (v) => (v === "" ? 0 : parseFloat(v) || 0),
-              })}
-              error={!!errors.items?.[i]?.price}
-            />
-
-            <span className="text-[15px] font-bold text-text-secondary tabular-nums">
-              {total}
-            </span>
-
-            <button
-              type="button"
-              onClick={() => remove(i)}
-              className="text-[#888EB0] hover:text-red transition-colors flex items-center justify-center"
+          return (
+            <div
+              key={field.id}
+              className="flex flex-col gap-6 sm:grid sm:grid-cols-[1fr_60px_100px_72px_18px] sm:items-center sm:gap-4"
             >
-              <Trash2 className="w-4.5 h-4.5" />
-            </button>
-          </div>
-        );
-      })}
+              <div className="flex flex-col gap-3 sm:block">
+                <label className="text-[13px] text-text-secondary sm:hidden">
+                  Item Name
+                </label>
+                <Input
+                  placeholder="Item name"
+                  {...register(`items.${i}.name` as const)}
+                  error={!!errors.items?.[i]?.name}
+                />
+              </div>
+
+              <div className="flex items-center gap-4 sm:contents">
+                <div className="flex flex-col gap-3 sm:block w-16 shrink-0 sm:w-auto">
+                  <label className="text-[13px] text-text-secondary sm:hidden">
+                    Qty.
+                  </label>
+                  <Input
+                    inputMode="numeric"
+                    {...register(`items.${i}.quantity` as const, {
+                      setValueAs: (v) => (v === "" ? 0 : Number(v)),
+                    })}
+                    error={!!errors.items?.[i]?.quantity}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-3 sm:block flex-1 sm:w-auto">
+                  <label className="text-[13px] text-text-secondary sm:hidden">
+                    Price
+                  </label>
+                  <Input
+                    inputMode="decimal"
+                    {...register(`items.${i}.price` as const, {
+                      setValueAs: (v) => (v === "" ? 0 : parseFloat(v) || 0),
+                    })}
+                    error={!!errors.items?.[i]?.price}
+                  />
+                </div>
+
+                <div className="flex flex-col gap-3 sm:block flex-1 sm:w-auto">
+                  <label className="text-[13px] text-text-secondary sm:hidden">
+                    Total
+                  </label>
+                  <div className="h-14 flex items-center">
+                    <span className="text-[15px] font-bold text-text-secondary tabular-nums">
+                      {total}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-3 sm:block shrink-0 sm:w-auto">
+                  <label
+                    className="text-[13px] opacity-0 sm:hidden"
+                    aria-hidden="true"
+                  >
+                    Del
+                  </label>
+                  <div className="h-14 flex items-center justify-center">
+                    <button
+                      type="button"
+                      onClick={() => remove(i)}
+                      className="text-[#888EB0] hover:text-red transition-colors flex items-center justify-center"
+                      aria-label="Delete item"
+                    >
+                      <Trash2 className="w-4.5 h-4.5" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       <button
         type="button"
         onClick={() =>
           append({ id: nanoid(), name: "", quantity: 1, price: 0, total: 0 })
         }
-        className="w-full mt-4 h-14 rounded-3xl text-[15px] font-bold text-text-secondary bg-(--draft-bg) hover:bg-border transition-colors"
+        className="w-full mt-8 sm:mt-10 h-14 rounded-3xl text-[15px] font-bold text-text-secondary bg-(--draft-bg) hover:bg-border transition-colors"
       >
         + Add New Item
       </button>
@@ -373,25 +411,34 @@ export default function InvoiceForm({
         </div>
 
         <div
-          className={`px-6 py-6 md:px-14 border-t border-border bg-bg mt-auto flex items-center gap-4 ${isEdit ? "justify-end" : "justify-between"}`}
+          className={`px-4 sm:px-6 py-6 md:px-14 border-t border-border bg-surface mt-auto flex items-center ${
+            isEdit ? "justify-end gap-2" : "justify-between gap-1.5 sm:gap-4"
+          }`}
         >
-          {/* Only show 'Discard' on the left if we are NOT editing */}
           {!isEdit && (
             <button
               type="button"
               onClick={onDiscard}
-              className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-[#F9FAFE] dark:bg-[#252945] text-text-secondary hover:bg-border transition-colors"
+              className="
+        px-4 sm:px-6 h-12 pt-1 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+        bg-surface-alt text-text-muted dark:text-text-secondary 
+        hover:bg-border transition-colors whitespace-nowrap
+      "
             >
               Discard
             </button>
           )}
 
-          <div className="flex gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             {isEdit && (
               <button
                 type="button"
                 onClick={onDiscard}
-                className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-[#F9FAFE] dark:bg-[#252945] text-text-secondary hover:bg-border transition-colors"
+                className="
+          px-4 sm:px-6 pt-1 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+          bg-surface-alt text-text-muted dark:text-text-secondary 
+          hover:bg-border transition-colors whitespace-nowrap
+        "
               >
                 Cancel
               </button>
@@ -401,7 +448,11 @@ export default function InvoiceForm({
               <button
                 type="button"
                 onClick={handleSaveDraft}
-                className="px-6 h-12 rounded-3xl text-[15px] font-bold text-[#888EB0] bg-[#373b53] hover:bg-[#0C0E16] transition-colors"
+                className="
+          px-4 sm:px-6 pt-1 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+          text-text-secondary-light dark:text-text-secondary-dark 
+          bg-sidebar-light hover:bg-text-primary-light transition-colors whitespace-nowrap
+        "
               >
                 Save as Draft
               </button>
@@ -419,7 +470,10 @@ export default function InvoiceForm({
                     : "pending"
                 )
               )}
-              className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-purple text-white hover:bg-purple-light transition-colors"
+              className="
+        px-4 pt-1 sm:px-6 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+        bg-purple text-white hover:bg-purple-light transition-colors whitespace-nowrap
+      "
             >
               {isEdit ? "Save Changes" : "Save & Send"}
             </button>
