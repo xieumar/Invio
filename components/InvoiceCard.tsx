@@ -8,7 +8,7 @@ export default function InvoiceCard({ invoice }: { invoice: Invoice }) {
   const idStyle = "text-[15px] font-bold text-text-primary";
   const dateStyle = "text-[13px] text-text-secondary whitespace-nowrap";
   const nameStyle =
-    "text-[13px] text-text-secondary whitespace-nowrap overflow-hidden text-ellipsis";
+    "text-[13px] text-text-secondary whitespace-nowrap overflow-hidden text-ellipsis min-w-0 block";
   const totalStyle =
     "text-[16px] font-bold text-text-primary whitespace-nowrap";
 
@@ -44,8 +44,8 @@ export default function InvoiceCard({ invoice }: { invoice: Invoice }) {
       <div
         className="
         hidden sm:grid 
-        grid-cols-[4.5rem_7.5rem_1fr_auto_7.5rem_1rem] 
-        lg:grid-cols-[90px_150px_1fr_120px_140px_20px] 
+        sm:grid-cols-[4.5rem_7.5rem_1fr_auto_7.5rem_1rem] 
+        lg:grid-cols-[70px_90px_1fr_auto_120px_20px]  
         items-center h-20 px-6 lg:px-8 gap-4 lg:gap-6
       "
       >
