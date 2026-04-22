@@ -347,16 +347,31 @@ export default function InvoiceForm({
           </FormProvider>
         </div>
 
-        <div className="px-6 py-6 md:px-14 border-t border-border bg-bg mt-auto flex justify-between items-center gap-4">
-          <button
-            type="button"
-            onClick={onDiscard}
-            className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-[#F9FAFE] dark:bg-[#252945] text-text-secondary hover:bg-border transition-colors"
-          >
-            {isEdit ? "Cancel" : "Discard"}
-          </button>
+        <div
+          className={`px-6 py-6 md:px-14 border-t border-border bg-bg mt-auto flex items-center gap-4 ${isEdit ? "justify-end" : "justify-between"}`}
+        >
+          {/* Only show 'Discard' on the left if we are NOT editing */}
+          {!isEdit && (
+            <button
+              type="button"
+              onClick={onDiscard}
+              className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-[#F9FAFE] dark:bg-[#252945] text-text-secondary hover:bg-border transition-colors"
+            >
+              Discard
+            </button>
+          )}
 
           <div className="flex gap-2">
+            {isEdit && (
+              <button
+                type="button"
+                onClick={onDiscard}
+                className="px-6 h-12 rounded-3xl text-[15px] font-bold bg-[#F9FAFE] dark:bg-[#252945] text-text-secondary hover:bg-border transition-colors"
+              >
+                Cancel
+              </button>
+            )}
+
             {!isEdit && (
               <button
                 type="button"
@@ -366,6 +381,7 @@ export default function InvoiceForm({
                 Save as Draft
               </button>
             )}
+
             <button
               type="button"
               onClick={handleSubmit((data) =>
