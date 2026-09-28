@@ -5,10 +5,11 @@ import Image from "next/image";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useInvoices } from "@/context/InvoiceContext";
-import { FilterState, InvoiceFormData, InvoiceStatus } from "@/lib/types";
-import InvoiceCard from "@/components/InvoiceCard";
-import FilterDropdown from "@/components/FilterDropdown";
-import InvoiceForm from "@/components/InvoiceForm";
+import {
+  InvoiceCard,
+  FilterDropdown,
+  InvoiceForm,
+} from "@/components/invoices";
 import { toast } from "sonner";
 
 const defaultFilter: FilterState = {
@@ -17,7 +18,7 @@ const defaultFilter: FilterState = {
   paid: false,
 };
 
-export default function HomePage() {
+export function InvoicesPage() {
   const { invoices, loading, createInvoice } = useInvoices();
   const [filter, setFilter] = useState<FilterState>(defaultFilter);
   const [showForm, setShowForm] = useState(false);
@@ -26,7 +27,7 @@ export default function HomePage() {
 
   const filtered = useMemo(() => {
     if (!anyActive) return invoices;
-    return invoices.filter((inv) => filter[inv.status]);
+    return invoices.filter((inv) => filter[inv.status as keyof FilterState]);
   }, [invoices, filter, anyActive]);
 
   async function handleCreate(data: InvoiceFormData, status: InvoiceStatus) {
@@ -68,7 +69,7 @@ export default function HomePage() {
                 pl-14 pr-4 sm:pr-6 py-6 h-12
                 bg-purple hover:bg-purple-light
                 text-white text-[15px] font-bold
-                rounded-3xl transition-colors border-0
+                rounded-3xl transition-colors border-0 cursor-pointer
               "
             >
               <span className="absolute left-1.5 w-8 h-8 rounded-full bg-white flex items-center justify-center">
@@ -111,7 +112,10 @@ export default function HomePage() {
             </p>
           </div>
         ) : (
-          <ul aria-label="Invoice list" className="flex flex-col gap-4">
+          <ul
+            aria-label="Invoice list"
+            className="flex flex-col gap-4 list-none p-0 m-0"
+          >
             {filtered.map((invoice) => (
               <li key={invoice.id}>
                 <InvoiceCard invoice={invoice} />
@@ -130,3 +134,5 @@ export default function HomePage() {
     </>
   );
 }
+
+export default InvoicesPage;

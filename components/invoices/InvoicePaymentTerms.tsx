@@ -24,7 +24,6 @@ export function InvoicePaymentTerms({
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (
@@ -48,7 +47,6 @@ export function InvoicePaymentTerms({
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Trigger */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -56,7 +54,7 @@ export function InvoicePaymentTerms({
           w-full h-14 px-5 flex justify-between items-center
           rounded border font-bold text-[15px]
           bg-(--input-bg) text-text-primary
-          transition-colors outline-none
+          transition-colors outline-none cursor-pointer
           ${error ? "border-red!" : "border-(--input-border) hover:border-purple focus:border-purple"}
         `}
       >
@@ -66,7 +64,6 @@ export function InvoicePaymentTerms({
         />
       </button>
 
-      {/* Dropdown */}
       {open && (
         <div
           className="absolute left-0 top-[calc(100%+8px)] z-[9999] w-full rounded-lg overflow-hidden shadow-dropdown"
@@ -82,7 +79,7 @@ export function InvoicePaymentTerms({
                 onClick={() => handleSelect(term.value)}
                 className={`
                   w-full px-6 py-4 text-left text-[15px] font-bold
-                  transition-colors
+                  transition-colors cursor-pointer
                   ${i < TERMS.length - 1 ? "border-b border-(--input-border)" : ""}
                   ${
                     isSelected
@@ -101,3 +98,5 @@ export function InvoicePaymentTerms({
     </div>
   );
 }
+
+export default InvoicePaymentTerms;

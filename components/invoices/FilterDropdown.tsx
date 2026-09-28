@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
-import { FilterState } from "@/lib/types";
 import { ChevronDown } from "lucide-react";
 
 interface FilterDropdownProps {
@@ -15,10 +14,7 @@ const OPTIONS: { key: keyof FilterState; label: string }[] = [
   { key: "paid", label: "Paid" },
 ];
 
-export default function FilterDropdown({
-  filter,
-  onChange,
-}: FilterDropdownProps) {
+export function FilterDropdown({ filter, onChange }: FilterDropdownProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -44,7 +40,7 @@ export default function FilterDropdown({
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-3 text-[15px] font-bold text-text-primary hover:text-purple transition-colors outline-none"
+        className="flex items-center gap-3 text-[15px] font-bold text-text-primary hover:text-purple transition-colors outline-none cursor-pointer"
       >
         <span>
           Filter <span className="hidden sm:inline">by status</span>
@@ -110,3 +106,5 @@ export default function FilterDropdown({
     </div>
   );
 }
+
+export default FilterDropdown;

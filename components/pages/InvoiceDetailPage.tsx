@@ -9,22 +9,29 @@ import { toast } from "sonner";
 
 import { useInvoices } from "@/context/InvoiceContext";
 import { Button } from "@/components/ui/button";
-import StatusBadge from "@/components/StatusBadge";
-import InvoiceForm from "@/components/InvoiceForm";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import {
+  StatusBadge,
+  InvoiceForm,
+  DeleteConfirmModal,
+} from "@/components/invoices";
 import { formatCurrency, formatDate } from "@/lib/utils";
-import { InvoiceFormData, InvoiceStatus } from "@/lib/types";
 
-export default function InvoiceDetailPage() {
+interface InvoiceDetailPageProps {
+  invoiceId?: string;
+}
+
+export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
   const params = useParams();
   const router = useRouter();
+
+  const id = invoiceId ?? (params?.id as string | undefined);
 
   const { invoices, loading, updateInvoice, deleteInvoice, markAsPaid } =
     useInvoices();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
-  const invoice = invoices.find((inv) => inv.id === params.id);
+  const invoice = invoices.find((inv) => inv.id === id);
 
   if (loading) {
     return (
@@ -51,10 +58,10 @@ export default function InvoiceDetailPage() {
           This invoice doesn&apos;t exist or may have been deleted.
         </p>
         <Button
-          onClick={() => router.push("/")}
-          className="px-6 pt-1 h-12 bg-purple hover:bg-purple-light rounded-3xl text-white border-none"
+          onClick={() => router.push("/invoices")}
+          className="px-6 pt-1 h-12 bg-purple hover:bg-purple-light rounded-3xl text-white border-none cursor-pointer"
         >
-          Go Back Home
+          Go Back to Invoices
         </Button>
       </div>
     );
@@ -73,7 +80,7 @@ export default function InvoiceDetailPage() {
 
   const handleDeleteConfirm = async () => {
     if (deleteInvoice) {
-      router.push("/");
+      router.push("/invoices");
       toast.error(`Invoice #${invoice.id} deleted.`);
       await deleteInvoice(invoice.id);
     }
@@ -91,7 +98,7 @@ export default function InvoiceDetailPage() {
       <Button
         variant="secondary"
         onClick={() => setIsEditing(true)}
-        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none"
+        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none cursor-pointer"
       >
         Edit
       </Button>
@@ -99,7 +106,7 @@ export default function InvoiceDetailPage() {
       <Button
         variant="destructive"
         onClick={() => setIsDeleteDialogOpen(true)}
-        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold dark:bg-red bg-red dark:hover:bg-red-hover hover:bg-red-hover text-white transition-colors border-none"
+        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold dark:bg-red bg-red dark:hover:bg-red-hover hover:bg-red-hover text-white transition-colors border-none cursor-pointer"
       >
         Delete
       </Button>
@@ -107,7 +114,7 @@ export default function InvoiceDetailPage() {
       {invoice.status !== "paid" && (
         <Button
           onClick={handleMarkAsPaid}
-          className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none"
+          className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none cursor-pointer"
         >
           Mark as Paid
         </Button>
@@ -119,7 +126,7 @@ export default function InvoiceDetailPage() {
     <>
       <div className="w-full animate-in fade-in duration-300 pb-32 sm:pb-0">
         <Link
-          href="/"
+          href="/invoices"
           className="group inline-flex items-center gap-6 text-[15px] font-bold text-text-primary hover:text-text-secondary transition-colors mb-8 no-underline"
         >
           <ChevronLeft className="w-4 h-4 text-purple stroke-[3px]" />
@@ -255,7 +262,6 @@ export default function InvoiceDetailPage() {
         <ActionButtons />
       </div>
 
-      {/* Modals */}
       {isEditing && (
         <InvoiceForm
           invoice={invoice}
@@ -273,3 +279,5 @@ export default function InvoiceDetailPage() {
     </>
   );
 }
+
+export default InvoiceDetailPage;

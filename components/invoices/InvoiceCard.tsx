@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { Invoice } from "@/lib/types";
-import StatusBadge from "./StatusBadge";
+import { StatusBadge } from "./StatusBadge";
 import { formatDate, formatCurrency } from "@/lib/utils";
 
-export default function InvoiceCard({ invoice }: { invoice: Invoice }) {
+export function InvoiceCard({ invoice }: { invoice: Invoice }) {
   const idStyle = "text-[15px] font-bold text-text-primary";
   const dateStyle = "text-[13px] text-text-secondary whitespace-nowrap";
   const nameStyle =
@@ -76,3 +75,5 @@ export default function InvoiceCard({ invoice }: { invoice: Invoice }) {
     </Link>
   );
 }
+
+export default InvoiceCard;

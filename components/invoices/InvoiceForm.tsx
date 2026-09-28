@@ -7,15 +7,12 @@ import {
   FormProvider,
   useFormContext,
   Controller,
-  useWatch,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
 import { nanoid } from "nanoid";
-import { InvoiceDatePicker } from "@/components/InvoiceDatePicker";
-import { InvoicePaymentTerms } from "@/components/InvoicePaymentTerms";
-
-import { Invoice, InvoiceFormData, InvoiceStatus } from "@/lib/types";
+import { InvoiceDatePicker } from "./InvoiceDatePicker";
+import { InvoicePaymentTerms } from "./InvoicePaymentTerms";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
 
 interface InvoiceFormProps {
@@ -132,7 +129,6 @@ function ItemList() {
         Item List
       </p>
 
-      {/* Desktop Headers */}
       <div className="hidden sm:grid grid-cols-[1fr_60px_100px_72px_18px] gap-4 mb-2">
         {["Item Name", "Qty.", "Price", "Total", ""].map((h) => (
           <span key={h} className="text-[13px] text-text-secondary">
@@ -213,7 +209,7 @@ function ItemList() {
                     <button
                       type="button"
                       onClick={() => remove(i)}
-                      className="text-[#888EB0] hover:text-red transition-colors flex items-center justify-center"
+                      className="text-[#888EB0] hover:text-red transition-colors flex items-center justify-center cursor-pointer"
                       aria-label="Delete item"
                     >
                       <Trash2 className="w-4.5 h-4.5" />
@@ -231,7 +227,7 @@ function ItemList() {
         onClick={() =>
           append({ id: nanoid(), name: "", quantity: 1, price: 0, total: 0 })
         }
-        className="w-full mt-8 sm:mt-10 h-14 rounded-3xl text-[15px] font-bold text-text-secondary bg-(--draft-bg) hover:bg-border transition-colors"
+        className="w-full mt-8 sm:mt-10 h-14 rounded-3xl text-[15px] font-bold text-text-secondary bg-(--draft-bg) hover:bg-border transition-colors cursor-pointer"
       >
         + Add New Item
       </button>
@@ -239,11 +235,7 @@ function ItemList() {
   );
 }
 
-export default function InvoiceForm({
-  invoice,
-  onSave,
-  onDiscard,
-}: InvoiceFormProps) {
+export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
   const isEdit = !!invoice;
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -300,9 +292,6 @@ export default function InvoiceForm({
     onSave(formattedData, status);
   }
 
-  const inputBase =
-    "w-full rounded px-5 py-4 text-[15px] font-bold text-[var(--text-primary)] outline-none transition-colors border bg-[var(--input-bg)] border-[var(--input-border)] hover:border-purple focus:border-purple h-[56px]";
-
   return (
     <>
       <div
@@ -323,9 +312,8 @@ export default function InvoiceForm({
           <h2 className="text-2xl font-bold text-text-primary mb-12">
             {isEdit ? (
               <>
-                {" "}
                 <span className="text-text-secondary">#</span>
-                {invoice?.id}{" "}
+                {invoice?.id}
               </>
             ) : (
               "New Invoice"
@@ -420,10 +408,10 @@ export default function InvoiceForm({
               type="button"
               onClick={onDiscard}
               className="
-        px-4 sm:px-6 h-12 pt-1 rounded-3xl text-[13px] sm:text-[15px] font-bold 
-        bg-surface-alt text-text-muted dark:text-text-secondary 
-        hover:bg-border transition-colors whitespace-nowrap
-      "
+                px-4 sm:px-6 h-12 pt-1 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+                bg-surface-alt text-text-muted dark:text-text-secondary 
+                hover:bg-border transition-colors whitespace-nowrap cursor-pointer
+              "
             >
               Discard
             </button>
@@ -435,10 +423,10 @@ export default function InvoiceForm({
                 type="button"
                 onClick={onDiscard}
                 className="
-          px-4 sm:px-6 pt-1 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
-          bg-surface-alt text-text-muted dark:text-text-secondary 
-          hover:bg-border transition-colors whitespace-nowrap
-        "
+                  px-4 sm:px-6 pt-1 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+                  bg-surface-alt text-text-muted dark:text-text-secondary 
+                  hover:bg-border transition-colors whitespace-nowrap cursor-pointer
+                "
               >
                 Cancel
               </button>
@@ -449,10 +437,10 @@ export default function InvoiceForm({
                 type="button"
                 onClick={handleSaveDraft}
                 className="
-          px-4 sm:px-6 pt-1 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
-          text-text-secondary-light dark:text-text-secondary-dark 
-          bg-sidebar-light hover:bg-text-primary-light transition-colors whitespace-nowrap
-        "
+                  px-4 sm:px-6 pt-1 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+                  text-text-secondary-light dark:text-text-secondary-dark 
+                  bg-sidebar-light hover:bg-text-primary-light transition-colors whitespace-nowrap cursor-pointer
+                "
               >
                 Save as Draft
               </button>
@@ -471,9 +459,9 @@ export default function InvoiceForm({
                 )
               )}
               className="
-        px-4 pt-1 sm:px-6 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
-        bg-purple text-white hover:bg-purple-light transition-colors whitespace-nowrap
-      "
+                px-4 pt-1 sm:px-6 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 
+                bg-purple text-white hover:bg-purple-light transition-colors whitespace-nowrap cursor-pointer
+              "
             >
               {isEdit ? "Save Changes" : "Save & Send"}
             </button>
@@ -483,3 +471,5 @@ export default function InvoiceForm({
     </>
   );
 }
+
+export default InvoiceForm;
