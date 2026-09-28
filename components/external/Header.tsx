@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { Moon, Sun, Menu, X, ArrowUpRight, FileText } from "lucide-react";
+import { Moon, Sun, Menu, X, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/context/ThemeContext";
 
@@ -20,26 +21,33 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full pt-3 sm:pt-5 pb-3 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mx-auto">
+    <header className="sticky top-0 z-50 w-full pt-3 sm:pt-5 pb-3">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <nav
           aria-label="External navigation"
           className="
             bg-surface/85 dark:bg-surface/85 backdrop-blur-md 
-            border border-border/70 rounded-full 
+            border border-border/70 rounded-xl
             px-4 sm:px-6 py-2.5 sm:py-3 
             flex items-center justify-between 
             shadow-[0_8px_30px_rgba(72,84,159,0.06)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.3)]
             transition-colors duration-200
           "
         >
-          {/* Brand Logo with Lucide FileText */}
+          {/* Brand Logo with App Logo */}
           <Link
             href="/"
             className="flex items-center gap-2.5 no-underline group pl-1 sm:pl-2"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-purple flex items-center justify-center text-white shadow-sm shadow-purple/40 group-hover:scale-105 transition-transform">
-              <FileText className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
+              <Image
+                src="/logo.svg"
+                alt="Invio"
+                width={36}
+                height={36}
+                priority
+                className="w-full h-full object-contain"
+              />
             </div>
             <span className="text-lg sm:text-xl font-extrabold tracking-tight text-text-primary">
               Invio<span className="text-purple">.</span>
@@ -108,7 +116,7 @@ export function Header() {
                 rounded-full bg-purple hover:bg-purple-light text-white 
                 font-bold text-[13px] sm:text-[14px] 
                 px-4 sm:px-5 h-9 sm:h-10 
-                shadow-sm shadow-purple/25 hover:shadow-purple/40 
+                shadow-sm hover:opacity-95 
                 transition-all duration-200
               "
             >

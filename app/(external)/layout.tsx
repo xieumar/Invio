@@ -5,6 +5,11 @@ export const metadata: Metadata = {
   title: "Invio — Smart Invoicing & Small Business Finance",
   description:
     "Create invoices, track expenses, and manage small business finance with AI assistance.",
+  icons: {
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.svg",
+  },
 };
 
 export default function ExternalLayout({
