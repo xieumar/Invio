@@ -1,7 +1,4 @@
-import type { Address } from "./common";
-import type { CurrencyCode, MinorUnitAmount } from "./money";
-
-export interface Client {
+interface Client {
   id: string;
   userId: string;
   name: string;
@@ -17,7 +14,7 @@ export interface Client {
   updatedAt: string;
 }
 
-export interface ClientFormData {
+interface ClientFormData {
   name: string;
   email: string;
   phone?: string;

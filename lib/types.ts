@@ -1,2 +1,2 @@
-// Backward compatibility layer — re-exports all domain types from @/@types
-export * from "@/@types";
+// Types are now globally ambient via @types/*.d.ts
+export {};

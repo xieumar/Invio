@@ -1,17 +1,17 @@
-export type CurrencyCode = "GBP" | "USD" | "EUR" | string;
+type CurrencyCode = "GBP" | "USD" | "EUR" | string;
 
-export type MinorUnitAmount = number;
+type MinorUnitAmount = number;
 
-export type TaxRatePercent = number;
+type TaxRatePercent = number;
 
-export interface InvoiceCalculationResult {
+interface InvoiceCalculationResult {
   subtotal: MinorUnitAmount;
   taxAmount: MinorUnitAmount;
   discountAmount: MinorUnitAmount;
   total: MinorUnitAmount;
 }
 
-export interface CurrencyConfig {
+interface CurrencyConfig {
   code: CurrencyCode;
   symbol: string;
   name: string;

@@ -17,7 +17,7 @@ import {
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface InvoiceDatePickerProps {
-  value: string; // ISO date string "YYYY-MM-DD"
+  value: string;
   onChange: (value: string) => void;
   error?: boolean;
 }
@@ -40,7 +40,6 @@ export function InvoiceDatePicker({
   });
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (
@@ -54,7 +53,6 @@ export function InvoiceDatePicker({
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
-  // Sync viewDate when value changes externally
   useEffect(() => {
     if (value) {
       try {
@@ -75,7 +73,6 @@ export function InvoiceDatePicker({
       })()
     : null;
 
-  // Build the 6-week grid for current view month
   const monthStart = startOfMonth(viewDate);
   const monthEnd = endOfMonth(viewDate);
   const gridStart = startOfWeek(monthStart, { weekStartsOn: 0 });
@@ -83,7 +80,6 @@ export function InvoiceDatePicker({
   const days = eachDayOfInterval({ start: gridStart, end: gridEnd });
 
   function handleDayClick(day: Date) {
-    // Only allow days in current month
     if (!isSameMonth(day, viewDate)) return;
     onChange(format(day, "yyyy-MM-dd"));
     setOpen(false);
@@ -105,7 +101,6 @@ export function InvoiceDatePicker({
 
   return (
     <div ref={containerRef} className="relative">
-      {/* Trigger Button */}
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -113,7 +108,7 @@ export function InvoiceDatePicker({
           w-full h-14 px-5 flex justify-between items-center
           rounded border font-bold text-[15px]
           bg-(--input-bg) text-text-primary
-          transition-colors outline-none
+          transition-colors outline-none cursor-pointer
           ${error ? "border-red!" : "border-(--input-border) hover:border-purple focus:border-purple"}
         `}
       >
@@ -121,7 +116,6 @@ export function InvoiceDatePicker({
         <CalendarIcon className="h-4 w-4 shrink-0 text-purple" />
       </button>
 
-      {/* Calendar Dropdown */}
       {open && (
         <div
           className="absolute left-0 top-[calc(100%+8px)] z-[9999] rounded-lg p-6 shadow-dropdown"
@@ -132,12 +126,11 @@ export function InvoiceDatePicker({
           }}
           onMouseDown={(e) => e.stopPropagation()}
         >
-          {/* Header */}
           <div className="relative flex items-center justify-center mb-6">
             <button
               type="button"
               onClick={prevMonth}
-              className="absolute left-0 text-purple hover:opacity-70 transition-opacity p-0"
+              className="absolute left-0 text-purple hover:opacity-70 transition-opacity p-0 cursor-pointer"
               aria-label="Previous month"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -150,14 +143,13 @@ export function InvoiceDatePicker({
             <button
               type="button"
               onClick={nextMonth}
-              className="absolute right-0 text-purple hover:opacity-70 transition-opacity p-0"
+              className="absolute right-0 text-purple hover:opacity-70 transition-opacity p-0 cursor-pointer"
               aria-label="Next month"
             >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
 
-          {/* Day Grid — no weekday headers per the design */}
           <div className="grid grid-cols-7 gap-y-1">
             {days.map((day) => {
               const inCurrentMonth = isSameMonth(day, viewDate);
@@ -181,7 +173,7 @@ export function InvoiceDatePicker({
                         ? "text-text-secondary opacity-20 cursor-default"
                         : isSelected
                           ? "text-purple"
-                          : "text-text-primary hover:text-purple"
+                          : "text-text-primary hover:text-purple cursor-pointer"
                     }
                   `}
                 >
@@ -195,3 +187,5 @@ export function InvoiceDatePicker({
     </div>
   );
 }
+
+export default InvoiceDatePicker;

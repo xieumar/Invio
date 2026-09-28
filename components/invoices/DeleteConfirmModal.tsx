@@ -3,27 +3,26 @@
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
-interface CustomDeleteModalProps {
+interface DeleteConfirmModalProps {
   invoiceId: string;
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }
 
-export default function DeleteConfirmModal({
+export function DeleteConfirmModal({
   invoiceId,
   isOpen,
   onClose,
   onConfirm,
-}: CustomDeleteModalProps) {
-  // Close on Escape key
+}: DeleteConfirmModalProps) {
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
     if (isOpen) {
       document.addEventListener("keydown", handleEsc);
-      document.body.style.overflow = "hidden"; // Prevent scrolling behind modal
+      document.body.style.overflow = "hidden";
     }
     return () => {
       document.removeEventListener("keydown", handleEsc);
@@ -40,11 +39,9 @@ export default function DeleteConfirmModal({
         onClick={onClose}
       />
 
-      {/* Modal Container */}
       <div
         className="
           relative z-10 bg-surface p-8 sm:p-12 rounded-lg shadow-card
-          /* The exact widths you requested */
           w-full max-w-81.75 sm:max-w-120
           animate-in fade-in zoom-in-95 duration-200
         "
@@ -63,11 +60,11 @@ export default function DeleteConfirmModal({
             variant="secondary"
             onClick={onClose}
             className="
-      px-6 h-12 rounded-full text-[15px] font-bold 
-      flex items-center justify-center 
-      pt-1 
-      bg-draft-bg text-text-secondary hover:bg-border border-none shadow-none
-    "
+              px-6 h-12 rounded-full text-[15px] font-bold 
+              flex items-center justify-center 
+              pt-1 
+              bg-draft-bg text-text-secondary hover:bg-border border-none shadow-none cursor-pointer
+            "
           >
             Cancel
           </Button>
@@ -79,11 +76,11 @@ export default function DeleteConfirmModal({
               onClose();
             }}
             className="
-      px-6 h-12 rounded-full text-[15px] font-bold 
-      flex items-center justify-center 
-      pt-1 
-      bg-red dark:bg-red hover:bg-red-hover dark:hover:bg-red-hover text-white border-none shadow-none
-    "
+              px-6 h-12 rounded-full text-[15px] font-bold 
+              flex items-center justify-center 
+              pt-1 
+              bg-red dark:bg-red hover:bg-red-hover dark:hover:bg-red-hover text-white border-none shadow-none cursor-pointer
+            "
           >
             Delete
           </Button>
@@ -92,3 +89,5 @@ export default function DeleteConfirmModal({
     </div>
   );
 }
+
+export default DeleteConfirmModal;

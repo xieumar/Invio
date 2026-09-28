@@ -1,12 +1,10 @@
-import type { CurrencyCode, MinorUnitAmount } from "./money";
+type TransactionStatus = "cleared" | "pending_review" | "reconciled";
 
-export type TransactionStatus = "cleared" | "pending_review" | "reconciled";
+type CategorizationMethod = "manual" | "rule" | "ai" | "unassigned";
 
-export type CategorizationMethod = "manual" | "rule" | "ai" | "unassigned";
+type TransactionType = "income" | "expense";
 
-export type TransactionType = "income" | "expense";
-
-export interface TransactionSplit {
+interface TransactionSplit {
   id: string;
   categoryId: string;
   categoryName: string;
@@ -14,20 +12,20 @@ export interface TransactionSplit {
   notes?: string | null;
 }
 
-export interface Transaction {
+interface Transaction {
   id: string;
   userId: string;
   importBatchId?: string | null;
-  date: string; // ISO date "YYYY-MM-DD"
+  date: string;
   description: string;
   cleanedDescription?: string;
-  amount: MinorUnitAmount; // positive = income, negative = expense
+  amount: MinorUnitAmount;
   type: TransactionType;
   currency: CurrencyCode;
   categoryId?: string | null;
   categoryName?: string | null;
   categorizationMethod: CategorizationMethod;
-  confidenceScore?: number | null; // 0.0 to 1.0 for AI
+  confidenceScore?: number | null;
   aiRationale?: string | null;
   status: TransactionStatus;
   matchedInvoiceId?: string | null;
@@ -37,7 +35,7 @@ export interface Transaction {
   updatedAt: string;
 }
 
-export interface TransactionCategory {
+interface TransactionCategory {
   id: string;
   name: string;
   type: TransactionType;
@@ -47,7 +45,7 @@ export interface TransactionCategory {
   userId?: string;
 }
 
-export interface ImportBatch {
+interface ImportBatch {
   id: string;
   userId: string;
   fileName: string;
@@ -58,10 +56,10 @@ export interface ImportBatch {
   status: "active" | "rolled_back";
 }
 
-export interface TransactionFormData {
+interface TransactionFormData {
   date: string;
   description: string;
-  amount: number; // Decimal in form, converted to minor unit
+  amount: number;
   type: TransactionType;
   categoryId?: string;
   status: TransactionStatus;

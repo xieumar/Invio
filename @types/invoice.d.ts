@@ -1,29 +1,21 @@
-import type { Address } from "./common";
-import type { CurrencyCode, MinorUnitAmount, TaxRatePercent } from "./money";
+type InvoiceStatus = "draft" | "pending" | "paid" | "overdue" | "cancelled";
 
-export type InvoiceStatus =
-  | "draft"
-  | "pending"
-  | "paid"
-  | "overdue"
-  | "cancelled";
-
-export interface InvoiceItem {
+interface InvoiceItem {
   id: string;
   name: string;
   quantity: number;
-  price: number; // In client forms: major units (or minor units when specified)
+  price: number;
   total: number;
 }
 
-export interface Invoice {
+interface Invoice {
   id: string;
   userId?: string;
   clientId?: string | null;
-  createdAt: string; // ISO date "YYYY-MM-DD"
-  paymentDue: string; // ISO date "YYYY-MM-DD"
+  createdAt: string;
+  paymentDue: string;
   description: string;
-  paymentTerms: number; // Days (1, 7, 14, 30)
+  paymentTerms: number;
   clientName: string;
   clientEmail: string;
   status: InvoiceStatus;
@@ -41,7 +33,7 @@ export interface Invoice {
   updatedAt?: string;
 }
 
-export interface InvoiceFormData {
+interface InvoiceFormData {
   description: string;
   paymentTerms: number;
   clientName: string;

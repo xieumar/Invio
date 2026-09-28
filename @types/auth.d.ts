@@ -1,8 +1,5 @@
-import type { Address } from "./common";
-import type { CurrencyCode } from "./money";
-
-export interface UserProfile {
-  id: string; // Firebase Auth UID
+interface UserProfile {
+  id: string;
   email: string;
   displayName: string;
   photoURL?: string | null;
@@ -10,7 +7,7 @@ export interface UserProfile {
   updatedAt: string;
 }
 
-export interface BusinessProfile {
+interface BusinessProfile {
   id: string;
   businessName: string;
   email: string;
@@ -24,7 +21,7 @@ export interface BusinessProfile {
   updatedAt: string;
 }
 
-export interface UserPreferences {
+interface UserPreferences {
   theme: "light" | "dark" | "system";
   dateFormat?: string;
   currencyDisplay?: "symbol" | "code";
@@ -32,13 +29,13 @@ export interface UserPreferences {
   tourLastStep?: number;
 }
 
-export type OnboardingStep =
+type OnboardingStep =
   | "business_info"
   | "first_client"
   | "sample_invoice"
   | "ready";
 
-export interface OnboardingState {
+interface OnboardingState {
   isCompleted: boolean;
   currentStep: OnboardingStep;
   completedAt?: string | null;

@@ -1,40 +1,40 @@
-export interface Address {
+interface Address {
   street: string;
   city: string;
   postCode: string;
   country: string;
 }
 
-export interface FilterState {
+interface FilterState {
   draft: boolean;
   pending: boolean;
   paid: boolean;
 }
 
-export type SortDirection = "asc" | "desc";
+type SortDirection = "asc" | "desc";
 
-export type DateRangePreset = "30d" | "90d" | "6m" | "ytd" | "all";
+type DateRangePreset = "30d" | "90d" | "6m" | "ytd" | "all";
 
-export interface DateRangeCustom {
+interface DateRangeCustom {
   from: string;
   to: string;
 }
 
-export type DateRangeFilter = DateRangePreset | DateRangeCustom;
+type DateRangeFilter = DateRangePreset | DateRangeCustom;
 
-export interface ApiResponse<T = unknown> {
+interface ApiResponse<T = unknown> {
   success: boolean;
   data?: T;
   error?: string;
   message?: string;
 }
 
-export interface PaginationParams {
+interface PaginationParams {
   page: number;
   pageSize: number;
 }
 
-export interface PaginatedResult<T> {
+interface PaginatedResult<T> {
   items: T[];
   total: number;
   page: number;
