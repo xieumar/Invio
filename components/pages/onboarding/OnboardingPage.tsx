@@ -8,12 +8,13 @@ import { toast } from "sonner";
 import { useAuth } from "@/features/auth";
 import {
   OnboardingWizard,
+  completeOnboarding,
   type OnboardingFormValues,
 } from "@/features/onboarding";
 
 export function OnboardingPage() {
   const router = useRouter();
-  const { user, userProfile } = useAuth();
+  const { user, userProfile, isDemoUser } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const initialValues: Partial<OnboardingFormValues> = {
@@ -24,11 +25,17 @@ export function OnboardingPage() {
   const handleComplete = async (values: OnboardingFormValues) => {
     setIsSubmitting(true);
     try {
-      // In Commit 3.1, this verifies step completion; Commit 3.2 wires persistent Firestore sync
-      toast.success("Business profile configured!");
+      const activeUserId =
+        user?.uid || (isDemoUser ? "demo-user" : "demo-user");
+      await completeOnboarding(activeUserId, values);
+      toast.success("Business profile configured successfully!");
       router.push("/invoices");
-    } catch {
-      toast.error("Failed to complete setup. Please try again.");
+    } catch (err) {
+      toast.error(
+        err instanceof Error
+          ? err.message
+          : "Failed to complete setup. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
