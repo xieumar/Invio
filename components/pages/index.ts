@@ -8,3 +8,4 @@ export * from "./ContactPage";
 export * from "./PrivacyPage";
 export * from "./TermsPage";
 export * from "./auth";
+export * from "./onboarding";

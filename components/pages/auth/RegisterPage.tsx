@@ -18,7 +18,7 @@ import { Input } from "@/components/ui/input";
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/invoices";
+  const redirectUrl = searchParams.get("redirect") || "/onboarding";
 
   const { signUpWithEmail, signInWithGoogle, enableDemoMode } = useAuth();
   const [showPassword, setShowPassword] = useState(false);

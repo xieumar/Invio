@@ -21,6 +21,17 @@ interface BusinessProfile {
   updatedAt: string;
 }
 
+interface BusinessProfileFormData {
+  businessName: string;
+  email: string;
+  phone?: string | null;
+  taxId?: string | null;
+  address: Address;
+  defaultCurrency: CurrencyCode;
+  defaultPaymentTerms: number;
+  defaultNotes?: string;
+}
+
 interface UserPreferences {
   theme: "light" | "dark" | "system";
   dateFormat?: string;
