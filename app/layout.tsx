@@ -3,6 +3,7 @@ import { League_Spartan } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { QueryProvider } from "@/lib/query";
 import { Toaster } from "@/components/ui/sonner";
 
 const leagueSpartan = League_Spartan({
@@ -30,10 +31,12 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${leagueSpartan.className} antialiased`}>
         <ThemeProvider>
-          <AuthProvider>
-            {children}
-            <Toaster position="top-center" richColors />
-          </AuthProvider>
+          <QueryProvider>
+            <AuthProvider>
+              {children}
+              <Toaster position="top-center" richColors />
+            </AuthProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>

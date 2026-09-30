@@ -9,3 +9,4 @@ export * from "./PrivacyPage";
 export * from "./TermsPage";
 export * from "./auth";
 export * from "./onboarding";
+export * from "./dashboard";
