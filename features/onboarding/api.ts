@@ -5,10 +5,6 @@ import { businessProfileSchema } from "@/lib/validations";
 const DEMO_PROFILE_KEY = "invio_demo_business_profile";
 const DEMO_ONBOARDING_KEY = "invio_demo_onboarding_status";
 
-/**
- * Persists the business profile document to Firestore under:
- * users/{userId}/businessProfile/default
- */
 export async function saveBusinessProfile(
   userId: string,
   data: BusinessProfileFormData
@@ -34,9 +30,6 @@ export async function saveBusinessProfile(
   );
 }
 
-/**
- * Fetches the saved business profile for the current user
- */
 export async function getBusinessProfile(
   userId: string
 ): Promise<BusinessProfile | null> {
@@ -88,9 +81,6 @@ export async function getBusinessProfile(
   }
 }
 
-/**
- * Fetches the onboarding status for a user
- */
 export async function getOnboardingStatus(
   userId: string
 ): Promise<OnboardingState> {
@@ -127,9 +117,6 @@ export async function getOnboardingStatus(
   }
 }
 
-/**
- * Saves business profile and marks onboarding completion in Firestore atomically
- */
 export async function completeOnboarding(
   userId: string,
   data: BusinessProfileFormData
