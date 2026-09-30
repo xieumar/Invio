@@ -109,3 +109,22 @@ export function useDashboardMetrics() {
     staleTime: 5 * 60 * 1000,
   });
 }
+
+export function useRecentInvoices(limit = 5) {
+  const { user } = useAuth();
+  const userId = user?.uid;
+
+  return useQuery({
+    queryKey: [...queryKeys.invoices.list(userId), { limit }],
+    queryFn: async (): Promise<Invoice[]> => {
+      const all = await fetchDashboardInvoices(userId);
+      const sorted = [...all].sort((a, b) => {
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        return timeB - timeA;
+      });
+      return sorted.slice(0, limit);
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}

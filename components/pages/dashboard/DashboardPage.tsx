@@ -1,54 +1,76 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import {
-  Plus,
-  ArrowRight,
-  FileText,
-  Users,
-  TrendingUp,
-  Sparkles,
-} from "lucide-react";
+import { Plus, ArrowRight } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { DashboardMetrics } from "@/components/dashboard";
+import {
+  DashboardMetrics,
+  RecentInvoices,
+  QuickActions,
+} from "@/components/dashboard";
+import { InvoiceForm } from "@/components/invoices/InvoiceForm";
+import { useInvoices } from "@/context/InvoiceContext";
 import { useAuth } from "@/features/auth";
+import { queryKeys } from "@/lib/query";
 
 export function DashboardPage() {
   const { user } = useAuth();
+  const { createInvoice } = useInvoices();
+  const queryClient = useQueryClient();
+  const [showInvoiceForm, setShowInvoiceForm] = useState(false);
+
   const userName = user?.displayName?.split(" ")[0] || "there";
 
+  const handleCreateInvoice = async (
+    data: InvoiceFormData,
+    status: InvoiceStatus
+  ) => {
+    try {
+      await createInvoice(data, status);
+      queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.metrics.all });
+      toast.success("New invoice created!");
+      setShowInvoiceForm(false);
+    } catch {
+      toast.error("Failed to create invoice.");
+    }
+  };
+
   return (
-    <div className="w-full space-y-8 sm:space-y-10">
-      {/* Top Banner & Header */}
-      <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-2 border-b border-border/40">
-        <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple/10 text-purple dark:text-purple-light text-xs font-bold uppercase tracking-wider mb-2">
-            <span className="w-2 h-2 rounded-full bg-purple animate-pulse" />
-            Finance Workspace
+    <>
+      <div className="w-full space-y-8 sm:space-y-10">
+        {/* Top Banner & Header */}
+        <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-2 border-b border-border/40">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple/10 text-purple dark:text-purple-light text-xs font-bold uppercase tracking-wider mb-2">
+              <span className="w-2 h-2 rounded-full bg-purple animate-pulse" />
+              Finance Workspace
+            </div>
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-primary">
+              Welcome back, {userName}
+            </h1>
+            <p className="text-sm sm:text-[15px] text-text-secondary mt-1">
+              Real-time overview of your cashflow, receivables, and invoices.
+            </p>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-primary">
-            Welcome back, {userName}
-          </h1>
-          <p className="text-sm sm:text-[15px] text-text-secondary mt-1">
-            Real-time overview of your cashflow, receivables, and invoices.
-          </p>
-        </div>
 
-        {/* Header Action Buttons */}
-        <div className="flex items-center gap-3">
-          <Link href="/invoices">
-            <Button
-              variant="outline"
-              className="rounded-full border-border/80 hover:border-purple text-text-secondary hover:text-text-primary transition-colors text-xs font-bold px-5 h-11"
-            >
-              All Invoices
-              <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
-            </Button>
-          </Link>
+          {/* Header Action Buttons */}
+          <div className="flex items-center gap-3">
+            <Link href="/invoices">
+              <Button
+                variant="outline"
+                className="rounded-full border-border/80 hover:border-purple text-text-secondary hover:text-text-primary transition-colors text-xs font-bold px-5 h-11"
+              >
+                All Invoices
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
+              </Button>
+            </Link>
 
-          <Link href="/invoices">
             <Button
+              onClick={() => setShowInvoiceForm(true)}
               className="
                 relative flex items-center gap-2.5
                 pl-11 pr-5 h-11
@@ -62,88 +84,37 @@ export function DashboardPage() {
               </span>
               <span>New Invoice</span>
             </Button>
-          </Link>
-        </div>
-      </header>
+          </div>
+        </header>
 
-      {/* Overview Metric Summary Cards */}
-      <DashboardMetrics />
+        {/* Overview Metric Summary Cards */}
+        <DashboardMetrics />
 
-      {/* Quick Navigation Hub */}
-      <section aria-labelledby="quick-actions-heading" className="w-full pt-2">
-        <h2
-          id="quick-actions-heading"
-          className="text-sm font-bold uppercase tracking-wider text-text-secondary mb-4"
+        {/* Recent Invoices & Quick Actions Section */}
+        <section
+          aria-label="Recent Invoices and Quick Actions"
+          className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start"
         >
-          Quick Access
-        </h2>
+          {/* Recent Invoices Widget (2 Columns on large screens) */}
+          <div className="lg:col-span-2">
+            <RecentInvoices onNewInvoice={() => setShowInvoiceForm(true)} />
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <Link
-            href="/invoices"
-            className="group p-5 bg-surface rounded-2xl border border-border/60 hover:border-purple/50 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl bg-purple/10 text-purple flex items-center justify-center group-hover:scale-110 transition-transform">
-                <FileText className="w-5 h-5" />
-              </div>
-              <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-purple group-hover:translate-x-1 transition-all" />
-            </div>
-            <div>
-              <h3 className="font-bold text-text-primary group-hover:text-purple transition-colors text-base">
-                Invoices
-              </h3>
-              <p className="text-xs text-text-secondary mt-1">
-                Draft, issue, and manage all your client invoices with automated
-                status tracking.
-              </p>
-            </div>
-          </Link>
+          {/* Quick Actions Panel (1 Column on large screens) */}
+          <div className="lg:col-span-1">
+            <QuickActions onNewInvoice={() => setShowInvoiceForm(true)} />
+          </div>
+        </section>
+      </div>
 
-          <Link
-            href="/clients"
-            className="group p-5 bg-surface rounded-2xl border border-border/60 hover:border-purple/50 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl bg-paid-bg text-paid-text flex items-center justify-center group-hover:scale-110 transition-transform">
-                <Users className="w-5 h-5" />
-              </div>
-              <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-purple group-hover:translate-x-1 transition-all" />
-            </div>
-            <div>
-              <h3 className="font-bold text-text-primary group-hover:text-purple transition-colors text-base">
-                Clients
-              </h3>
-              <p className="text-xs text-text-secondary mt-1">
-                Maintain client contact records, default payment terms, and
-                billing history.
-              </p>
-            </div>
-          </Link>
-
-          <Link
-            href="/insights"
-            className="group p-5 bg-surface rounded-2xl border border-border/60 hover:border-purple/50 shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between"
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl bg-pending-bg text-pending-text flex items-center justify-center group-hover:scale-110 transition-transform">
-                <TrendingUp className="w-5 h-5" />
-              </div>
-              <ArrowRight className="w-4 h-4 text-text-muted group-hover:text-purple group-hover:translate-x-1 transition-all" />
-            </div>
-            <div>
-              <h3 className="font-bold text-text-primary group-hover:text-purple transition-colors text-base">
-                Cashflow & Insights
-              </h3>
-              <p className="text-xs text-text-secondary mt-1">
-                Visual analytics on revenue trends, monthly collections, and
-                outstanding dues.
-              </p>
-            </div>
-          </Link>
-        </div>
-      </section>
-    </div>
+      {/* Invoice Creation Drawer/Modal */}
+      {showInvoiceForm && (
+        <InvoiceForm
+          onSave={handleCreateInvoice}
+          onDiscard={() => setShowInvoiceForm(false)}
+        />
+      )}
+    </>
   );
 }
 
