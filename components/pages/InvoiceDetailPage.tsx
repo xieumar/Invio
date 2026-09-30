@@ -124,7 +124,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 
   return (
     <>
-      <div className="w-full animate-in fade-in duration-300 pb-32 sm:pb-0">
+      <div className="w-full max-w-182.5 mx-auto animate-in fade-in duration-300 pb-32 sm:pb-0">
         <Link
           href="/invoices"
           className="group inline-flex items-center gap-6 text-[15px] font-bold text-text-primary hover:text-text-secondary transition-colors mb-8 no-underline"

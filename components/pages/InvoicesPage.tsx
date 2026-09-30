@@ -38,7 +38,7 @@ export function InvoicesPage() {
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full max-w-182.5 mx-auto">
         {/* Header */}
         <header className="flex items-center justify-between mb-8 sm:mb-10">
           <div>
