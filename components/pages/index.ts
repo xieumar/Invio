@@ -7,3 +7,4 @@ export * from "./FaqPage";
 export * from "./ContactPage";
 export * from "./PrivacyPage";
 export * from "./TermsPage";
+export * from "./auth";

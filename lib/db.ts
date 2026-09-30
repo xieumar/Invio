@@ -1,5 +1,4 @@
 import { openDB, DBSchema, IDBPDatabase } from "idb";
-import { Invoice } from "./types";
 
 const DB_NAME = "invio-db";
 const DB_VERSION = 1;

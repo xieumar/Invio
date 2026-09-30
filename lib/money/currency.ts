@@ -1,5 +1,3 @@
-import type { CurrencyCode, CurrencyConfig, MinorUnitAmount } from "@/@types";
-
 export const SUPPORTED_CURRENCIES: Record<string, CurrencyConfig> = {
   GBP: {
     code: "GBP",

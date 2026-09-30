@@ -1,5 +1,3 @@
-import { Invoice } from "./types";
-
 export const seedData: Invoice[] = [
   {
     id: "RT3080",
