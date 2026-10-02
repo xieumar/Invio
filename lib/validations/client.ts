@@ -10,11 +10,10 @@ export const clientSchema = z.object({
     .email("Please enter a valid email address"),
   phone: z.string().trim().optional().nullable(),
   address: addressSchema,
-  currency: z.string().default("GBP").optional(),
-  defaultPaymentTerms: z.coerce
+  currency: z.string().optional(),
+  defaultPaymentTerms: z
     .number()
     .min(1, "Payment terms must be at least 1 day")
-    .default(14)
     .optional(),
   notes: z.string().trim().optional().nullable(),
 });

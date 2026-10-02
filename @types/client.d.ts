@@ -17,9 +17,9 @@ interface Client {
 interface ClientFormData {
   name: string;
   email: string;
-  phone?: string;
+  phone?: string | null;
   address: Address;
   currency?: CurrencyCode;
   defaultPaymentTerms?: number;
-  notes?: string;
+  notes?: string | null;
 }

@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MetricCard } from "@/components/ui/metric-card";
-import { ClientList } from "@/components/clients";
+import { ClientList, ClientFormModal } from "@/components/clients";
 import { useClients, useDeleteClient } from "@/features/clients";
 import { formatMoney, toMinorUnits } from "@/lib/money";
 
@@ -14,6 +14,18 @@ export function ClientsListPage() {
   const { data: clients = [], isLoading } = useClients();
   const deleteClientMutation = useDeleteClient();
   const [searchQuery, setSearchQuery] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clientToEdit, setClientToEdit] = useState<Client | null>(null);
+
+  const handleOpenCreate = () => {
+    setClientToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const handleOpenEdit = (client: Client) => {
+    setClientToEdit(client);
+    setIsModalOpen(true);
+  };
 
   // Real-time instant search filter
   const filteredClients = useMemo(() => {
@@ -69,9 +81,7 @@ export function ClientsListPage() {
 
         <div className="flex items-center gap-3">
           <Button
-            onClick={() => {
-              toast.info("Add Client dialog will be connected in Commit 6.3!");
-            }}
+            onClick={handleOpenCreate}
             className="
               relative flex items-center gap-2.5
               pl-11 pr-5 h-11
@@ -161,12 +171,15 @@ export function ClientsListPage() {
         clients={filteredClients}
         isLoading={isLoading}
         onDeleteClient={handleDeleteClient}
-        onEditClient={() => {
-          toast.info("Edit Client will be connected in Commit 6.3!");
-        }}
-        onNewClient={() => {
-          toast.info("Add Client will be connected in Commit 6.3!");
-        }}
+        onEditClient={handleOpenEdit}
+        onNewClient={handleOpenCreate}
+      />
+
+      {/* Add / Edit Client Modal */}
+      <ClientFormModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        clientToEdit={clientToEdit}
       />
     </div>
   );
