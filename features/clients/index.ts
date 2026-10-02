@@ -1,3 +1,3 @@
-export * from "@/components/clients";
+export * from "./ClientFormModal";
 export * from "./api";
 export * from "./useClients";

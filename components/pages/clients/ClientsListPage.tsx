@@ -81,6 +81,7 @@ export function ClientsListPage() {
 
         <div className="flex items-center gap-3">
           <Button
+            type="button"
             onClick={handleOpenCreate}
             className="
               relative flex items-center gap-2.5
@@ -90,10 +91,10 @@ export function ClientsListPage() {
               rounded-full transition-all duration-200 border-0 cursor-pointer shadow-md shadow-purple/20
             "
           >
-            <span className="absolute left-1.5 w-8 h-8 rounded-full bg-white flex items-center justify-center">
+            <span className="pointer-events-none absolute left-1.5 w-8 h-8 rounded-full bg-white flex items-center justify-center">
               <Plus className="w-4 h-4 text-purple stroke-[3px]" />
             </span>
-            <span>New Client</span>
+            <span className="pointer-events-none">New Client</span>
           </Button>
         </div>
       </header>

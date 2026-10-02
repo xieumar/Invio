@@ -17,7 +17,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { clientSchema, type ClientFormValues } from "@/lib/validations";
-import { useCreateClient, useUpdateClient } from "@/features/clients";
+import {
+  useCreateClient,
+  useUpdateClient,
+} from "@/features/clients/useClients";
 import { SUPPORTED_CURRENCIES } from "@/lib/money";
 
 export interface ClientFormModalProps {
@@ -67,10 +70,10 @@ export function ClientFormModal({
         email: clientToEdit.email,
         phone: clientToEdit.phone || "",
         address: {
-          street: clientToEdit.address.street,
-          city: clientToEdit.address.city,
-          postCode: clientToEdit.address.postCode,
-          country: clientToEdit.address.country,
+          street: clientToEdit.address?.street || "",
+          city: clientToEdit.address?.city || "",
+          postCode: clientToEdit.address?.postCode || "",
+          country: clientToEdit.address?.country || "United Kingdom",
         },
         currency: clientToEdit.currency || "GBP",
         defaultPaymentTerms: clientToEdit.defaultPaymentTerms || 14,
@@ -105,7 +108,12 @@ export function ClientFormModal({
     isSubmitting || createMutation.isPending || updateMutation.isPending;
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={(open) => {
+        if (!open) onClose();
+      }}
+    >
       <DialogContent className="sm:max-w-xl max-h-[92vh] overflow-y-auto bg-surface border-border p-6 sm:p-7 rounded-2xl shadow-2xl">
         <DialogHeader className="p-0 text-left mb-5">
           <DialogTitle className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight">
