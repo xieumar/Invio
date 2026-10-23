@@ -1,20 +1,13 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  useCallback,
-} from "react";
+import React, { createContext, useContext, useCallback } from "react";
 import {
-  getAllInvoices,
-  saveInvoice,
-  deleteInvoice as dbDelete,
-  seedInvoices,
-} from "@/lib/db";
-import { generateId, calcPaymentDue, calcTotal } from "@/lib/utils";
-import { seedData } from "@/lib/seeddata";
+  useInvoices as useInvoicesQuery,
+  useCreateInvoice,
+  useUpdateInvoice,
+  useDeleteInvoice,
+  useUpdateInvoiceStatus,
+} from "@/features/invoices";
 
 interface InvoiceContextValue {
   invoices: Invoice[];
@@ -26,7 +19,7 @@ interface InvoiceContextValue {
   updateInvoice: (
     id: string,
     data: InvoiceFormData,
-    status: InvoiceStatus
+    status?: InvoiceStatus
   ) => Promise<void>;
   deleteInvoice: (id: string) => Promise<void>;
   markAsPaid: (id: string) => Promise<void>;
@@ -36,93 +29,39 @@ interface InvoiceContextValue {
 const InvoiceContext = createContext<InvoiceContextValue | null>(null);
 
 export function InvoiceProvider({ children }: { children: React.ReactNode }) {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  const refresh = useCallback(async () => {
-    const all = await getAllInvoices();
-    setInvoices(all.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)));
-  }, []);
-
-  useEffect(() => {
-    (async () => {
-      await seedInvoices(seedData);
-      await refresh();
-      setLoading(false);
-    })();
-  }, [refresh]);
+  const { data: invoices = [], isLoading } = useInvoicesQuery();
+  const createMutation = useCreateInvoice();
+  const updateMutation = useUpdateInvoice();
+  const deleteMutation = useDeleteInvoice();
+  const updateStatusMutation = useUpdateInvoiceStatus();
 
   const createInvoice = useCallback(
     async (data: InvoiceFormData, status: InvoiceStatus): Promise<Invoice> => {
-      const invoice: Invoice = {
-        ...data,
-        id: generateId(),
-        status,
-        paymentDue: calcPaymentDue(data.createdAt, data.paymentTerms),
-        items: data.items.map((item) => ({
-          ...item,
-          total: item.quantity * item.price,
-        })),
-        total: calcTotal(data.items),
-      };
-
-      setInvoices((prev) => [invoice, ...prev]);
-      await saveInvoice(invoice);
-      return invoice;
+      return await createMutation.mutateAsync({ data, status });
     },
-    []
+    [createMutation]
   );
 
   const updateInvoice = useCallback(
     async (id: string, data: InvoiceFormData, status?: InvoiceStatus) => {
-      setInvoices((prev) => {
-        const index = prev.findIndex((inv) => inv.id === id);
-        if (index === -1) return prev;
-
-        const existing = prev[index];
-        const updated: Invoice = {
-          ...existing,
-          ...data,
-          paymentDue: calcPaymentDue(data.createdAt, data.paymentTerms),
-          items: data.items.map((item) => ({
-            ...item,
-            total: item.quantity * item.price,
-          })),
-          total: calcTotal(data.items),
-          // Use explicit status if provided, otherwise promote draft→pending, keep everything else
-          status:
-            status ??
-            (existing.status === "draft" ? "pending" : existing.status),
-        };
-
-        saveInvoice(updated);
-
-        const newInvoices = [...prev];
-        newInvoices[index] = updated;
-        return newInvoices;
-      });
+      await updateMutation.mutateAsync({ id, data, status });
     },
-    []
+    [updateMutation]
   );
 
-  const deleteInvoice = useCallback(async (id: string) => {
-    setInvoices((prev) => prev.filter((inv) => inv.id !== id));
-    await dbDelete(id);
-  }, []);
+  const deleteInvoice = useCallback(
+    async (id: string) => {
+      await deleteMutation.mutateAsync(id);
+    },
+    [deleteMutation]
+  );
 
-  const markAsPaid = useCallback(async (id: string) => {
-    setInvoices((prev) => {
-      const index = prev.findIndex((inv) => inv.id === id);
-      if (index === -1) return prev;
-
-      const updated = { ...prev[index], status: "paid" as InvoiceStatus };
-      saveInvoice(updated);
-
-      const newInvoices = [...prev];
-      newInvoices[index] = updated;
-      return newInvoices;
-    });
-  }, []);
+  const markAsPaid = useCallback(
+    async (id: string) => {
+      await updateStatusMutation.mutateAsync({ invoiceId: id, status: "paid" });
+    },
+    [updateStatusMutation]
+  );
 
   const getInvoice = useCallback(
     (id: string) => invoices.find((inv) => inv.id === id),
@@ -133,7 +72,7 @@ export function InvoiceProvider({ children }: { children: React.ReactNode }) {
     <InvoiceContext.Provider
       value={{
         invoices,
-        loading,
+        loading: isLoading,
         createInvoice,
         updateInvoice,
         deleteInvoice,

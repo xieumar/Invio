@@ -1,11 +1,9 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useAuth } from "@/features/auth";
 import { queryKeys } from "@/lib/query";
-import { getAllInvoices } from "@/lib/db";
+import { fetchInvoices } from "@/features/invoices";
 import { getBusinessProfile } from "@/features/onboarding/api";
 
 export interface DashboardMetricsSummary {
@@ -63,29 +61,7 @@ export function calculateMetricsFromInvoices(
 export async function fetchDashboardInvoices(
   userId?: string | null
 ): Promise<Invoice[]> {
-  if (!userId || userId === "demo-user") {
-    return getAllInvoices();
-  }
-
-  try {
-    const invoicesRef = collection(db, "users", userId, "invoices");
-    const snapshot = await getDocs(invoicesRef);
-
-    if (snapshot.empty) {
-      // Fallback to local IndexedDB if Firestore is not yet populated
-      return getAllInvoices();
-    }
-
-    return snapshot.docs.map((docSnap) => {
-      const data = docSnap.data();
-      return {
-        id: docSnap.id,
-        ...data,
-      } as Invoice;
-    });
-  } catch {
-    return getAllInvoices();
-  }
+  return fetchInvoices(userId);
 }
 
 export function useDashboardMetrics() {
