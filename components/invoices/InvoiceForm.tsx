@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import {
   useForm,
   useFieldArray,
@@ -14,6 +14,7 @@ import { nanoid } from "nanoid";
 import { InvoiceDatePicker } from "./InvoiceDatePicker";
 import { InvoicePaymentTerms } from "./InvoicePaymentTerms";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
+import { ClientSelect } from "@/features/invoices/ClientSelect";
 
 interface InvoiceFormProps {
   invoice?: Invoice;
@@ -242,6 +243,7 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
   const methods = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: invoice || {
+      clientId: null,
       description: "",
       paymentTerms: 30,
       clientName: "",
@@ -258,8 +260,26 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
     handleSubmit,
     getValues,
     control,
+    setValue,
     formState: { errors },
   } = methods;
+
+  const handleClientSelect = useCallback(
+    (client: Client | null) => {
+      if (client) {
+        setValue("clientId", client.id, { shouldDirty: true });
+        setValue("clientName", client.name, { shouldValidate: true });
+        setValue("clientEmail", client.email, { shouldValidate: true });
+        setValue("clientAddress", client.address, { shouldValidate: true });
+      } else {
+        setValue("clientId", null);
+        setValue("clientName", "");
+        setValue("clientEmail", "");
+        setValue("clientAddress", emptyAddress);
+      }
+    },
+    [setValue]
+  );
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -331,6 +351,18 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
                 Bill To
               </p>
               <div className="flex flex-col gap-6 mb-6">
+                <Field label="Client">
+                  <Controller
+                    control={control}
+                    name="clientId"
+                    render={({ field }) => (
+                      <ClientSelect
+                        value={field.value}
+                        onChange={handleClientSelect}
+                      />
+                    )}
+                  />
+                </Field>
                 <Field label="Client's Name" error={errors.clientName?.message}>
                   <Input
                     {...register("clientName")}

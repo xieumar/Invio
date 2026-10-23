@@ -16,6 +16,7 @@ export const itemSchema = z.object({
 });
 
 export const invoiceSchema = z.object({
+  clientId: z.string().nullable().optional(),
   description: z.string().min(1, "Required"),
   paymentTerms: z.number(),
   clientName: z.string().min(1, "Required"),
