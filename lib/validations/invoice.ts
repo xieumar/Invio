@@ -25,6 +25,9 @@ export const invoiceSchema = z.object({
   senderAddress: addressSchema,
   clientAddress: addressSchema,
   items: z.array(itemSchema).min(1, "Add at least one item"),
+  taxRate: z.number().min(0).max(100).optional(),
+  discount: z.number().min(0).optional(),
+  currency: z.string().optional(),
 });
 
 export type InvoiceFormValues = z.infer<typeof invoiceSchema>;
