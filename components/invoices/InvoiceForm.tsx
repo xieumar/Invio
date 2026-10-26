@@ -14,7 +14,7 @@ import { nanoid } from "nanoid";
 import { InvoiceDatePicker } from "./InvoiceDatePicker";
 import { InvoicePaymentTerms } from "./InvoicePaymentTerms";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
-import { ClientSelect } from "@/features/invoices/ClientSelect";
+import { ClientSelect } from "@/features/invoices";
 import { calculateInvoice, toMajorUnits, formatMoney } from "@/lib/money";
 
 interface InvoiceFormProps {

@@ -10,6 +10,11 @@ import {
   FilterDropdown,
   InvoiceForm,
 } from "@/components/invoices";
+import {
+  InvoiceSearch,
+  SortDropdown,
+  type SortKey,
+} from "@/features/invoices";
 import { toast } from "sonner";
 
 const defaultFilter: FilterState = {
@@ -18,17 +23,44 @@ const defaultFilter: FilterState = {
   paid: false,
 };
 
+function sortInvoices(invoices: Invoice[], sort: SortKey): Invoice[] {
+  return [...invoices].sort((a, b) => {
+    switch (sort) {
+      case "date-asc":    return a.createdAt.localeCompare(b.createdAt);
+      case "date-desc":   return b.createdAt.localeCompare(a.createdAt);
+      case "amount-desc": return b.total - a.total;
+      case "amount-asc":  return a.total - b.total;
+      case "due-asc":     return (a.paymentDue ?? "").localeCompare(b.paymentDue ?? "");
+      default:            return 0;
+    }
+  });
+}
+
 export function InvoicesPage() {
   const { invoices, loading, createInvoice } = useInvoices();
   const [filter, setFilter] = useState<FilterState>(defaultFilter);
   const [showForm, setShowForm] = useState(false);
+  const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<SortKey>("date-desc");
 
   const anyActive = filter.draft || filter.pending || filter.paid;
 
   const filtered = useMemo(() => {
-    if (!anyActive) return invoices;
-    return invoices.filter((inv) => filter[inv.status as keyof FilterState]);
-  }, [invoices, filter, anyActive]);
+    let result = anyActive
+      ? invoices.filter((inv) => filter[inv.status as keyof FilterState])
+      : invoices;
+
+    if (search.trim()) {
+      const q = search.trim().toLowerCase();
+      result = result.filter(
+        (inv) =>
+          inv.clientName.toLowerCase().includes(q) ||
+          inv.description.toLowerCase().includes(q)
+      );
+    }
+
+    return sortInvoices(result, sort);
+  }, [invoices, filter, anyActive, search, sort]);
 
   async function handleCreate(data: InvoiceFormData, status: InvoiceStatus) {
     await createInvoice(data, status);
@@ -40,7 +72,7 @@ export function InvoicesPage() {
     <>
       <div className="w-full max-w-182.5 mx-auto">
         {/* Header */}
-        <header className="flex items-center justify-between mb-8 sm:mb-10">
+        <header className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
             <h1 className="text-2xl sm:text-[36px] font-extrabold tracking-tight text-text-primary">
               Invoices
@@ -82,6 +114,14 @@ export function InvoicesPage() {
           </div>
         </header>
 
+        {/* Search + Sort toolbar */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">
+          <InvoiceSearch value={search} onChange={setSearch} />
+          <div className="ml-auto">
+            <SortDropdown value={sort} onChange={setSort} />
+          </div>
+        </div>
+
         {loading ? (
           <div
             className="flex items-center justify-center h-48 text-text-secondary"
@@ -106,9 +146,11 @@ export function InvoicesPage() {
               There is nothing here
             </h3>
             <p className="text-[13px] text-text-secondary max-w-55 leading-relaxed mx-auto">
-              {anyActive
-                ? "No invoices match the selected filters. Change your status filter or create a new one."
-                : "Create an invoice by clicking the New Invoice button and get started."}
+              {search
+                ? `No invoices match "${search}". Try a different search term.`
+                : anyActive
+                  ? "No invoices match the selected filters."
+                  : "Create an invoice by clicking the New Invoice button and get started."}
             </p>
           </div>
         ) : (

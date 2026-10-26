@@ -1,7 +1,15 @@
 "use client";
 
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface DeleteConfirmModalProps {
   invoiceId: string;
@@ -16,77 +24,55 @@ export function DeleteConfirmModal({
   onClose,
   onConfirm,
 }: DeleteConfirmModalProps) {
-  useEffect(() => {
-    const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
-    };
-    if (isOpen) {
-      document.addEventListener("keydown", handleEsc);
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      document.removeEventListener("keydown", handleEsc);
-      document.body.style.overflow = "unset";
-    };
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-999 flex items-center justify-center px-6">
-      <div
-        className="absolute inset-0 bg-black/50 backdrop-blur-[2px]"
-        onClick={onClose}
-      />
-
-      <div
+    <AlertDialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <AlertDialogContent
         className="
-          relative z-10 bg-surface p-8 sm:p-12 rounded-lg shadow-card
-          w-full max-w-81.75 sm:max-w-120
-          animate-in fade-in zoom-in-95 duration-200
+          bg-surface text-text-primary border-none shadow-card
+          rounded-xl w-full max-w-[327px] sm:max-w-[480px] p-8 sm:p-12
         "
       >
-        <h2 className="text-2xl font-bold text-text-primary mb-3">
-          Confirm Deletion
-        </h2>
+        <AlertDialogHeader className="place-items-start text-left gap-3 mb-2">
+          <AlertDialogTitle className="text-2xl font-bold text-text-primary">
+            Confirm Deletion
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-[13px] leading-5.5 text-text-secondary">
+            Are you sure you want to delete invoice{" "}
+            <span className="font-bold text-text-primary">#{invoiceId}</span>?
+            This action cannot be undone.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
-        <p className="text-[13px] leading-5.5 text-text-secondary mb-8">
-          Are you sure you want to delete invoice #{invoiceId}? This action
-          cannot be undone.
-        </p>
-
-        <div className="flex justify-end gap-2">
-          <Button
-            variant="secondary"
+        <AlertDialogFooter className="flex-row justify-end gap-2 bg-transparent border-none m-0 p-0 rounded-none">
+          <AlertDialogCancel
             onClick={onClose}
             className="
-              px-6 h-12 rounded-full text-[15px] font-bold 
-              flex items-center justify-center 
-              pt-1 
-              bg-draft-bg text-text-secondary hover:bg-border border-none shadow-none cursor-pointer
+              px-6 h-12 rounded-full text-[15px] font-bold pt-1
+              bg-surface-alt text-text-muted dark:text-text-secondary
+              hover:bg-border border-none shadow-none cursor-pointer
+              focus-visible:ring-2 focus-visible:ring-purple focus-visible:ring-offset-2
             "
           >
             Cancel
-          </Button>
+          </AlertDialogCancel>
 
-          <Button
-            variant="destructive"
+          <AlertDialogAction
             onClick={() => {
               onConfirm();
               onClose();
             }}
             className="
-              px-6 h-12 rounded-full text-[15px] font-bold 
-              flex items-center justify-center 
-              pt-1 
-              bg-red dark:bg-red hover:bg-red-hover dark:hover:bg-red-hover text-white border-none shadow-none cursor-pointer
+              px-6 h-12 rounded-full text-[15px] font-bold pt-1
+              bg-red dark:bg-red hover:bg-red-hover dark:hover:bg-red-hover
+              text-white border-none shadow-none cursor-pointer
+              focus-visible:ring-2 focus-visible:ring-red focus-visible:ring-offset-2
             "
           >
             Delete
-          </Button>
-        </div>
-      </div>
-    </div>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
