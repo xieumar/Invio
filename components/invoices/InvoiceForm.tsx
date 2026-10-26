@@ -19,11 +19,18 @@ import { calculateInvoice, toMajorUnits, formatMoney } from "@/lib/money";
 
 interface InvoiceFormProps {
   invoice?: Invoice;
+  initialValues?: Partial<InvoiceFormValues>;
   onSave: (data: InvoiceFormData, status: InvoiceStatus) => void;
   onDiscard: () => void;
 }
 
 const emptyAddress = { street: "", city: "", postCode: "", country: "" };
+const defaultSenderAddress = {
+  street: "19 Union Terrace",
+  city: "London",
+  postCode: "E1 3EZ",
+  country: "United Kingdom",
+};
 
 function Field({
   label,
@@ -302,7 +309,12 @@ function ItemList() {
   );
 }
 
-export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
+export function InvoiceForm({
+  invoice,
+  initialValues,
+  onSave,
+  onDiscard,
+}: InvoiceFormProps) {
   const isEdit = !!invoice;
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -310,14 +322,19 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
     resolver: zodResolver(invoiceSchema),
     defaultValues: invoice || {
       clientId: null,
-      description: "",
-      paymentTerms: 30,
-      clientName: "",
-      clientEmail: "",
-      createdAt: new Date().toISOString().split("T")[0],
-      senderAddress: emptyAddress,
-      clientAddress: emptyAddress,
-      items: [{ id: nanoid(), name: "", quantity: 1, price: 0, total: 0 }],
+      description: initialValues?.description || "",
+      paymentTerms: initialValues?.paymentTerms || 30,
+      clientName: initialValues?.clientName || "",
+      clientEmail: initialValues?.clientEmail || "",
+      createdAt:
+        initialValues?.createdAt || new Date().toISOString().split("T")[0],
+      senderAddress: initialValues?.senderAddress || defaultSenderAddress,
+      clientAddress: initialValues?.clientAddress || emptyAddress,
+      items: initialValues?.items?.length
+        ? initialValues.items
+        : [{ id: nanoid(), name: "", quantity: 1, price: 0, total: 0 }],
+      taxRate: initialValues?.taxRate ?? 0,
+      discount: initialValues?.discount ?? 0,
     },
   });
 
@@ -352,7 +369,14 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
       if (e.key === "Escape") onDiscard();
     }
     document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
+
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = originalOverflow;
+    };
   }, [onDiscard]);
 
   function buildPayload(values: InvoiceFormValues): InvoiceFormData {
@@ -388,17 +412,17 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
   return (
     <>
       <div
-        className="fixed inset-0 bg-black/50 z-150 lg:left-25.75"
+        className="fixed inset-0 bg-black/50 z-150 backdrop-blur-xs animate-in fade-in duration-200"
         onClick={onDiscard}
       />
 
       <div
         ref={panelRef}
         className="
-          fixed bottom-0 z-151 flex flex-col w-full md:w-160 bg-bg transition-all
-          top-18 md:top-20 lg:top-0 
-          left-0 lg:left-25.75 
-          lg:rounded-r-[20px] shadow-2xl
+          fixed top-0 right-0 bottom-0 z-151 flex flex-col
+          w-full md:w-160 max-w-full bg-bg
+          border-l border-border shadow-2xl md:rounded-l-[20px]
+          transition-all animate-in slide-in-from-right duration-300
         "
       >
         <div className="flex-1 overflow-y-auto px-6 pt-8 pb-8 md:px-14 md:pt-14">

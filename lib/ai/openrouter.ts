@@ -8,17 +8,20 @@ Your job is to parse natural language invoicing prompts into structured JSON inv
 
 Rules:
 1. Return ONLY valid JSON matching the specified schema. No markdown code blocks, no explanations.
-2. clientName: The name of the client or company being billed. If unspecified, leave as empty string.
-3. description: A clear 2-6 word summary of the work/project (e.g. "Brand Identity Design", "Fullstack Web App Development").
-4. paymentTerms: One of [1, 7, 14, 30]. Default to 30 if unspecified or flexible.
-5. items: Array of line items. Each item must have:
+2. clientName: The name of the client or company being billed.
+3. clientEmail: The client's email address. If not specified in the prompt, generate a realistic professional email based on the client or company name (e.g. billing@acme.com or contact@client.com). NEVER leave this empty.
+4. description: A clear 2-6 word summary of the work/project (e.g. "Frontend Development", "Brand Identity Package").
+5. paymentTerms: One of [1, 7, 14, 30]. Default to 30 if unspecified or flexible.
+6. items: Array of line items. Each item must have:
    - name: clear description of the service or product
    - quantity: number (integer or decimal >= 1)
-   - price: unit price in standard currency units (e.g. 50.00 for $50/hour). Never use cents/minor units.
-6. taxRate: Percentage number (e.g. 20 for 20% VAT/Tax) if mentioned or implied, otherwise 0.
-7. discount: Total discount amount in standard currency units if mentioned, otherwise 0.
-8. clientAddress: { street: "", city: "", postCode: "", country: "" } if mentioned, otherwise empty strings.
-9. notes: Optional extra terms or notes mentioned.
+   - price: unit price in standard currency units (e.g. 75.00 for $75/hour).
+7. taxRate: Percentage number (e.g. 20 for 20% VAT/Tax) if mentioned or implied, otherwise 0.
+8. discount: Total discount amount in standard currency units if mentioned, otherwise 0.
+9. senderAddress: The billing sender address. If not mentioned in the prompt, default to:
+   { "street": "19 Union Terrace", "city": "London", "postCode": "E1 3EZ", "country": "United Kingdom" }
+10. clientAddress: Complete address for the client. If not fully specified in the prompt, generate realistic details (street, city, postCode, country) so that no address fields are left blank.
+11. notes: Helpful payment remittance notes or terms.
 
 JSON Output Schema:
 {
@@ -31,6 +34,12 @@ JSON Output Schema:
   ],
   "taxRate": number,
   "discount": number,
+  "senderAddress": {
+    "street": string,
+    "city": string,
+    "postCode": string,
+    "country": string
+  },
   "clientAddress": {
     "street": string,
     "city": string,
@@ -91,27 +100,62 @@ export async function generateInvoiceDraftFromPrompt(
     throw new Error("No response content received from OpenRouter.");
   }
 
-  // Handle possible markdown formatting (e.g. ```json ... ```)
-  const cleaned = rawContent
-    .replace(/^```json\s*/i, "")
-    .replace(/^```\s*/i, "")
-    .replace(/```$/i, "")
-    .trim();
-
-  let parsed: unknown;
-  try {
-    parsed = JSON.parse(cleaned);
-  } catch (err) {
-    console.error("Failed to parse OpenRouter response as JSON:", rawContent, err);
-    throw new Error("The AI model returned an invalid JSON response.");
-  }
+  const parsed = extractJsonFromText(rawContent);
 
   // Validate strictly with Zod schema
   const validated = aiInvoiceDraftSchema.safeParse(parsed);
   if (!validated.success) {
-    console.error("Zod validation failed for AI draft:", validated.error.format());
-    throw new Error("The AI response did not conform to the expected invoice format.");
+    console.error(
+      "Zod validation failed for AI draft:",
+      validated.error.format(),
+      "Parsed JSON was:",
+      parsed
+    );
+    throw new Error(
+      "The AI response did not conform to the expected invoice format."
+    );
   }
 
   return validated.data;
+}
+
+/**
+ * Extracts and parses a JSON object from text that may contain
+ * markdown code blocks, reasoning tags (<think>...</think>), or extra preamble.
+ */
+function extractJsonFromText(rawText: string): unknown {
+  // 1. Remove <think>...</think> reasoning blocks from reasoning models
+  let text = rawText.replace(/<think>[\s\S]*?<\/think>/gi, "").trim();
+
+  // 2. Try direct JSON parse
+  try {
+    return JSON.parse(text);
+  } catch {
+    // Continue fallback strategies
+  }
+
+  // 3. Extract from markdown code blocks ```json ... ``` or ``` ... ```
+  const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  if (codeBlockMatch && codeBlockMatch[1]) {
+    try {
+      return JSON.parse(codeBlockMatch[1].trim());
+    } catch {
+      // Continue fallback
+    }
+  }
+
+  // 4. Find outermost JSON object braces { ... }
+  const firstBrace = text.indexOf("{");
+  const lastBrace = text.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    const candidate = text.substring(firstBrace, lastBrace + 1);
+    try {
+      return JSON.parse(candidate);
+    } catch {
+      // Failed to parse substring
+    }
+  }
+
+  console.error("Unable to extract valid JSON from model response:", rawText);
+  throw new Error("The AI model returned an invalid JSON response.");
 }
