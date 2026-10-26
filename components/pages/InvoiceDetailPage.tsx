@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { useInvoices } from "@/context/InvoiceContext";
@@ -14,6 +14,7 @@ import {
   InvoiceForm,
   DeleteConfirmModal,
 } from "@/components/invoices";
+import { useDownloadInvoicePdf } from "@/features/invoices";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 interface InvoiceDetailPageProps {
@@ -30,6 +31,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
     useInvoices();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const { downloadPdf, isGenerating } = useDownloadInvoicePdf();
 
   const invoice = invoices.find((inv) => inv.id === id);
 
@@ -95,6 +97,19 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
 
   const ActionButtons = ({ className = "" }: { className?: string }) => (
     <div className={`flex items-center gap-2 ${className}`}>
+      <Button
+        variant="secondary"
+        onClick={() => downloadPdf(invoice)}
+        disabled={isGenerating}
+        aria-label="Download invoice as PDF"
+        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none cursor-pointer flex items-center gap-2 disabled:opacity-60"
+      >
+        {isGenerating
+          ? <Loader2 className="w-4 h-4 animate-spin" />
+          : <Download className="w-4 h-4" />}
+        <span className="hidden sm:inline">{isGenerating ? "Generating…" : "PDF"}</span>
+      </Button>
+
       <Button
         variant="secondary"
         onClick={() => setIsEditing(true)}

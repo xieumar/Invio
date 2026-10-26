@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import {
   useForm,
   useFieldArray,
@@ -14,6 +14,8 @@ import { nanoid } from "nanoid";
 import { InvoiceDatePicker } from "./InvoiceDatePicker";
 import { InvoicePaymentTerms } from "./InvoicePaymentTerms";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
+import { ClientSelect } from "@/features/invoices";
+import { calculateInvoice, toMajorUnits, formatMoney } from "@/lib/money";
 
 interface InvoiceFormProps {
   invoice?: Invoice;
@@ -114,6 +116,69 @@ function AddressFields({ type }: { type: "senderAddress" | "clientAddress" }) {
   );
 }
 
+function TotalsSection() {
+  const { watch, register } = useFormContext<InvoiceFormValues>();
+  const items = watch("items") ?? [];
+  const taxRate = Number(watch("taxRate")) || 0;
+  const discount = Number(watch("discount")) || 0;
+
+  const { subtotal, taxAmount, discountAmount, total } = calculateInvoice(
+    items.map((i) => ({ quantity: Number(i.quantity) || 0, price: Number(i.price) || 0 })),
+    taxRate,
+    discount
+  );
+
+  const rows: Array<{ label: string; value: number; highlight?: boolean }> = [
+    { label: "Subtotal", value: subtotal },
+    ...(taxRate > 0 ? [{ label: `Tax (${taxRate}%)`, value: taxAmount }] : []),
+    ...(discount > 0 ? [{ label: "Discount", value: -discountAmount }] : []),
+    { label: "Total Due", value: total, highlight: true },
+  ];
+
+  return (
+    <div className="mt-10 space-y-6">
+      {/* Tax & Discount inputs */}
+      <div className="grid grid-cols-2 gap-4">
+        <Field label="Tax Rate (%)">
+          <Input
+            inputMode="decimal"
+            placeholder="0"
+            {...register("taxRate", {
+              setValueAs: (v) => (v === "" || v === undefined ? 0 : parseFloat(v) || 0),
+            })}
+          />
+        </Field>
+        <Field label="Discount (£)">
+          <Input
+            inputMode="decimal"
+            placeholder="0.00"
+            {...register("discount", {
+              setValueAs: (v) => (v === "" || v === undefined ? 0 : parseFloat(v) || 0),
+            })}
+          />
+        </Field>
+      </div>
+
+      {/* Totals summary */}
+      <div className="rounded-xl overflow-hidden">
+        <div className="bg-surface-alt px-6 py-4 space-y-3">
+          {rows.map(({ label, value, highlight }) => (
+            <div key={label} className="flex justify-between items-center">
+              <span className={`text-[13px] ${highlight ? "text-text-primary font-bold text-[15px]" : "text-text-secondary"}`}>
+                {label}
+              </span>
+              <span className={`tabular-nums font-bold ${highlight ? "text-text-primary text-[20px]" : "text-text-secondary text-[15px]"}`}>
+                {formatMoney(Math.abs(value))}
+                {value < 0 ? " off" : ""}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ItemList() {
   const {
     control,
@@ -142,7 +207,9 @@ function ItemList() {
           const watched = watchedItems?.[i];
           const qty = Number(watched?.quantity) || 0;
           const price = Number(watched?.price) || 0;
-          const total = (qty * price).toFixed(2);
+          // Minor-unit safe: price is in major units, convert → minor → calc → back to display
+          const { subtotal: rowMinor } = calculateInvoice([{ quantity: qty, price }]);
+          const total = toMajorUnits(rowMinor).toFixed(2);
 
           return (
             <div
@@ -242,6 +309,7 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
   const methods = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: invoice || {
+      clientId: null,
       description: "",
       paymentTerms: 30,
       clientName: "",
@@ -258,8 +326,26 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
     handleSubmit,
     getValues,
     control,
+    setValue,
     formState: { errors },
   } = methods;
+
+  const handleClientSelect = useCallback(
+    (client: Client | null) => {
+      if (client) {
+        setValue("clientId", client.id, { shouldDirty: true });
+        setValue("clientName", client.name, { shouldValidate: true });
+        setValue("clientEmail", client.email, { shouldValidate: true });
+        setValue("clientAddress", client.address, { shouldValidate: true });
+      } else {
+        setValue("clientId", null);
+        setValue("clientName", "");
+        setValue("clientEmail", "");
+        setValue("clientAddress", emptyAddress);
+      }
+    },
+    [setValue]
+  );
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -269,27 +355,34 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
     return () => document.removeEventListener("keydown", onKey);
   }, [onDiscard]);
 
-  const handleSaveDraft = () => {
-    const values = getValues();
-    const formattedData: InvoiceFormData = {
+  function buildPayload(values: InvoiceFormValues): InvoiceFormData {
+    const { subtotal, taxAmount, discountAmount, total } = calculateInvoice(
+      values.items.map((i) => ({ quantity: Number(i.quantity) || 0, price: Number(i.price) || 0 })),
+      Number(values.taxRate) || 0,
+      Number(values.discount) || 0
+    );
+    return {
       ...values,
       items: values.items.map((item) => ({
         ...item,
-        total: (item.quantity || 0) * (item.price || 0),
+        // per-row total stored in minor units
+        total: calculateInvoice([{ quantity: Number(item.quantity) || 0, price: Number(item.price) || 0 }]).total,
       })),
+      subtotal,
+      taxRate: Number(values.taxRate) || 0,
+      taxAmount,
+      discountAmount,
+      total,
     };
-    onSave(formattedData, "draft");
+  }
+
+  const handleSaveDraft = () => {
+    const values = getValues();
+    onSave(buildPayload(values), "draft");
   };
 
   function submit(data: InvoiceFormValues, status: InvoiceStatus) {
-    const formattedData: InvoiceFormData = {
-      ...data,
-      items: data.items.map((item) => ({
-        ...item,
-        total: item.quantity * item.price,
-      })),
-    };
-    onSave(formattedData, status);
+    onSave(buildPayload(data), status);
   }
 
   return (
@@ -331,6 +424,18 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
                 Bill To
               </p>
               <div className="flex flex-col gap-6 mb-6">
+                <Field label="Client">
+                  <Controller
+                    control={control}
+                    name="clientId"
+                    render={({ field }) => (
+                      <ClientSelect
+                        value={field.value}
+                        onChange={handleClientSelect}
+                      />
+                    )}
+                  />
+                </Field>
                 <Field label="Client's Name" error={errors.clientName?.message}>
                   <Input
                     {...register("clientName")}
@@ -394,6 +499,7 @@ export function InvoiceForm({ invoice, onSave, onDiscard }: InvoiceFormProps) {
               </Field>
 
               <ItemList />
+              <TotalsSection />
             </form>
           </FormProvider>
         </div>

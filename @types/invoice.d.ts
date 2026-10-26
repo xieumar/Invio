@@ -44,7 +44,11 @@ interface InvoiceFormData {
   items: InvoiceItem[];
   clientId?: string | null;
   taxRate?: number;
+  taxAmount?: MinorUnitAmount;
+  subtotal?: MinorUnitAmount;
   discount?: number;
+  discountAmount?: MinorUnitAmount;
+  total: number;
   currency?: CurrencyCode;
   notes?: string;
 }
