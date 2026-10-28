@@ -221,6 +221,7 @@ export function InvoicesPage() {
       {showForm && (
         <InvoiceForm
           initialValues={aiDraftValues}
+          aiSuggested={!!aiDraftValues}
           onSave={handleCreate}
           onDiscard={() => {
             setShowForm(false);

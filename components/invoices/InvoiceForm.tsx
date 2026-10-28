@@ -1,7 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
 import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useCallback,
+} from "react";
+import {
+  get,
   useForm,
   useFieldArray,
   FormProvider,
@@ -20,8 +27,42 @@ import { calculateInvoice, toMajorUnits, formatMoney } from "@/lib/money";
 interface InvoiceFormProps {
   invoice?: Invoice;
   initialValues?: Partial<InvoiceFormValues>;
+  /** Highlight prefilled fields as AI suggestions until the user edits them */
+  aiSuggested?: boolean;
   onSave: (data: InvoiceFormData, status: InvoiceStatus) => void;
   onDiscard: () => void;
+}
+
+const AI_FIELD_KEYS = [
+  "clientName",
+  "clientEmail",
+  "description",
+  "paymentTerms",
+  "senderAddress",
+  "clientAddress",
+  "items",
+  "taxRate",
+  "discount",
+];
+
+interface AiHighlightState {
+  enabled: boolean;
+  dirtyFields: unknown;
+}
+
+const AiHighlightContext = createContext<AiHighlightState>({
+  enabled: false,
+  dirtyFields: {},
+});
+
+/** True while a field is AI-suggested and the user hasn't edited it yet */
+function useIsAiSuggested(name?: string): boolean {
+  const { enabled, dirtyFields } = useContext(AiHighlightContext);
+  if (!enabled || !name) return false;
+  const isAiField = AI_FIELD_KEYS.some(
+    (key) => name === key || name.startsWith(`${key}.`)
+  );
+  return isAiField && !get(dirtyFields, name);
 }
 
 const emptyAddress = { street: "", city: "", postCode: "", country: "" };
@@ -37,12 +78,16 @@ function Field({
   error,
   children,
   className = "",
+  aiName,
 }: {
   label: string;
   error?: string;
   children: React.ReactNode;
   className?: string;
+  /** Field name to badge as AI-suggested (for non-Input controls) */
+  aiName?: string;
 }) {
+  const aiSuggested = useIsAiSuggested(aiName);
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       <div className="flex justify-between items-center">
@@ -52,6 +97,11 @@ function Field({
           }`}
         >
           {label}
+          {aiSuggested && (
+            <span className="ml-2 text-[10px] font-bold uppercase tracking-wide text-purple">
+              AI suggested
+            </span>
+          )}
         </label>
         {error && (
           <span className="text-[10px] text-red italic" role="alert">
@@ -68,13 +118,16 @@ function Input({
   error,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & { error?: boolean }) {
+  const aiSuggested = useIsAiSuggested(props.name);
   return (
     <input
       className={`w-full rounded px-5 py-4 text-[15px] font-bold text-text-primary outline-none transition-colors border
         bg-(--input-bg) border-(--input-border)
         hover:border-purple focus:border-purple h-14
+        ${aiSuggested ? "border-purple/60! bg-purple/5! ring-2 ring-purple/15" : ""}
         ${error ? "border-red!" : ""}
       `}
+      data-ai-suggested={aiSuggested || undefined}
       {...props}
     />
   );
@@ -312,6 +365,7 @@ function ItemList() {
 export function InvoiceForm({
   invoice,
   initialValues,
+  aiSuggested = false,
   onSave,
   onDiscard,
 }: InvoiceFormProps) {
@@ -344,7 +398,7 @@ export function InvoiceForm({
     getValues,
     control,
     setValue,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = methods;
 
   const handleClientSelect = useCallback(
@@ -437,6 +491,20 @@ export function InvoiceForm({
             )}
           </h2>
 
+          {aiSuggested && !isEdit && (
+            <p
+              role="status"
+              className="mb-8 -mt-6 rounded-lg border border-purple/30 bg-purple/5 px-4 py-3 text-[13px] text-text-secondary"
+            >
+              <span className="font-bold text-purple">AI draft.</span> Suggested
+              fields are highlighted. Review and edit them, then save. Nothing is
+              saved until you click Save.
+            </p>
+          )}
+
+          <AiHighlightContext.Provider
+            value={{ enabled: aiSuggested && !isEdit, dirtyFields }}
+          >
           <FormProvider {...methods}>
             <form noValidate>
               <p className="text-[15px] font-bold text-purple mb-6">
@@ -496,7 +564,7 @@ export function InvoiceForm({
                   />
                 </Field>
 
-                <Field label="Payment Terms">
+                <Field label="Payment Terms" aiName="paymentTerms">
                   <Controller
                     control={control}
                     name="paymentTerms"
@@ -526,6 +594,7 @@ export function InvoiceForm({
               <TotalsSection />
             </form>
           </FormProvider>
+          </AiHighlightContext.Provider>
         </div>
 
         <div

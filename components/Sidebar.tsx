@@ -8,9 +8,6 @@ import {
   LayoutDashboard,
   FileText,
   Users,
-  ArrowLeftRight,
-  BarChart3,
-  Settings,
   Moon,
   Sun,
   ChevronLeft,
@@ -41,9 +38,7 @@ const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Invoices", href: "/invoices", icon: FileText },
   { label: "Clients", href: "/clients", icon: Users },
-  { label: "Transactions", href: "/transactions", icon: ArrowLeftRight },
-  { label: "Insights", href: "/insights", icon: BarChart3 },
-  { label: "Settings", href: "/settings", icon: Settings },
+  // Hidden until built: Transactions (PR-11), Insights (PR-16), Settings (PR-17)
 ];
 
 export default function Sidebar() {

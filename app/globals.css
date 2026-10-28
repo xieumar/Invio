@@ -8,6 +8,16 @@
 @theme inline {
   --font-sans: "League Spartan", var(--font-sans);
 
+  --animate-loading-bar: loading-bar 1.2s ease-in-out infinite;
+  @keyframes loading-bar {
+    0% {
+      left: -50%;
+    }
+    100% {
+      left: 100%;
+    }
+  }
+
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-alt: var(--surface-alt);

@@ -1,4 +1,10 @@
-import { aiInvoiceDraftSchema, type AiInvoiceDraft } from "@/lib/validations/ai";
+import {
+  aiInvoiceDraftSchema,
+  aiReminderResponseSchema,
+  type AiInvoiceDraft,
+  type AiReminderRequest,
+  type AiReminderResponse,
+} from "@/lib/validations/ai";
 
 const OPENROUTER_ENDPOINT = "https://openrouter.ai/api/v1/chat/completions";
 const DEFAULT_MODEL = "openrouter/free";
@@ -159,3 +165,96 @@ function extractJsonFromText(rawText: string): unknown {
   console.error("Unable to extract valid JSON from model response:", rawText);
   throw new Error("The AI model returned an invalid JSON response.");
 }
+
+/**
+ * Generate a contextual payment reminder email based on invoice data and chosen tone
+ */
+export async function generatePaymentReminder(
+  params: AiReminderRequest
+): Promise<AiReminderResponse> {
+  const apiKey = process.env.OPENROUTER_API_KEY;
+  if (!apiKey) {
+    throw new Error("OPENROUTER_API_KEY is not configured on the server.");
+  }
+
+  const model = process.env.OPENROUTER_MODEL || DEFAULT_MODEL;
+
+  const toneGuidance = {
+    friendly:
+      "Warm, polite, and understanding. A gentle check-in regarding the invoice payment.",
+    firm: "Professional, direct, and clear. Explicitly reference invoice ID, amount, and request prompt remittance.",
+    urgent:
+      "Assertive and urgent. Highlight overdue account status, request immediate payment to prevent interruption of service or late fees.",
+  }[params.tone] || "Professional and polite.";
+
+  const prompt = `Draft a payment reminder email for invoice #${params.invoiceId}.
+Client Name: ${params.clientName}
+Client Email: ${params.clientEmail || "Not specified"}
+Service/Project: ${params.description}
+Total Amount: ${params.total}
+Due Date: ${params.paymentDue}
+Invoice Status: ${params.status}
+${
+  params.daysOverdue > 0
+    ? `Days Overdue: ${params.daysOverdue} (the payment is past due; mention how long)`
+    : "Days Overdue: 0 (the payment is NOT overdue; do not state or imply that it is)"
+}
+Requested Tone: ${params.tone} (${toneGuidance})
+
+Return ONLY a JSON object:
+{
+  "subject": "Clear email subject line referencing invoice #${params.invoiceId}",
+  "body": "Complete professional email body with greeting, invoice details, clear call to action, and sign-off."
+}`;
+
+  const response = await fetch(OPENROUTER_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+      "HTTP-Referer": process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+      "X-Title": "Invio Payment Reminder",
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        {
+          role: "system",
+          content:
+            "You are a professional business finance assistant. Write concise, effective invoice payment reminder emails. Output ONLY valid JSON matching the schema.",
+        },
+        { role: "user", content: prompt },
+      ],
+      response_format: { type: "json_object" },
+      temperature: 0.3,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.text();
+    let errorDetail = response.statusText;
+    try {
+      const errJson = JSON.parse(errorBody);
+      errorDetail = errJson?.error?.message || response.statusText;
+    } catch {
+      errorDetail = errorBody || response.statusText;
+    }
+    throw new Error(`OpenRouter request failed (${response.status}): ${errorDetail}`);
+  }
+
+  const json = await response.json();
+  const rawContent = json?.choices?.[0]?.message?.content;
+  if (!rawContent) {
+    throw new Error("No response received from OpenRouter.");
+  }
+
+  const parsed = extractJsonFromText(rawContent);
+  const validated = aiReminderResponseSchema.safeParse(parsed);
+  if (!validated.success) {
+    console.error("Zod validation failed for reminder:", validated.error.format());
+    throw new Error("AI returned an invalid payment reminder structure.");
+  }
+
+  return validated.data;
+}
+
