@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
+import { nanoid } from "nanoid";
 import { Button } from "@/components/ui/button";
 import { useInvoices } from "@/context/InvoiceContext";
 import {
@@ -15,6 +16,9 @@ import {
   SortDropdown,
   type SortKey,
 } from "@/features/invoices";
+import { AiAssistantDrawer } from "@/features/ai";
+import { type InvoiceFormValues } from "@/lib/validations";
+import { type AiInvoiceDraft } from "@/lib/validations/ai";
 import { toast } from "sonner";
 
 const defaultFilter: FilterState = {
@@ -43,6 +47,11 @@ export function InvoicesPage() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState<SortKey>("date-desc");
 
+  const [showAiDrawer, setShowAiDrawer] = useState(false);
+  const [aiDraftValues, setAiDraftValues] = useState<
+    Partial<InvoiceFormValues> | undefined
+  >(undefined);
+
   const anyActive = filter.draft || filter.pending || filter.paid;
 
   const filtered = useMemo(() => {
@@ -66,6 +75,30 @@ export function InvoicesPage() {
     await createInvoice(data, status);
     toast.success("New invoice created!");
     setShowForm(false);
+    setAiDraftValues(undefined);
+  }
+
+  function handleDraftGenerated(draft: AiInvoiceDraft) {
+    setAiDraftValues({
+      clientName: draft.clientName,
+      clientEmail: draft.clientEmail,
+      description: draft.description,
+      paymentTerms: draft.paymentTerms,
+      createdAt: new Date().toISOString().split("T")[0],
+      senderAddress: draft.senderAddress,
+      clientAddress: draft.clientAddress,
+      taxRate: draft.taxRate ?? 0,
+      discount: draft.discount ?? 0,
+      items: draft.items.map((item) => ({
+        id: nanoid(),
+        name: item.name,
+        quantity: item.quantity,
+        price: item.price,
+        total: item.quantity * item.price,
+      })),
+    });
+    setShowForm(true);
+    toast.info("Invoice populated with AI draft! Review and save.");
   }
 
   return (
@@ -90,11 +123,29 @@ export function InvoicesPage() {
                     : `${filtered.length} invoices`}
             </p>
           </div>
-          <div className="flex items-center gap-4 sm:gap-10">
+          <div className="flex items-center gap-3 sm:gap-6">
             <FilterDropdown filter={filter} onChange={setFilter} />
 
             <Button
-              onClick={() => setShowForm(true)}
+              type="button"
+              variant="secondary"
+              onClick={() => setShowAiDrawer(true)}
+              className="
+                h-12 px-4 rounded-3xl text-[14px] font-bold
+                bg-purple/10 text-purple hover:bg-purple/20
+                dark:bg-purple/20 dark:hover:bg-purple/30
+                transition-all border-none flex items-center gap-2 cursor-pointer shadow-sm
+              "
+            >
+              <Sparkles className="w-4 h-4 text-purple" />
+              <span className="hidden sm:inline">AI Assistant</span>
+            </Button>
+
+            <Button
+              onClick={() => {
+                setAiDraftValues(undefined);
+                setShowForm(true);
+              }}
               aria-label="Create new invoice"
               className="
                 relative flex items-center gap-4
@@ -169,10 +220,21 @@ export function InvoicesPage() {
 
       {showForm && (
         <InvoiceForm
+          initialValues={aiDraftValues}
+          aiSuggested={!!aiDraftValues}
           onSave={handleCreate}
-          onDiscard={() => setShowForm(false)}
+          onDiscard={() => {
+            setShowForm(false);
+            setAiDraftValues(undefined);
+          }}
         />
       )}
+
+      <AiAssistantDrawer
+        open={showAiDrawer}
+        onOpenChange={setShowAiDrawer}
+        onDraftGenerated={handleDraftGenerated}
+      />
     </>
   );
 }

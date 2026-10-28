@@ -114,7 +114,7 @@ export function MetricCard({
               {value}
             </span>
 
-            <div className="flex items-center gap-2 flex-wrap pt-0.5 min-w-0">
+            <div className="flex flex-col items-start gap-1.5 pt-0.5 min-w-0 max-w-full">
               {badgeText && (
                 <span
                   className={cn(

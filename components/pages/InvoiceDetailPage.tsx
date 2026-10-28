@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, Download, Loader2 } from "lucide-react";
+import { ChevronLeft, Download, Loader2, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 
 import { useInvoices } from "@/context/InvoiceContext";
@@ -15,6 +15,7 @@ import {
   DeleteConfirmModal,
 } from "@/components/invoices";
 import { useDownloadInvoicePdf } from "@/features/invoices";
+import { PaymentReminderModal } from "@/features/ai";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 interface InvoiceDetailPageProps {
@@ -31,6 +32,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
     useInvoices();
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isReminderOpen, setIsReminderOpen] = useState(false);
   const { downloadPdf, isGenerating } = useDownloadInvoicePdf();
 
   const invoice = invoices.find((inv) => inv.id === id);
@@ -96,13 +98,13 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
   };
 
   const ActionButtons = ({ className = "" }: { className?: string }) => (
-    <div className={`flex items-center gap-2 ${className}`}>
+    <div className={`flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 ${className}`}>
       <Button
         variant="secondary"
         onClick={() => downloadPdf(invoice)}
         disabled={isGenerating}
         aria-label="Download invoice as PDF"
-        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none cursor-pointer flex items-center gap-2 disabled:opacity-60"
+        className="px-3 sm:px-5 pt-1 h-12 rounded-3xl text-[14px] sm:text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none cursor-pointer flex items-center gap-2 disabled:opacity-60"
       >
         {isGenerating
           ? <Loader2 className="w-4 h-4 animate-spin" />
@@ -113,7 +115,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
       <Button
         variant="secondary"
         onClick={() => setIsEditing(true)}
-        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none cursor-pointer"
+        className="px-3 sm:px-5 pt-1 h-12 rounded-3xl text-[14px] sm:text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none cursor-pointer"
       >
         Edit
       </Button>
@@ -121,15 +123,27 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
       <Button
         variant="destructive"
         onClick={() => setIsDeleteDialogOpen(true)}
-        className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold dark:bg-red bg-red dark:hover:bg-red-hover hover:bg-red-hover text-white transition-colors border-none cursor-pointer"
+        className="px-3 sm:px-5 pt-1 h-12 rounded-3xl text-[14px] sm:text-[15px] font-bold dark:bg-red bg-red dark:hover:bg-red-hover hover:bg-red-hover text-white transition-colors border-none cursor-pointer"
       >
         Delete
       </Button>
 
       {invoice.status !== "paid" && (
         <Button
+          variant="secondary"
+          onClick={() => setIsReminderOpen(true)}
+          title="Draft payment reminder"
+          className="px-3 sm:px-5 pt-1 h-12 rounded-3xl text-[14px] sm:text-[15px] font-bold bg-purple/10 text-purple hover:bg-purple/20 transition-colors border-none cursor-pointer flex items-center gap-2"
+        >
+          <Sparkles className="w-4 h-4 text-purple" />
+          <span className="sr-only">Draft payment reminder</span>
+        </Button>
+      )}
+
+      {invoice.status !== "paid" && (
+        <Button
           onClick={handleMarkAsPaid}
-          className="px-6 pt-1 h-12 rounded-3xl text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none cursor-pointer"
+          className="px-3 sm:px-5 pt-1 h-12 rounded-3xl text-[14px] sm:text-[15px] font-bold bg-purple hover:bg-purple-light text-white transition-colors border-none cursor-pointer"
         >
           Mark as Paid
         </Button>
@@ -273,7 +287,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full bg-surface p-6 flex justify-center sm:hidden shadow-[0_-10px_20px_rgba(72,84,159,0.05)] z-10">
+      <div className="fixed bottom-0 left-0 w-full bg-surface px-4 py-5 flex justify-center sm:hidden shadow-[0_-10px_20px_rgba(72,84,159,0.05)] z-10">
         <ActionButtons />
       </div>
 
@@ -290,6 +304,12 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
         isOpen={isDeleteDialogOpen}
         onClose={() => setIsDeleteDialogOpen(false)}
         onConfirm={handleDeleteConfirm}
+      />
+
+      <PaymentReminderModal
+        invoice={invoice}
+        open={isReminderOpen}
+        onClose={() => setIsReminderOpen(false)}
       />
     </>
   );
