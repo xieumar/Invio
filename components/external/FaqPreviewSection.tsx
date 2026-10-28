@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ArrowRight } from "lucide-react";
+import { Collapse, FadeIn, Stagger, StaggerItem } from "@/components/motion";
 
 const FAQ_ITEMS = [
   {
@@ -32,20 +33,20 @@ export function FaqPreviewSection() {
 
   return (
     <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
-      <div className="text-center mb-12">
+      <FadeIn className="text-center mb-12" distance={32}>
         <span className="text-purple text-xs font-bold uppercase tracking-wider">
           Got Questions?
         </span>
         <h2 className="text-3xl sm:text-4xl font-extrabold text-text-primary mt-2">
           Frequently Asked Questions
         </h2>
-      </div>
+      </FadeIn>
 
-      <div className="flex flex-col gap-4">
+      <Stagger className="flex flex-col gap-4" stagger={0.1}>
         {FAQ_ITEMS.map((faq, i) => (
+          <StaggerItem key={i} distance={28}>
           <div
-            key={i}
-            className="bg-surface rounded-2xl border border-border p-6 shadow-xs transition-colors"
+            className="bg-surface rounded-2xl border border-border p-6 shadow-xs transition-colors hover:border-purple/40"
           >
             <button
               type="button"
@@ -59,14 +60,15 @@ export function FaqPreviewSection() {
                 }`}
               />
             </button>
-            {openIndex === i && (
-              <p className="mt-3 text-sm text-text-secondary leading-relaxed animate-in fade-in duration-150">
+            <Collapse open={openIndex === i}>
+              <p className="mt-3 text-sm text-text-secondary leading-relaxed">
                 {faq.a}
               </p>
-            )}
+            </Collapse>
           </div>
+          </StaggerItem>
         ))}
-      </div>
+      </Stagger>
 
       <div className="mt-8 text-center">
         <Link

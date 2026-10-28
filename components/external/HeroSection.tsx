@@ -2,15 +2,26 @@ import Image from "next/image";
 import NextLink from "next/link";
 import { ArrowRight, ArrowUpRight, CheckCircle2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  FadeIn,
+  Float,
+  ScrollFade,
+  ScrollTilt,
+  Stagger,
+  StaggerItem,
+} from "@/components/motion";
 
 export function HeroSection() {
   return (
-    <section className="relative pt-8 sm:pt-16 pb-12 sm:pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full text-center">
+    <section className="relative isolate pt-8 sm:pt-16 pb-12 sm:pb-20 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full text-center">
       {/* Subtle Background Glow */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[380px] bg-purple/15 blur-[130px] rounded-full pointer-events-none -z-10" />
 
+      <ScrollFade>
+      <Stagger immediate stagger={0.12}>
       {/* Badge with App Logo */}
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple/10 border border-purple/20 text-purple text-xs sm:text-sm font-bold tracking-wide uppercase mb-6 animate-in fade-in duration-300">
+      <StaggerItem>
+      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple/10 border border-purple/20 text-purple text-xs sm:text-sm font-bold tracking-wide uppercase mb-6">
         <Image
           src="/logo.svg"
           alt="Invio"
@@ -20,21 +31,27 @@ export function HeroSection() {
         />
         <span>Next-Generation Invoicing & Finance</span>
       </div>
+      </StaggerItem>
 
       {/* Headline */}
+      <StaggerItem>
       <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-text-primary max-w-4xl mx-auto leading-[1.08]">
         Automate your billing. <br className="hidden sm:inline" />
         <span className="text-purple">Get paid faster</span> with AI.
       </h1>
+      </StaggerItem>
 
       {/* Description */}
+      <StaggerItem>
       <p className="mt-6 text-base sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
         The smart invoicing and small-business finance workspace. Create
         professional invoices in seconds, reconcile bank CSVs effortlessly, and
         let AI streamline your cash flow.
       </p>
+      </StaggerItem>
 
       {/* CTAs */}
+      <StaggerItem>
       <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
         <Button
           asChild
@@ -63,8 +80,10 @@ export function HeroSection() {
           </NextLink>
         </Button>
       </div>
+      </StaggerItem>
 
       {/* Proof Micro-badges */}
+      <StaggerItem>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-text-secondary font-medium">
         <span className="flex items-center gap-1.5">
           <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
@@ -79,9 +98,61 @@ export function HeroSection() {
           Set up in 60 seconds
         </span>
       </div>
+      </StaggerItem>
+      </Stagger>
+      </ScrollFade>
 
       {/* Interactive Dashboard Preview Frame */}
-      <div className="mt-12 sm:mt-16 relative mx-auto max-w-5xl rounded-2xl sm:rounded-3xl border border-border/80 bg-surface/90 shadow-2xl overflow-hidden backdrop-blur-sm text-left">
+      <FadeIn
+        immediate
+        delay={0.6}
+        distance={48}
+        duration={0.9}
+        className="relative mx-auto mt-12 sm:mt-16 max-w-5xl"
+      >
+      {/* Floating accent chips */}
+      <Float
+        className="hidden lg:block absolute -left-10 top-24 z-10"
+        amplitude={10}
+        duration={6}
+      >
+        <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3 shadow-xl text-left">
+          <span className="w-8 h-8 rounded-full bg-paid-text/15 flex items-center justify-center">
+            <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
+          </span>
+          <span className="flex flex-col">
+            <span className="text-xs font-bold text-text-primary">
+              Payment received
+            </span>
+            <span className="text-[11px] text-text-secondary">
+              £1,800.90 · Acme Global
+            </span>
+          </span>
+        </div>
+      </Float>
+      <Float
+        className="hidden lg:block absolute -right-8 bottom-28 z-10"
+        amplitude={8}
+        duration={5}
+        delay={1.2}
+      >
+        <div className="flex items-center gap-2.5 rounded-2xl border border-purple/25 bg-surface px-4 py-3 shadow-xl text-left">
+          <span className="w-8 h-8 rounded-full bg-purple/15 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-purple" />
+          </span>
+          <span className="flex flex-col">
+            <span className="text-xs font-bold text-text-primary">
+              AI reminder drafted
+            </span>
+            <span className="text-[11px] text-text-secondary">
+              Ready for 1-click approval
+            </span>
+          </span>
+        </div>
+      </Float>
+
+      <ScrollTilt>
+      <div className="relative rounded-2xl sm:rounded-3xl border border-border/80 bg-surface/90 shadow-2xl overflow-hidden backdrop-blur-sm text-left">
         {/* Window Title Bar */}
         <div className="bg-surface-alt border-b border-border px-4 sm:px-6 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -249,33 +320,10 @@ export function HeroSection() {
           </div>
         </div>
       </div>
+      </ScrollTilt>
+      </FadeIn>
 
-      {/* Partner Strip (Inspired by Inspo 1 & 3) */}
-      <div className="mt-16 sm:mt-20 flex flex-col items-center gap-6">
-        <span className="text-xs font-extrabold uppercase tracking-widest text-text-secondary">
-          Trusted by fast-moving freelancers & studios worldwide
-        </span>
-        <div className="flex flex-wrap items-center justify-center gap-8 sm:gap-14 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
-          <span className="text-base sm:text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple" /> Quikly
-          </span>
-          <span className="text-base sm:text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-paid-text" /> Staly
-          </span>
-          <span className="text-base sm:text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-pending-text" /> Frame
-          </span>
-          <span className="text-base sm:text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-light" /> Graby
-          </span>
-          <span className="text-base sm:text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#4285f4]" /> DataSoft
-          </span>
-          <span className="text-base sm:text-lg font-extrabold tracking-tight text-text-primary flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#33d69f]" /> Brighty
-          </span>
-        </div>
-      </div>
+    
     </section>
   );
 }

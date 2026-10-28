@@ -13,6 +13,7 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FadeIn } from "@/components/motion";
 
 export function FeatureDetailSection() {
   return (
@@ -26,7 +27,7 @@ export function FeatureDetailSection() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Narrative */}
-          <div className="lg:col-span-5 flex flex-col gap-5 text-left">
+          <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-purple/10 flex items-center justify-center p-1.5 shrink-0">
                 <Image
@@ -88,10 +89,10 @@ export function FeatureDetailSection() {
                 <Link href="/invoices">Try Live Invoice Editor</Link>
               </Button>
             </div>
-          </div>
+          </FadeIn>
 
           {/* Right Visual Mockup */}
-          <div className="lg:col-span-7">
+          <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-7">
             <div className="bg-surface rounded-3xl p-6 sm:p-8 border border-border shadow-card flex flex-col gap-5">
               {/* Mockup Header */}
               <div className="flex items-center justify-between pb-4 border-b border-border/60">
@@ -177,7 +178,7 @@ export function FeatureDetailSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -193,7 +194,7 @@ export function FeatureDetailSection() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
             {/* Left Visual AI Chat Mockup */}
-            <div className="lg:col-span-7 order-2 lg:order-1">
+            <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-7 order-2 lg:order-1">
               <div className="bg-[#1e2139] rounded-3xl p-6 sm:p-8 border border-[#252945] shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex flex-col gap-5">
                 {/* AI Input Prompt Bubble */}
                 <div className="bg-[#252945] rounded-2xl p-4 border border-white/5 flex flex-col gap-2">
@@ -264,10 +265,10 @@ export function FeatureDetailSection() {
                   </span>
                 </div>
               </div>
-            </div>
+            </FadeIn>
 
             {/* Right Narrative */}
-            <div className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2">
+            <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2">
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-purple/20 flex items-center justify-center p-1.5 shrink-0">
                   <Image
@@ -318,7 +319,7 @@ export function FeatureDetailSection() {
                   </span>
                 </li>
               </ul>
-            </div>
+            </FadeIn>
           </div>
         </div>
       </section>
@@ -332,7 +333,7 @@ export function FeatureDetailSection() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Narrative */}
-          <div className="lg:col-span-5 flex flex-col gap-5 text-left">
+          <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-purple/10 flex items-center justify-center p-1.5 shrink-0">
                 <Image
@@ -382,10 +383,10 @@ export function FeatureDetailSection() {
                 </span>
               </li>
             </ul>
-          </div>
+          </FadeIn>
 
           {/* Right Visual Client Directory Card */}
-          <div className="lg:col-span-7">
+          <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-7">
             <div className="bg-surface rounded-3xl p-6 sm:p-8 border border-border shadow-card flex flex-col gap-5">
               {/* Client Profile Card */}
               <div className="flex items-center justify-between pb-4 border-b border-border/60">
@@ -474,7 +475,7 @@ export function FeatureDetailSection() {
                 </div>
               </div>
             </div>
-          </div>
+          </FadeIn>
         </div>
       </section>
 
@@ -487,7 +488,7 @@ export function FeatureDetailSection() {
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Visual CSV Upload & Reconciliation */}
-          <div className="lg:col-span-7 order-2 lg:order-1">
+          <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-7 order-2 lg:order-1">
             <div className="bg-surface rounded-3xl p-6 sm:p-8 border border-border shadow-card flex flex-col gap-5">
               {/* Dropzone Simulation */}
               <div className="border-2 border-dashed border-purple/40 bg-purple/5 rounded-2xl p-6 text-center flex flex-col items-center gap-2">
@@ -563,10 +564,10 @@ export function FeatureDetailSection() {
                 </span>
               </div>
             </div>
-          </div>
+          </FadeIn>
 
           {/* Right Narrative */}
-          <div className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2">
+          <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-purple/10 flex items-center justify-center p-1.5 shrink-0">
                 <Image
@@ -620,7 +621,7 @@ export function FeatureDetailSection() {
                 </span>
               </li>
             </ul>
-          </div>
+          </FadeIn>
         </div>
       </section>
     </div>

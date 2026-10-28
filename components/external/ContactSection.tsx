@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Mail, Building, ShieldCheck, Send, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 import {
   Select,
   SelectContent,
@@ -36,23 +37,34 @@ export function ContactSection() {
   return (
     <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full pt-8 sm:pt-14 pb-12">
       {/* Header */}
-      <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
+      <Stagger
+        immediate
+        stagger={0.12}
+        className="text-center max-w-2xl mx-auto mb-14 sm:mb-16"
+      >
+        <StaggerItem>
         <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
           Get in Touch
         </span>
+        </StaggerItem>
+        <StaggerItem>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-text-primary tracking-tight mt-4">
           We&apos;re here to <span className="text-purple">help</span>
         </h1>
+        </StaggerItem>
+        <StaggerItem>
         <p className="text-text-secondary mt-3.5 text-base sm:text-lg leading-relaxed">
           Have a question about billing, custom studio deployments, or feature
           requests? Send us a message and our engineering team will get back to
           you promptly.
         </p>
-      </div>
+        </StaggerItem>
+      </Stagger>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
         {/* Left Column: Direct Channels & SLA */}
-        <div className="lg:col-span-5 flex flex-col gap-6">
+        <Stagger className="lg:col-span-5 flex flex-col gap-6" stagger={0.18}>
+          <StaggerItem direction="right" distance={60}>
           <div className="bg-surface rounded-3xl p-7 sm:p-8 border border-border shadow-card flex flex-col gap-6">
             <h3 className="text-xl font-extrabold text-text-primary">
               Contact Channels
@@ -101,7 +113,10 @@ export function ContactSection() {
             </div>
           </div>
 
+          </StaggerItem>
+
           {/* Quick Security Assurance Card */}
+          <StaggerItem direction="right" distance={60}>
           <div className="bg-surface rounded-2xl p-6 border border-border flex items-center gap-4 text-xs text-text-secondary shadow-xs">
             <ShieldCheck className="w-6 h-6 text-paid-text shrink-0" />
             <p>
@@ -109,10 +124,11 @@ export function ContactSection() {
               We never share customer communications with third parties.
             </p>
           </div>
-        </div>
+          </StaggerItem>
+        </Stagger>
 
         {/* Right Column: Interactive Form */}
-        <div className="lg:col-span-7">
+        <FadeIn className="lg:col-span-7" direction="left" distance={70} duration={0.9}>
           <div className="bg-surface rounded-3xl p-7 sm:p-10 border border-border shadow-card">
             {isSubmitted ? (
               <div className="py-12 flex flex-col items-center text-center gap-4 animate-in fade-in zoom-in-95 duration-200">
@@ -144,12 +160,16 @@ export function ContactSection() {
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <form onSubmit={handleSubmit}>
+              <Stagger className="flex flex-col gap-5" stagger={0.1} delay={0.3}>
+                <StaggerItem>
                 <h3 className="text-xl font-extrabold text-text-primary mb-1">
                   Send Us a Direct Message
                 </h3>
+                </StaggerItem>
 
                 {/* Name & Email Fields */}
+                <StaggerItem>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5 text-left">
                     <label
@@ -192,7 +212,10 @@ export function ContactSection() {
                   </div>
                 </div>
 
+                </StaggerItem>
+
                 {/* Topic Selector */}
+                <StaggerItem>
                 <div className="flex flex-col gap-1.5 text-left">
                   <label
                     htmlFor="contact-topic"
@@ -241,7 +264,10 @@ export function ContactSection() {
                   </Select>
                 </div>
 
+                </StaggerItem>
+
                 {/* Message Textarea */}
+                <StaggerItem>
                 <div className="flex flex-col gap-1.5 text-left">
                   <label
                     htmlFor="contact-message"
@@ -262,7 +288,10 @@ export function ContactSection() {
                   />
                 </div>
 
+                </StaggerItem>
+
                 {/* Submit Button */}
+                <StaggerItem>
                 <Button
                   type="submit"
                   disabled={isSubmitting}
@@ -277,10 +306,12 @@ export function ContactSection() {
                     </>
                   )}
                 </Button>
+                </StaggerItem>
+              </Stagger>
               </form>
             )}
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );

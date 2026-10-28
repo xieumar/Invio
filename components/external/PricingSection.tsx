@@ -9,7 +9,9 @@ import {
   HelpCircle,
   ShieldCheck,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 
 const COMPARISON_FEATURES = [
   {
@@ -144,19 +146,27 @@ export function PricingSection() {
     <div className="w-full flex flex-col gap-20 sm:gap-28">
       {/* Header with Monthly/Annual Toggle */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full text-center pt-8 sm:pt-14">
+        <Stagger immediate stagger={0.12}>
+        <StaggerItem>
         <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
           Transparent Pricing
         </span>
+        </StaggerItem>
+        <StaggerItem>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-text-primary tracking-tight mt-4">
           Invest in clarity. <br />
           <span className="text-purple">Get paid faster</span> every month.
         </h1>
+        </StaggerItem>
+        <StaggerItem>
         <p className="text-text-secondary mt-4 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
           Start for free. Scale when you need unlimited AI invoice drafting,
           bank CSV reconciliation, and team seats.
         </p>
+        </StaggerItem>
 
         {/* Billing Cycle Toggle */}
+        <StaggerItem>
         <div className="mt-10 inline-flex items-center gap-3 bg-surface p-1.5 rounded-full border border-border shadow-xs">
           <button
             type="button"
@@ -184,11 +194,19 @@ export function PricingSection() {
             </span>
           </button>
         </div>
+        </StaggerItem>
+        </Stagger>
 
         {/* 3 Main Pricing Tier Cards */}
-        <div className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch text-left">
+        <Stagger
+          className="mt-14 grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch text-left"
+          stagger={0.2}
+          delay={0.35}
+          immediate
+        >
           {/* STARTER TIER */}
-          <div className="bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-card hover:border-purple/40 transition-all">
+          <StaggerItem className="h-full" distance={60} hoverLift>
+          <div className="h-full bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-card hover:border-purple/40 transition-all">
             <div>
               <span className="text-xs font-extrabold uppercase text-text-secondary tracking-wider">
                 Starter
@@ -237,8 +255,11 @@ export function PricingSection() {
             </Button>
           </div>
 
+          </StaggerItem>
+
           {/* PROFESSIONAL TIER (Featured) */}
-          <div className="bg-surface rounded-3xl p-8 border-2 border-purple relative flex flex-col justify-between shadow-xl">
+          <StaggerItem className="h-full" distance={40} scale={0.86} hoverLift>
+          <div className="h-full bg-surface rounded-3xl p-8 border-2 border-purple relative flex flex-col justify-between shadow-xl">
             <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-purple text-white text-[11px] font-extrabold px-3.5 py-1 rounded-full uppercase tracking-wider">
               Most Popular
             </span>
@@ -247,9 +268,15 @@ export function PricingSection() {
                 Professional
               </span>
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="text-4xl sm:text-5xl font-black text-text-primary">
+                <motion.span
+                  key={String(annual)}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-4xl sm:text-5xl font-black text-text-primary"
+                >
                   {annual ? "£11" : "£14"}
-                </span>
+                </motion.span>
                 <span className="text-sm text-text-secondary font-medium">
                   /month
                 </span>
@@ -302,16 +329,25 @@ export function PricingSection() {
             </Button>
           </div>
 
+          </StaggerItem>
+
           {/* STUDIO & AGENCY TIER */}
-          <div className="bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-card hover:border-purple/40 transition-all">
+          <StaggerItem className="h-full" distance={60} hoverLift>
+          <div className="h-full bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-card hover:border-purple/40 transition-all">
             <div>
               <span className="text-xs font-extrabold uppercase text-text-secondary tracking-wider">
                 Studio & Agency
               </span>
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="text-4xl sm:text-5xl font-black text-text-primary">
+                <motion.span
+                  key={String(annual)}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-4xl sm:text-5xl font-black text-text-primary"
+                >
                   {annual ? "£31" : "£39"}
-                </span>
+                </motion.span>
                 <span className="text-sm text-text-secondary font-medium">
                   /month
                 </span>
@@ -360,21 +396,22 @@ export function PricingSection() {
               <Link href="/contact">Contact Studio Sales</Link>
             </Button>
           </div>
-        </div>
+          </StaggerItem>
+        </Stagger>
       </section>
 
       {/* ========================================================================= */}
       {/* FEATURE COMPARISON MATRIX TABLE                                           */}
       {/* ========================================================================= */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
-        <div className="text-center max-w-2xl mx-auto mb-12">
+        <FadeIn className="text-center max-w-2xl mx-auto mb-12" distance={40}>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight">
             Compare all plan capabilities
           </h2>
           <p className="text-text-secondary mt-3 text-base">
             Every plan includes our integer math engine and responsive web app.
           </p>
-        </div>
+        </FadeIn>
 
         <div className="bg-surface rounded-3xl border border-border shadow-card overflow-hidden">
           {/* Table Header */}
@@ -399,8 +436,8 @@ export function PricingSection() {
               </div>
 
               {cat.features.map((feat, featIdx) => (
+                <FadeIn key={feat.name} direction="right" distance={24} duration={0.5}>
                 <div
-                  key={feat.name}
                   className="grid grid-cols-12 items-center p-4 sm:p-5 text-xs sm:text-sm text-text-primary hover:bg-surface-alt/30 transition-colors"
                 >
                   <span className="col-span-6 sm:col-span-5 font-semibold text-text-primary">
@@ -452,6 +489,7 @@ export function PricingSection() {
                     )}
                   </div>
                 </div>
+                </FadeIn>
               ))}
             </div>
           ))}
@@ -459,7 +497,7 @@ export function PricingSection() {
       </section>
 
       {/* Guarantee & Security Strip */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
+      <FadeIn className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full" distance={40}>
         <div className="bg-surface rounded-2xl p-6 sm:p-8 border border-border shadow-xs flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
           <div className="w-14 h-14 rounded-2xl bg-paid-text/15 text-paid-text flex items-center justify-center shrink-0">
             <ShieldCheck className="w-7 h-7 stroke-[2.5]" />
@@ -475,7 +513,7 @@ export function PricingSection() {
             </p>
           </div>
         </div>
-      </section>
+      </FadeIn>
     </div>
   );
 }
