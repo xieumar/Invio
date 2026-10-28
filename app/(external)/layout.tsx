@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Header, Footer } from "@/components/external";
+import { Header, Footer, AmbientBackground } from "@/components/external";
+import { ScrollProgress } from "@/components/motion";
 
 export const metadata: Metadata = {
   title: "Invio — Smart Invoicing & Small Business Finance",
@@ -20,7 +21,11 @@ export default function ExternalLayout({
   return (
     <div className="min-h-screen flex flex-col bg-bg text-text-primary selection:bg-purple/20 selection:text-purple">
       <Header />
-      <main className="flex-1 w-full">{children}</main>
+      <ScrollProgress />
+      <main className="relative isolate flex-1 w-full overflow-x-clip">
+        <AmbientBackground />
+        {children}
+      </main>
       <Footer />
     </div>
   );

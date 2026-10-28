@@ -1,27 +1,43 @@
 import { Quote } from "lucide-react";
+import { Float, Stagger, StaggerItem } from "@/components/motion";
 
 export function TestimonialsSection() {
   return (
     <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full py-6">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
         {/* Left Column: Heading and Narrative (No View More button per instruction) */}
-        <div className="lg:col-span-5 flex flex-col gap-4 text-left">
-          <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full w-fit">
-            Customer Stories
-          </span>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-text-primary tracking-tight leading-[1.12]">
-            What Our Customers Say About Invio
-          </h2>
-          <p className="text-text-secondary text-base sm:text-lg leading-relaxed mt-2">
-            Invio&apos;s intelligent billing, integer-accurate bookkeeping, and
-            clean workflow have helped thousands of freelancers and studios
-            build healthier financial habits that truly last.
-          </p>
-        </div>
+        <Stagger
+          className="lg:col-span-5 flex flex-col gap-4 text-left"
+          stagger={0.15}
+        >
+          <StaggerItem direction="right" distance={40}>
+            <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full w-fit">
+              Customer Stories
+            </span>
+          </StaggerItem>
+          <StaggerItem direction="right" distance={40}>
+            <h2 className="text-3xl sm:text-5xl font-extrabold text-text-primary tracking-tight leading-[1.12]">
+              What Our Customers Say About Invio
+            </h2>
+          </StaggerItem>
+          <StaggerItem direction="right" distance={40}>
+            <p className="text-text-secondary text-base sm:text-lg leading-relaxed mt-2">
+              Invio&apos;s intelligent billing, integer-accurate bookkeeping, and
+              clean workflow have helped thousands of freelancers and studios
+              build healthier financial habits that truly last.
+            </p>
+          </StaggerItem>
+        </Stagger>
 
         {/* Right Column: Staggered Tilted Pill Cards (Inspired by Reference) */}
-        <div className="lg:col-span-7 flex flex-col gap-5 sm:gap-6 relative">
+        <Stagger
+          className="lg:col-span-7 flex flex-col gap-5 sm:gap-6 relative"
+          stagger={0.3}
+          delay={0.15}
+        >
           {/* Card 1: Kira B. (Soft Sage/Emerald Tint, Shifted Right) */}
+          <StaggerItem direction="left" distance={90} scale={0.94}>
+          <Float amplitude={6} duration={6}>
           <div
             className="
               rounded-3xl p-6 sm:p-7 
@@ -56,7 +72,12 @@ export function TestimonialsSection() {
             </p>
           </div>
 
+          </Float>
+          </StaggerItem>
+
           {/* Card 2: Maria P. (Clean Surface Tint, Shifted Left) */}
+          <StaggerItem direction="right" distance={90} scale={0.94}>
+          <Float amplitude={6} duration={7} delay={0.8}>
           <div
             className="
               rounded-3xl p-6 sm:p-7 
@@ -91,7 +112,12 @@ export function TestimonialsSection() {
             </p>
           </div>
 
+          </Float>
+          </StaggerItem>
+
           {/* Card 3: Andrew S. (Soft Purple Tint, Shifted Right) */}
+          <StaggerItem direction="left" distance={90} scale={0.94}>
+          <Float amplitude={6} duration={8} delay={1.6}>
           <div
             className="
               rounded-3xl p-6 sm:p-7 
@@ -125,7 +151,9 @@ export function TestimonialsSection() {
               months.&quot;
             </p>
           </div>
-        </div>
+          </Float>
+          </StaggerItem>
+        </Stagger>
       </div>
     </section>
   );

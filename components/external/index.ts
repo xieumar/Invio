@@ -1,5 +1,6 @@
 export * from "./Header";
 export * from "./Footer";
+export * from "./AmbientBackground";
 export * from "./HeroSection";
 export * from "./BenefitsSection";
 export * from "./HowItWorksSection";

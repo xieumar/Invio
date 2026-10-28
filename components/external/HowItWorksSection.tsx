@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Sparkles, CheckCircle2 } from "lucide-react";
+import { FadeIn, Grow, Stagger, StaggerItem } from "@/components/motion";
 
 export function HowItWorksSection() {
   return (
@@ -9,7 +10,7 @@ export function HowItWorksSection() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+        <FadeIn className="text-center max-w-2xl mx-auto mb-16 sm:mb-20" distance={40}>
           <span className="text-purple-light text-xs font-extrabold uppercase tracking-widest bg-purple/20 px-3.5 py-1 rounded-full">
             Simple Steps
           </span>
@@ -20,12 +21,17 @@ export function HowItWorksSection() {
             No confusion or delays. Just fast, automated invoicing from initial
             draft to settled bank deposit.
           </p>
-        </div>
+        </FadeIn>
 
         {/* 2-Column Showcase (Visual Card on Left + Connected Steps on Right) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left Column: Visual Showcase with Floating Card & Annotation */}
-          <div className="lg:col-span-6 relative">
+          <FadeIn
+            className="lg:col-span-6 relative"
+            direction="right"
+            distance={90}
+            duration={1}
+          >
             {/* Background Container / Gradient Canvas */}
             <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#1e2139] via-[#141625] to-[#1e2139] border border-[#252945] shadow-[0_25px_50px_rgba(0,0,0,0.4)] overflow-hidden">
               {/* Floating Annotation Tag */}
@@ -58,26 +64,36 @@ export function HowItWorksSection() {
                 </div>
 
                 {/* Line Items List */}
-                <div className="flex flex-col gap-2.5 text-xs">
+                <Stagger
+                  className="flex flex-col gap-2.5 text-xs"
+                  stagger={0.25}
+                  delay={0.5}
+                >
+                  <StaggerItem direction="right" distance={30}>
                   <div className="flex items-center justify-between p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
                     <span className="font-bold text-white">
                       UX Research & Discovery
                     </span>
                     <span className="font-extrabold text-white">£1,200.00</span>
                   </div>
+                  </StaggerItem>
+                  <StaggerItem direction="right" distance={30}>
                   <div className="flex items-center justify-between p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
                     <span className="font-bold text-white">
                       Component Design System
                     </span>
                     <span className="font-extrabold text-white">£2,450.00</span>
                   </div>
+                  </StaggerItem>
+                  <StaggerItem direction="right" distance={30}>
                   <div className="flex items-center justify-between p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
                     <span className="font-bold text-white">
                       Figma Prototype Review
                     </span>
                     <span className="font-extrabold text-white">£600.00</span>
                   </div>
-                </div>
+                  </StaggerItem>
+                </Stagger>
 
                 {/* Total Bar */}
                 <div className="pt-3 border-t border-[#252945] flex items-center justify-between">
@@ -106,14 +122,24 @@ export function HowItWorksSection() {
                 </span>
               </div>
             </div>
-          </div>
+          </FadeIn>
 
           {/* Right Column: Vertical Connected Timeline with PNG Icons */}
-          <div className="lg:col-span-6 flex flex-col gap-8 relative">
-            {/* Vertical Line Connector */}
-            <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-[#252945] hidden sm:block -z-0" />
+          <Stagger
+            className="lg:col-span-6 flex flex-col gap-8 relative"
+            stagger={0.45}
+            delay={0.2}
+          >
+            {/* Vertical Line Connector, drawn in as the steps appear */}
+            <Grow
+              axis="y"
+              delay={0.2}
+              duration={1.8}
+              className="absolute left-6 top-8 bottom-8 w-0.5 bg-linear-to-b from-paid-text via-purple to-pending-text opacity-60 hidden sm:block -z-0"
+            />
 
             {/* Step 1 */}
+            <StaggerItem direction="left" distance={70}>
             <div className="relative flex items-start gap-5 sm:gap-6 group">
               <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
                 <Image
@@ -141,7 +167,10 @@ export function HowItWorksSection() {
               </div>
             </div>
 
+            </StaggerItem>
+
             {/* Step 2 */}
+            <StaggerItem direction="left" distance={70}>
             <div className="relative flex items-start gap-5 sm:gap-6 group">
               <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
                 <Image
@@ -169,7 +198,10 @@ export function HowItWorksSection() {
               </div>
             </div>
 
+            </StaggerItem>
+
             {/* Step 3 */}
+            <StaggerItem direction="left" distance={70}>
             <div className="relative flex items-start gap-5 sm:gap-6 group">
               <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
                 <Image
@@ -196,7 +228,8 @@ export function HowItWorksSection() {
                 </p>
               </div>
             </div>
-          </div>
+            </StaggerItem>
+          </Stagger>
         </div>
       </div>
     </section>

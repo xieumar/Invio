@@ -9,6 +9,7 @@ import {
   FileText,
   ChevronRight,
 } from "lucide-react";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 
 export interface LegalSection {
   id: string;
@@ -59,25 +60,36 @@ export function LegalDocument({
 
       {/* Header */}
       <header className="max-w-3xl mb-12 sm:mb-16">
+        <Stagger immediate stagger={0.1}>
+        <StaggerItem>
         <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
           {badge}
         </span>
+        </StaggerItem>
+        <StaggerItem>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-text-primary tracking-tight mt-4">
           {title}
         </h1>
+        </StaggerItem>
+        <StaggerItem>
         <p className="text-text-secondary mt-3.5 text-base sm:text-lg leading-relaxed">
           {subtitle}
         </p>
+        </StaggerItem>
+        <StaggerItem>
         <div className="flex items-center gap-2 mt-4 text-xs font-semibold text-text-secondary">
           <Clock className="w-4 h-4 text-purple" />
           <span>Last modified: {lastUpdated}</span>
         </div>
+        </StaggerItem>
+        </Stagger>
       </header>
 
       {/* Main Layout: Sticky Sidebar TOC + Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         {/* Table of Contents Sticky Sidebar */}
         <aside className="lg:col-span-4 sticky top-28 hidden lg:block">
+          <FadeIn direction="right" distance={50} immediate delay={0.3}>
           <div className="bg-surface rounded-2xl p-6 border border-border shadow-card">
             <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-border text-text-primary font-extrabold text-sm">
               <FileText className="w-4 h-4 text-purple" />
@@ -119,13 +131,14 @@ export function LegalDocument({
               <span>GDPR, CCPA & SOC-2 compliance certified</span>
             </div>
           </div>
+          </FadeIn>
         </aside>
 
         {/* Content Body */}
         <div className="lg:col-span-8 flex flex-col gap-12 bg-surface rounded-3xl p-6 sm:p-12 border border-border shadow-card">
           {sections.map((section, idx) => (
+            <FadeIn key={section.id} distance={32}>
             <section
-              key={section.id}
               id={section.id}
               className="scroll-mt-28 flex flex-col gap-4 text-text-secondary text-sm sm:text-base leading-relaxed"
             >
@@ -137,6 +150,7 @@ export function LegalDocument({
               </h2>
               <div className="space-y-4 pt-1">{section.content}</div>
             </section>
+            </FadeIn>
           ))}
         </div>
       </div>

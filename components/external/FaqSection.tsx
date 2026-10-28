@@ -4,6 +4,12 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { ChevronDown, Search, Mail, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Collapse,
+  FadeIn,
+  Stagger,
+  StaggerItem,
+} from "@/components/motion";
 
 interface FaqItem {
   category: "Invoicing" | "AI Copilot" | "Bank & CSV" | "Security";
@@ -118,18 +124,26 @@ export function FaqSection() {
     <div className="w-full flex flex-col gap-16 sm:gap-20">
       {/* Header with Search and Category Filter */}
       <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full text-center pt-8 sm:pt-14">
+        <Stagger immediate stagger={0.12}>
+        <StaggerItem>
         <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
           Help & Answers
         </span>
+        </StaggerItem>
+        <StaggerItem>
         <h1 className="text-4xl sm:text-6xl font-extrabold text-text-primary tracking-tight mt-4">
           Frequently Asked <span className="text-purple">Questions</span>
         </h1>
+        </StaggerItem>
+        <StaggerItem>
         <p className="text-text-secondary mt-4 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
           Everything you need to know about our integer math engine,
           conversational AI copilot, and CSV reconciliations.
         </p>
+        </StaggerItem>
 
         {/* Search Input */}
+        <StaggerItem>
         <div className="mt-8 max-w-md mx-auto relative">
           <Search className="w-4 h-4 text-text-secondary absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
           <input
@@ -140,8 +154,10 @@ export function FaqSection() {
             className="w-full pl-11 pr-4 py-3 bg-surface border border-border rounded-full text-sm text-text-primary placeholder:text-text-secondary outline-none focus:border-purple focus:ring-2 focus:ring-purple/20 transition-all shadow-xs"
           />
         </div>
+        </StaggerItem>
 
         {/* Category Filter Pills */}
+        <StaggerItem>
         <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
           {CATEGORIES.map((cat) => (
             <button
@@ -158,6 +174,8 @@ export function FaqSection() {
             </button>
           ))}
         </div>
+        </StaggerItem>
+        </Stagger>
       </section>
 
       {/* Accordion List */}
@@ -179,12 +197,12 @@ export function FaqSection() {
             </Button>
           </div>
         ) : (
-          <div className="flex flex-col gap-3.5">
+          <Stagger className="flex flex-col gap-3.5" stagger={0.07}>
             {filteredFaqs.map((faq, idx) => {
               const isOpen = openIndex === idx;
               return (
+                <StaggerItem key={faq.q} distance={28}>
                 <div
-                  key={faq.q}
                   className="bg-surface rounded-2xl border border-border p-5 sm:p-6 shadow-xs transition-colors hover:border-purple/40"
                 >
                   <button
@@ -205,20 +223,21 @@ export function FaqSection() {
                     />
                   </button>
 
-                  {isOpen && (
-                    <div className="mt-4 pt-3.5 border-t border-border/60 text-sm text-text-secondary leading-relaxed animate-in fade-in duration-200">
+                  <Collapse open={isOpen}>
+                    <div className="mt-4 pt-3.5 border-t border-border/60 text-sm text-text-secondary leading-relaxed">
                       {faq.a}
                     </div>
-                  )}
+                  </Collapse>
                 </div>
+                </StaggerItem>
               );
             })}
-          </div>
+          </Stagger>
         )}
       </section>
 
       {/* "Still have questions?" Callout Strip */}
-      <section className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
+      <FadeIn className="px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full" distance={40}>
         <div className="bg-surface rounded-3xl p-8 sm:p-10 border border-border shadow-card flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
           <div className="flex flex-col gap-1.5">
             <h3 className="text-xl font-extrabold text-text-primary">
@@ -245,7 +264,7 @@ export function FaqSection() {
             </Button>
           </div>
         </div>
-      </section>
+      </FadeIn>
     </div>
   );
 }

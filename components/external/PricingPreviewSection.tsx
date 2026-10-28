@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
 
 export function PricingPreviewSection() {
   return (
     <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
-      <div className="text-center max-w-2xl mx-auto mb-16">
+      <FadeIn className="text-center max-w-2xl mx-auto mb-16" distance={40}>
         <span className="text-purple text-xs font-bold uppercase tracking-wider">
           Simple & Transparent
         </span>
@@ -16,11 +17,15 @@ export function PricingPreviewSection() {
           Start for free. Upgrade when you need advanced AI and unlimited
           reconciliations.
         </p>
-      </div>
+      </FadeIn>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+      <Stagger
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch"
+        stagger={0.22}
+      >
         {/* Free Tier */}
-        <div className="bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-xs">
+        <StaggerItem className="h-full" distance={60} hoverLift>
+        <div className="h-full bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-xs">
           <div>
             <span className="text-xs font-bold uppercase text-text-secondary">
               Starter
@@ -60,8 +65,11 @@ export function PricingPreviewSection() {
           </Button>
         </div>
 
+        </StaggerItem>
+
         {/* Pro Tier (Popular) */}
-        <div className="bg-surface rounded-3xl p-8 border-2 border-purple relative flex flex-col justify-between shadow-xl">
+        <StaggerItem className="h-full" distance={40} scale={0.86} hoverLift>
+        <div className="h-full bg-surface rounded-3xl p-8 border-2 border-purple relative flex flex-col justify-between shadow-xl">
           <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple text-white text-[11px] font-extrabold px-3 py-0.5 rounded-full uppercase tracking-wider">
             Most Popular
           </span>
@@ -107,8 +115,11 @@ export function PricingPreviewSection() {
           </Button>
         </div>
 
+        </StaggerItem>
+
         {/* Business Tier */}
-        <div className="bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-xs">
+        <StaggerItem className="h-full" distance={60} hoverLift>
+        <div className="h-full bg-surface rounded-3xl p-8 border border-border flex flex-col justify-between shadow-xs">
           <div>
             <span className="text-xs font-bold uppercase text-text-secondary">
               Studio & Agency
@@ -151,7 +162,8 @@ export function PricingPreviewSection() {
             <Link href="/pricing">View Details</Link>
           </Button>
         </div>
-      </div>
+        </StaggerItem>
+      </Stagger>
     </section>
   );
 }

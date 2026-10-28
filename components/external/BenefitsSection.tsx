@@ -1,11 +1,12 @@
 import Image from "next/image";
 import { Flag, CheckCircle2 } from "lucide-react";
+import { FadeIn, Grow, Stagger, StaggerItem } from "@/components/motion";
 
 export function BenefitsSection() {
   return (
     <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
       {/* Section Header */}
-      <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-16">
+      <FadeIn className="text-center max-w-2xl mx-auto mb-14 sm:mb-16" distance={40}>
         <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
           Capabilities
         </span>
@@ -16,11 +17,15 @@ export function BenefitsSection() {
           Each of our features has the depth required to streamline your
           workflow from project kickoff to settled payment.
         </p>
-      </div>
+      </FadeIn>
 
       {/* 3 Interactive Cards with Uniform Height and Balanced Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+      <Stagger
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch"
+        stagger={0.2}
+      >
         {/* CARD 1: Client-facing portal */}
+        <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
         <div className="bg-surface rounded-3xl p-6 sm:p-7 border border-border shadow-card h-full flex flex-col justify-between overflow-hidden group hover:border-purple/40 transition-all duration-300">
           {/* Header with uniform min-height */}
           <div className="min-h-[84px] flex flex-col justify-start mb-6">
@@ -142,7 +147,10 @@ export function BenefitsSection() {
           </div>
         </div>
 
+        </StaggerItem>
+
         {/* CARD 2: Task collaboration */}
+        <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
         <div className="bg-surface rounded-3xl p-6 sm:p-7 border border-border shadow-card h-full flex flex-col justify-between overflow-hidden group hover:border-purple/40 transition-all duration-300">
           {/* Header with uniform min-height */}
           <div className="min-h-[84px] flex flex-col justify-start mb-6">
@@ -221,7 +229,7 @@ export function BenefitsSection() {
                     <span className="font-bold text-text-primary">5</span>
                   </div>
                   <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-[#4285f4] h-full rounded-full w-[45%]" />
+                    <Grow className="bg-[#4285f4] h-full rounded-full w-[45%]" delay={0.7} />
                   </div>
                 </div>
 
@@ -232,7 +240,7 @@ export function BenefitsSection() {
                     <span className="font-bold text-text-primary">12</span>
                   </div>
                   <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-purple h-full rounded-full w-[85%]" />
+                    <Grow className="bg-purple h-full rounded-full w-[85%]" delay={0.85} />
                   </div>
                 </div>
 
@@ -243,7 +251,7 @@ export function BenefitsSection() {
                     <span className="font-bold text-text-primary">10</span>
                   </div>
                   <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-pending-text h-full rounded-full w-[65%]" />
+                    <Grow className="bg-pending-text h-full rounded-full w-[65%]" delay={1} />
                   </div>
                 </div>
 
@@ -254,7 +262,7 @@ export function BenefitsSection() {
                     <span className="font-bold text-text-primary">5</span>
                   </div>
                   <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <div className="bg-[#f4b400] h-full rounded-full w-[40%]" />
+                    <Grow className="bg-[#f4b400] h-full rounded-full w-[40%]" delay={1.15} />
                   </div>
                 </div>
               </div>
@@ -272,7 +280,10 @@ export function BenefitsSection() {
           </div>
         </div>
 
+        </StaggerItem>
+
         {/* CARD 3: Retainer tracking (Shortened, punchy title) */}
+        <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
         <div className="bg-surface rounded-3xl p-6 sm:p-7 border border-border shadow-card h-full flex flex-col justify-between overflow-hidden group hover:border-purple/40 transition-all duration-300">
           {/* Header with uniform min-height */}
           <div className="min-h-[84px] flex flex-col justify-start mb-6">
@@ -335,16 +346,10 @@ export function BenefitsSection() {
 
               {/* Segmented Colorful Bar */}
               <div className="w-full h-2 rounded-full flex gap-1 overflow-hidden bg-border/40 my-0.5">
-                <div className="bg-[#4285f4] h-full w-[25%]" title="Spent" />
-                <div className="bg-purple h-full w-[35%]" title="Projected" />
-                <div
-                  className="bg-paid-text h-full w-[25%]"
-                  title="Available"
-                />
-                <div
-                  className="bg-pending-text h-full w-[15%]"
-                  title="Rollover"
-                />
+                <Grow className="bg-[#4285f4] h-full w-[25%]" delay={1.2} />
+                <Grow className="bg-purple h-full w-[35%]" delay={1.35} />
+                <Grow className="bg-paid-text h-full w-[25%]" delay={1.5} />
+                <Grow className="bg-pending-text h-full w-[15%]" delay={1.65} />
               </div>
 
               {/* 4 Usage Metric Columns */}
@@ -407,7 +412,8 @@ export function BenefitsSection() {
             </div>
           </div>
         </div>
-      </div>
+        </StaggerItem>
+      </Stagger>
     </section>
   );
 }
