@@ -1,147 +1,193 @@
-# Invoice App (Invio)
+# Invio
 
-A robust, modern invoice management application built with Next.js, TypeScript, Tailwind CSS, and shadcn/ui. This project focuses on providing a complete lifecycle for invoice management, featuring full CRUD capabilities, draft handling, status tracking, seamless theming, and a fully responsive interface.
+**AI-powered invoicing and small-business finance workspace.**
 
----
+Invio helps freelancers and small studios create professional invoices in seconds, manage clients, and an AI assistant that drafts work for you but never acts without your approval.
 
-## Core Objective
-
-To provide a comprehensive invoice system that enables users to:
-
-- Create, view, update, and delete invoices.
-- Save incomplete work as drafts.
-- Manage invoice lifecycles (e.g., mark as paid).
-- Filter invoices by their current status.
-- Toggle between light and dark themes seamlessly.
-- Interact with a layout optimized for mobile, tablet, and desktop screens.
-- Experience refined UI states (hover, focus, active).
-- Persist data reliably using LocalStorage, IndexedDB, or a custom backend API.
+> **Status:** active development. Phases 0–3 are done and Phase 4 (AI assistant) is in review. Transactions, categorisation and insights are planned. See [Roadmap](#roadmap).
 
 ---
 
-## Key Features
+## Screenshots
 
-### 1. Complete CRUD Operations
+![Invio landing page](public/home.png)
 
-Users have full control over their data:
-
-- **Create:** Generate new invoices through an intuitive form.
-- **Read:** Browse a summarized list view and inspect detailed invoice pages.
-- **Update:** Edit existing invoice data and securely persist the changes.
-- **Delete:** Permanently remove records, guarded by a confirmation modal to prevent accidental data loss.
-
-### 2. Strict Form Validation
-
-Data integrity is maintained through rigorous validation rules before submission:
-
-- Required fields are strictly enforced.
-- Inline error messages provide immediate feedback on invalid inputs.
-- Submission logic is blocked until all criteria are met (e.g., valid email formatting, positive numeric values for quantity and price, and a minimum of one line item per invoice).
-
-### 3. Dynamic Status Flow
-
-Invoices track real-world billing states:
-
-- **Draft:** Incomplete invoices saved for later editing.
-- **Pending:** Finalized invoices awaiting payment.
-- **Paid:** Completed transactions.
-- _Note:_ Paid invoices are locked to maintain historical accuracy. Status updates are immediately reflected across list views, detail pages, and UI badges.
-
-### 4. Real-time Filtering
-
-Efficiently manage large datasets with intuitive filtering:
-
-- Filter views by Draft, Pending, Paid, or All.
-- Instant UI updates upon selection.
-- Clear empty-state messaging when no records match the criteria.
-
-### 5. Persistent Theming
-
-- Full support for Light and Dark modes.
-- User preferences are saved via LocalStorage to persist across sessions.
-- Ensures high-contrast accessibility and consistent styling in both themes.
-
-### 6. Responsive Architecture
-
-The application layout fluidly adapts to any device:
-
-- Mobile (320px+), Tablet (768px+), and Desktop (1024px+).
-- Features adaptive navigation, mobile-optimized forms, and consistent visual hierarchy without horizontal overflow.
-
-### 7. Refined UI/UX
-
-Every interactive element provides clear visual feedback:
-
-- Consistent hover, focus, and active states applied across buttons, links, cards, filters, and form inputs to enhance usability and accessibility.
+![Invio dashboard](public/dashboard.png)
 
 ---
 
-## Technical Stack
+## Highlights
 
-- **Framework:** Next.js 15+ (App Router)
-- **Language:** TypeScript (Strict Mode)
-- **Styling:** Tailwind CSS
-- **UI Primitives:** Radix UI & shadcn/ui
-- **Form Management:** React Hook Form
-- **Schema Validation:** Zod
-- **State Management:** Context API / Zustand
-- **Data Persistence:** IndexedDB / LocalStorage / API
-- **Utility Libraries:**
-  - `date-fns` (Date formatting)
-  - `nanoid` (Unique ID generation)
-  - `clsx` / `tailwind-merge` (Dynamic class routing)
-  - `sonner` (Toast notifications)
+- **Integer-accurate money.** All amounts are stored and calculated in minor units (pence/cents), never floating point, so totals, tax and discounts never drift.
+- **Human-in-the-loop AI.** The assistant drafts invoices and payment reminders; nothing is saved or sent until you click.
+- **Secure by design.** AI calls run server-side only, with rate limiting and Zod-validated output. Data is scoped per user in Firestore.
+- **Accessible motion.** Scroll-driven animations and parallax backgrounds on the public site, all honouring `prefers-reduced-motion`.
 
 ---
 
-## Getting Started
+## What's built
+
+### Public site
+
+- Landing, Features, Pricing, FAQ, Contact, Privacy and Terms pages.
+- Reusable motion primitives (staggered reveals, parallax, scroll tilt, count-ups, accordions) built on [`motion`](https://motion.dev), all respecting `prefers-reduced-motion`.
+- Page-length ambient gradient background with grain, and a scroll progress bar.
+
+### Authentication & onboarding
+
+- Email/password and Google sign-in, password reset, route guards.
+- Two-step business setup wizard that creates the Firestore profile.
+- Onboarding enforcement: unconfigured accounts are redirected until setup is complete.
+- Anonymous demo mode backed by IndexedDB with seed data.
+
+### Dashboard
+
+- Overview metric cards and a recent-invoices widget (TanStack Query).
+- Collapsible, responsive sidebar with a themed loading screen.
+- Light and dark themes.
+
+### Clients
+
+- Client directory with add/edit/delete, search, and summary metrics.
+- Client picker in the invoice form that auto-fills name, email and address.
+
+### Invoices
+
+- Create, view, edit and delete, with draft / pending / paid status flow.
+- Firestore persistence with integer minor-unit math, tax rates and discounts.
+- Search, sort and status filtering.
+- Accessible confirm dialogs and PDF export.
+
+### AI assistant
+
+- **Invoice drafting:** describe the work in plain English (or pick a preset) and the assistant prefills the invoice form for review. Prefilled fields are highlighted until you edit them. Route: `POST /api/ai/invoice-draft`.
+- **Payment reminders:** generate an email from the invoice detail page in Friendly, Firm or Urgent tone, aware of how many days overdue the invoice is. Copy to clipboard or open in your mail client. Route: `POST /api/ai/reminder`.
+- Server-side API key, per-IP rate limiting, and Zod validation of model output.
+
+---
+
+## Tech stack
+
+| Area | Choice |
+| --- | --- |
+| Framework | Next.js 16 (App Router), React 19, TypeScript |
+| Styling | Tailwind CSS v4, shadcn/ui, Radix UI |
+| Data | Cloud Firestore, IndexedDB (demo mode) via `idb` |
+| Auth | Firebase Authentication |
+| Server state | TanStack Query v5 |
+| Forms & validation | React Hook Form, Zod 4 |
+| AI | OpenRouter (server-side route handlers) |
+| PDF | `@react-pdf/renderer` |
+| Motion | `motion` |
+| Tooling | ESLint, Prettier, lint-staged |
+
+---
+
+## Getting started
 
 ### Prerequisites
 
-Ensure you have Node.js and `pnpm` installed on your machine.
+- Node.js 20+
+- [pnpm](https://pnpm.io)
+- A Firebase project (Authentication + Firestore)
+- An [OpenRouter](https://openrouter.ai) API key for the AI features
 
-### Installation & Setup
+### Install
 
-1. Clone the repository:
+```bash
+git clone <repo-url>
+cd invio
+pnpm install
+cp .env.example .env.local
+```
 
-   ```bash
-   git clone <repo-url>
-   cd invio
-   ```
+### Environment variables
 
-2. Install dependencies:
+Fill in `.env.local`:
 
-   ```bash
-   pnpm install
-   ```
+| Variable | Scope | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_FIREBASE_API_KEY` and the other `NEXT_PUBLIC_FIREBASE_*` values | Client | Firebase web config |
+| `NEXT_PUBLIC_SITE_URL` | Client | Public site URL (used as the OpenRouter referer) |
+| `OPENROUTER_API_KEY` | **Server only** | Authenticates AI requests |
+| `OPENROUTER_MODEL` | Server only | Model to use (a default is applied if unset) |
 
-3. Start the development server:
-   ```bash
-   pnpm dev
-   ```
+Never commit `.env.local`. The AI key is read only in server route handlers and is never sent to the browser.
 
-### Available Scripts
+### Run
 
-- `npm run dev`: Starts the local development server.
-- `npm run build`: Compiles the application for production.
-- `npm run start`: Runs the compiled production build.
-- `npm run lint`: Analyzes the code for style and syntax errors.
-- `npm run format`: Automatically formats the codebase.
-- `npm run type-check`: Validates TypeScript typings.
+```bash
+pnpm dev
+```
 
-### Project Goals & Architecture
+Open <http://localhost:3000>.
 
-This project was developed with a focus on:
+### Scripts
 
-- **Clean UI Architecture:** Modular and maintainable component design.
-- **Strong Validation Logic:** Ensuring data integrity at the client level.
-- **Flexible State Persistence:** Designing the application to easily swap between local storage and backend databases.
-- **Production-Level Patterns:** Implementing industry-standard frontend practices for scalability and performance.
+| Command | Description |
+| --- | --- |
+| `pnpm dev` | Start the dev server |
+| `pnpm build` / `pnpm start` | Production build and serve |
+| `pnpm lint` / `pnpm lint:fix` | Lint (and auto-fix) |
+| `pnpm format` / `pnpm format:check` | Prettier |
+| `pnpm type-check` | TypeScript, no emit |
 
-### Future Roadmap
+---
 
-- Implement full user authentication.
-- Add multi-user support and role-based access.
-- Enable PDF export functionality for invoices.
-- Integrate a dedicated backend (Node/Next API routes) for centralized data management.
-- Implement real-time synchronization across devices.
+## Project structure
+
+```text
+app/
+  (external)/     Public marketing pages
+  (auth)/         Login, register, password reset
+  (dashboard)/    Authenticated app (dashboard, invoices, clients, onboarding)
+  api/ai/         AI route handlers (invoice-draft, reminder)
+components/
+  external/       Marketing sections and ambient background
+  motion/         Reusable animation primitives
+  pages/          Page-level compositions
+  ui/             shadcn/ui primitives
+features/         Domain modules (ai, auth, clients, dashboard, invoices, onboarding)
+lib/
+  ai/             OpenRouter client and rate limiting
+  money/          Integer minor-unit math and formatters
+  validations/    Zod schemas
+  firebase/       Firebase setup
+docs/planning/    Implementation plan, PR breakdown, risks and decisions, task tracker
+```
+
+Architecture decisions and the risk register live in [`docs/planning/`](docs/planning).
+
+---
+
+## Roadmap
+
+Work is split into small, reviewable PRs. Full detail is in [`docs/planning/INVIO_PR_BREAKDOWN.md`](docs/planning/INVIO_PR_BREAKDOWN.md).
+
+| Phase | Scope | Status |
+| --- | --- | --- |
+| 0–1 | Foundation, public site, auth, onboarding | Done |
+| 2 | Dashboard metrics; accessible guided product tour | Dashboard done, tour planned |
+| 3 | Clients and invoices (persistence, PDF, accessible dialogs) | Done |
+| 4 | AI invoice assistant and payment reminders | In review |
+| 5 | Bank transactions: table and manual entry, CSV upload with column mapping, batch import with undo and splits | Planned |
+| 6 | Categorisation: deterministic rules engine, AI categorisation with a confidence-scored review queue | Planned |
+| 7 | Insights (cashflow and category charts), settings, full data export | Planned |
+| 8 | Vitest unit tests, Playwright E2E, Lighthouse and bundle optimisation, release docs | Planned |
+
+---
+
+## Conventions
+
+- **Money** is always an integer in minor units. Format only at the UI boundary with the helpers in `lib/money`.
+- **AI output** is untrusted: validate with Zod and never persist without an explicit user action.
+- **Commits** follow `Type(Scope): Description`, for example `Feat(AI): Implement payment reminder generator`.
+- **Next.js 16** differs from earlier versions. Check `node_modules/next/dist/docs/` before relying on older APIs.
+
+---
+
+## Contributing
+
+1. Branch from `main` (`feat/...`, `fix/...`).
+2. Keep PRs small and scoped to one roadmap item.
+3. Run `pnpm lint` and `pnpm type-check` before pushing.
