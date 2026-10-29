@@ -138,21 +138,6 @@ export async function fetchClients(userId?: string | null): Promise<Client[]> {
     const q = query(clientsRef, orderBy("name", "asc"));
     const snapshot = await getDocs(q);
 
-    if (snapshot.empty) {
-      // First time user: seed initial demo clients into Firestore so they have data
-      const batchPromises = initialSeedClients.map((c) => {
-        const clientDocRef = doc(db, "users", userId, "clients", c.id);
-        return setDoc(clientDocRef, {
-          ...c,
-          userId,
-          createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
-        });
-      });
-      await Promise.all(batchPromises);
-      return initialSeedClients.map((c) => ({ ...c, userId }));
-    }
-
     return snapshot.docs.map((d) => {
       const data = d.data();
       return {
@@ -176,11 +161,8 @@ export async function fetchClients(userId?: string | null): Promise<Client[]> {
       } as Client;
     });
   } catch (error) {
-    console.warn(
-      "Failed to fetch clients from Firestore, falling back to local demo:",
-      error
-    );
-    return getLocalDemoClients();
+    console.warn("Failed to fetch clients from Firestore:", error);
+    return [];
   }
 }
 

@@ -52,21 +52,6 @@ export async function fetchInvoices(
     const q = query(invoicesRef, orderBy("createdAt", "desc"));
     const snapshot = await getDocs(q);
 
-    if (snapshot.empty) {
-      // First time user: seed initial demo invoices into Firestore
-      const batchPromises = initialSeedInvoices.map((inv) => {
-        const invoiceDocRef = doc(db, "users", userId, "invoices", inv.id);
-        return setDoc(invoiceDocRef, {
-          ...inv,
-          userId,
-          createdAt: inv.createdAt,
-          updatedAt: new Date().toISOString(),
-        });
-      });
-      await Promise.all(batchPromises);
-      return initialSeedInvoices.map((inv) => ({ ...inv, userId }));
-    }
-
     return snapshot.docs.map((d) => {
       const data = d.data();
       return {
@@ -99,11 +84,8 @@ export async function fetchInvoices(
       } as Invoice;
     });
   } catch (error) {
-    console.warn(
-      "Failed to fetch invoices from Firestore, falling back to local demo:",
-      error
-    );
-    return getLocalDemoInvoices();
+    console.warn("Failed to fetch invoices from Firestore:", error);
+    return [];
   }
 }
 
