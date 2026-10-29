@@ -87,6 +87,7 @@ export function InvoicesPage() {
       createdAt: new Date().toISOString().split("T")[0],
       senderAddress: draft.senderAddress,
       clientAddress: draft.clientAddress,
+      currency: draft.currency,
       taxRate: draft.taxRate ?? 0,
       discount: draft.discount ?? 0,
       items: draft.items.map((item) => ({

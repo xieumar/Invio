@@ -260,17 +260,17 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
                         {item.name}
                       </span>
                       <span className="text-[15px] font-bold text-text-secondary sm:hidden">
-                        {item.quantity} x {formatCurrency(item.price)}
+                        {item.quantity} x {formatCurrency(item.price, invoice.currency)}
                       </span>
                     </div>
                     <span className="hidden sm:block text-[15px] font-bold text-text-secondary text-center w-8">
                       {item.quantity}
                     </span>
                     <span className="hidden sm:block text-[15px] font-bold text-text-secondary text-right w-24">
-                      {formatCurrency(item.price)}
+                      {formatCurrency(item.price, invoice.currency)}
                     </span>
                     <span className="text-[15px] font-bold text-text-primary text-right w-24">
-                      {formatCurrency(item.total)}
+                      {formatCurrency(item.total, invoice.currency)}
                     </span>
                   </div>
                 ))}
@@ -280,7 +280,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
             <div className="bg-sidebar-light dark:bg-text-primary-light px-6 py-6 sm:px-8 sm:py-8 flex justify-between items-center text-white">
               <span className="text-[13px]">Amount Due</span>
               <span className="text-2xl sm:text-[32px] font-bold leading-none">
-                {formatCurrency(invoice.total)}
+                {formatCurrency(invoice.total, invoice.currency)}
               </span>
             </div>
           </div>

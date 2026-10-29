@@ -34,7 +34,9 @@ export function InvoiceCard({ invoice }: { invoice: Invoice }) {
             <span className={dateStyle}>
               Due {formatDate(invoice.paymentDue)}
             </span>
-            <span className={totalStyle}>{formatCurrency(invoice.total)}</span>
+            <span className={totalStyle}>
+              {formatCurrency(invoice.total, invoice.currency)}
+            </span>
           </div>
           <StatusBadge status={invoice.status} />
         </div>
@@ -58,7 +60,7 @@ export function InvoiceCard({ invoice }: { invoice: Invoice }) {
         <span className={nameStyle}>{invoice.clientName}</span>
 
         <span className={`${totalStyle} text-right`}>
-          {formatCurrency(invoice.total)}
+          {formatCurrency(invoice.total, invoice.currency)}
         </span>
 
         <div className="flex justify-center sm:justify-end lg:justify-center">

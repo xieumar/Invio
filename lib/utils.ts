@@ -40,9 +40,9 @@ export function calcTotal(
   return items.reduce((sum, item) => sum + item.quantity * item.price, 0);
 }
 
-export function formatCurrency(amount: number): string {
+export function formatCurrency(amount: number, currency = "GBP"): string {
   return new Intl.NumberFormat("en-GB", {
     style: "currency",
-    currency: "GBP",
+    currency: currency || "GBP",
   }).format(amount);
 }

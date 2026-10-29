@@ -62,7 +62,7 @@ export function CurrencyCombobox({
       </PopoverTrigger>
       <PopoverContent
         align="start"
-        className="w-(--radix-popover-trigger-width) p-0"
+        className="z-200 w-(--radix-popover-trigger-width) p-0"
       >
         <Command>
           <CommandInput placeholder="Search by code or name..." />

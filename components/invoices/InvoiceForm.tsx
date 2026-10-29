@@ -22,7 +22,14 @@ import { InvoiceDatePicker } from "./InvoiceDatePicker";
 import { InvoicePaymentTerms } from "./InvoicePaymentTerms";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
 import { ClientSelect } from "@/features/invoices";
-import { calculateInvoice, toMajorUnits, formatMoney } from "@/lib/money";
+import {
+  calculateInvoice,
+  toMajorUnits,
+  formatMoney,
+  getCurrencyConfig,
+} from "@/lib/money";
+import { CurrencyCombobox } from "@/components/ui/currency-combobox";
+import { useBusinessProfile } from "@/features/onboarding/useBusinessProfile";
 
 interface InvoiceFormProps {
   invoice?: Invoice;
@@ -43,6 +50,7 @@ const AI_FIELD_KEYS = [
   "items",
   "taxRate",
   "discount",
+  "currency",
 ];
 
 interface AiHighlightState {
@@ -181,6 +189,7 @@ function TotalsSection() {
   const items = watch("items") ?? [];
   const taxRate = Number(watch("taxRate")) || 0;
   const discount = Number(watch("discount")) || 0;
+  const currency = watch("currency") || "GBP";
 
   const { subtotal, taxAmount, discountAmount, total } = calculateInvoice(
     items.map((i) => ({ quantity: Number(i.quantity) || 0, price: Number(i.price) || 0 })),
@@ -208,7 +217,7 @@ function TotalsSection() {
             })}
           />
         </Field>
-        <Field label="Discount (£)">
+        <Field label={`Discount (${getCurrencyConfig(currency).symbol})`}>
           <Input
             inputMode="decimal"
             placeholder="0.00"
@@ -228,7 +237,7 @@ function TotalsSection() {
                 {label}
               </span>
               <span className={`tabular-nums font-bold ${highlight ? "text-text-primary text-[20px]" : "text-text-secondary text-[15px]"}`}>
-                {formatMoney(Math.abs(value))}
+                {formatMoney(Math.abs(value), currency)}
                 {value < 0 ? " off" : ""}
               </span>
             </div>
@@ -389,8 +398,22 @@ export function InvoiceForm({
         : [{ id: nanoid(), name: "", quantity: 1, price: 0, total: 0 }],
       taxRate: initialValues?.taxRate ?? 0,
       discount: initialValues?.discount ?? 0,
+      currency: initialValues?.currency,
     },
   });
+
+  // New invoices default to the currency and address from the business profile
+  const { data: profile } = useBusinessProfile();
+  useEffect(() => {
+    if (isEdit || !profile) return;
+    if (!initialValues?.currency) {
+      methods.setValue("currency", profile.defaultCurrency || "GBP");
+    }
+    if (!initialValues?.senderAddress && profile.address) {
+      methods.setValue("senderAddress", profile.address);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile, isEdit]);
 
   const {
     register,
@@ -549,7 +572,22 @@ export function InvoiceForm({
 
               <AddressFields type="clientAddress" />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 mt-12">
+              <div className="mb-6 mt-12">
+                <Field label="Currency" aiName="currency">
+                  <Controller
+                    control={control}
+                    name="currency"
+                    render={({ field }) => (
+                      <CurrencyCombobox
+                        value={field.value ?? "GBP"}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </Field>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 <Field label="Issue Date">
                   <Controller
                     control={control}
