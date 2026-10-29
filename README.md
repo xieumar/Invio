@@ -4,7 +4,7 @@
 
 Invio helps freelancers and small studios create professional invoices in seconds, manage clients, and an AI assistant that drafts work for you but never acts without your approval.
 
-> **Status:** active development. Phases 0–3 are done and Phase 4 (AI assistant) is in review. Transactions, categorisation and insights are planned. See [Roadmap](#roadmap).
+> **Status:** active development. Phases 0–3 are done and Phase 4 (AI assistant) is in review. Transactions, categorisation and insights are planned.
 
 ---
 
@@ -103,14 +103,7 @@ cp .env.example .env.local
 
 ### Environment variables
 
-Fill in `.env.local`:
-
-| Variable | Scope | Purpose |
-| --- | --- | --- |
-| `NEXT_PUBLIC_FIREBASE_API_KEY` and the other `NEXT_PUBLIC_FIREBASE_*` values | Client | Firebase web config |
-| `NEXT_PUBLIC_SITE_URL` | Client | Public site URL (used as the OpenRouter referer) |
-| `OPENROUTER_API_KEY` | **Server only** | Authenticates AI requests |
-| `OPENROUTER_MODEL` | Server only | Model to use (a default is applied if unset) |
+[`.env.example`](.env.example) is a template listing every variable the app needs, with placeholder values. The `cp` command above copies it to `.env.local`; replace the placeholders with your own Firebase and OpenRouter credentials.
 
 Never commit `.env.local`. The AI key is read only in server route handlers and is never sent to the browser.
 
@@ -160,23 +153,6 @@ Architecture decisions and the risk register live in [`docs/planning/`](docs/pla
 
 ---
 
-## Roadmap
-
-Work is split into small, reviewable PRs. Full detail is in [`docs/planning/INVIO_PR_BREAKDOWN.md`](docs/planning/INVIO_PR_BREAKDOWN.md).
-
-| Phase | Scope | Status |
-| --- | --- | --- |
-| 0–1 | Foundation, public site, auth, onboarding | Done |
-| 2 | Dashboard metrics; accessible guided product tour | Dashboard done, tour planned |
-| 3 | Clients and invoices (persistence, PDF, accessible dialogs) | Done |
-| 4 | AI invoice assistant and payment reminders | In review |
-| 5 | Bank transactions: table and manual entry, CSV upload with column mapping, batch import with undo and splits | Planned |
-| 6 | Categorisation: deterministic rules engine, AI categorisation with a confidence-scored review queue | Planned |
-| 7 | Insights (cashflow and category charts), settings, full data export | Planned |
-| 8 | Vitest unit tests, Playwright E2E, Lighthouse and bundle optimisation, release docs | Planned |
-
----
-
 ## Conventions
 
 - **Money** is always an integer in minor units. Format only at the UI boundary with the helpers in `lib/money`.
@@ -189,5 +165,5 @@ Work is split into small, reviewable PRs. Full detail is in [`docs/planning/INVI
 ## Contributing
 
 1. Branch from `main` (`feat/...`, `fix/...`).
-2. Keep PRs small and scoped to one roadmap item.
+2. Keep PRs small and scoped to one change.
 3. Run `pnpm lint` and `pnpm type-check` before pushing.
