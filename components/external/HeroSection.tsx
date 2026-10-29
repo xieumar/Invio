@@ -112,7 +112,7 @@ export function HeroSection() {
       >
       {/* Floating accent chips */}
       <Float
-        className="hidden lg:block absolute -left-10 top-24 z-10"
+        className="hidden min-[1400px]:block absolute right-full mr-[-28px] top-24 z-10"
         amplitude={10}
         duration={6}
       >
@@ -131,7 +131,7 @@ export function HeroSection() {
         </div>
       </Float>
       <Float
-        className="hidden lg:block absolute -right-8 bottom-28 z-10"
+        className="hidden min-[1400px]:block absolute left-full ml-[-28px] bottom-28 z-10"
         amplitude={8}
         duration={5}
         delay={1.2}
@@ -172,44 +172,44 @@ export function HeroSection() {
         {/* Preview Content Inside */}
         <div className="p-5 sm:p-8 flex flex-col gap-6">
           {/* Metric Cards Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-surface-alt rounded-2xl p-5 border border-border/60">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
               <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
                 Total Revenue
               </span>
-              <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl sm:text-3xl font-extrabold text-text-primary">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
+                <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-text-primary whitespace-nowrap">
                   £42,850.00
                 </span>
-                <span className="text-xs font-bold text-paid-text bg-paid-text/10 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-bold text-paid-text bg-paid-text/10 px-2 py-0.5 rounded-full whitespace-nowrap">
                   +18.4%
                 </span>
               </div>
             </div>
 
-            <div className="bg-surface-alt rounded-2xl p-5 border border-border/60">
+            <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
               <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
                 Paid Invoices
               </span>
-              <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl sm:text-3xl font-extrabold text-text-primary">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
+                <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-text-primary whitespace-nowrap">
                   £36,400.00
                 </span>
-                <span className="text-xs font-bold text-purple bg-purple/10 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-bold text-purple bg-purple/10 px-2 py-0.5 rounded-full whitespace-nowrap">
                   28 Cleared
                 </span>
               </div>
             </div>
 
-            <div className="bg-surface-alt rounded-2xl p-5 border border-border/60">
+            <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
               <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
                 Outstanding Due
               </span>
-              <div className="flex items-baseline justify-between mt-2">
-                <span className="text-2xl sm:text-3xl font-extrabold text-pending-text">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
+                <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-pending-text whitespace-nowrap">
                   £6,450.00
                 </span>
-                <span className="text-xs font-bold text-pending-text bg-pending-text/10 px-2 py-0.5 rounded-full">
+                <span className="text-xs font-bold text-pending-text bg-pending-text/10 px-2 py-0.5 rounded-full whitespace-nowrap">
                   3 Pending
                 </span>
               </div>

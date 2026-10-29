@@ -33,34 +33,32 @@ export function HowItWorksSection() {
             duration={1}
           >
             {/* Background Container / Gradient Canvas */}
-            <div className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-br from-[#1e2139] via-[#141625] to-[#1e2139] border border-[#252945] shadow-[0_25px_50px_rgba(0,0,0,0.4)] overflow-hidden">
+            <div className="relative rounded-3xl p-4 sm:p-8 bg-gradient-to-br from-[#1e2139] via-[#141625] to-[#1e2139] border border-[#252945] shadow-[0_25px_50px_rgba(0,0,0,0.4)] overflow-hidden">
               {/* Floating Annotation Tag */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paid-text text-[#0c0e16] text-xs font-extrabold shadow-md shadow-paid-text/25">
-                  <Sparkles className="w-3.5 h-3.5" />
+              <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-5 sm:mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paid-text text-[#0c0e16] text-xs font-extrabold whitespace-nowrap shadow-md shadow-paid-text/25">
+                  <Sparkles className="w-3.5 h-3.5 shrink-0" />
                   <span>Auto-Drafted in 2.4s</span>
                 </div>
-                <span className="text-xs font-bold text-[#888eb0]">
+                <span className="text-xs font-bold text-[#888eb0] whitespace-nowrap">
                   #INV-2026-089
                 </span>
               </div>
 
               {/* Main Interactive Showcase Card */}
-              <div className="bg-[#1e2139] rounded-2xl p-6 border border-[#252945] shadow-xl flex flex-col gap-4">
-                <div className="flex items-center justify-between pb-4 border-b border-[#252945]">
-                  <div>
+              <div className="bg-[#1e2139] rounded-2xl p-4 sm:p-6 border border-[#252945] shadow-xl flex flex-col gap-4">
+                <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2 pb-4 border-b border-[#252945]">
+                  <div className="min-w-0">
                     <h4 className="text-base font-extrabold text-white">
                       Studio Horizon Design
                     </h4>
-                    <p className="text-xs text-[#888eb0]">
+                    <p className="text-xs text-[#888eb0] break-all">
                       contact@horizonstudio.io
                     </p>
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs font-bold text-purple-light bg-purple/20 px-2.5 py-1 rounded-full">
-                      Due Net 14
-                    </span>
-                  </div>
+                  <span className="shrink-0 whitespace-nowrap text-xs font-bold text-purple-light bg-purple/20 px-2.5 py-1 rounded-full">
+                    Due Net 14
+                  </span>
                 </div>
 
                 {/* Line Items List */}
@@ -70,37 +68,37 @@ export function HowItWorksSection() {
                   delay={0.5}
                 >
                   <StaggerItem direction="right" distance={30}>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
-                    <span className="font-bold text-white">
+                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
+                    <span className="font-bold text-white min-w-0">
                       UX Research & Discovery
                     </span>
-                    <span className="font-extrabold text-white">£1,200.00</span>
+                    <span className="font-extrabold text-white whitespace-nowrap">£1,200.00</span>
                   </div>
                   </StaggerItem>
                   <StaggerItem direction="right" distance={30}>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
-                    <span className="font-bold text-white">
+                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
+                    <span className="font-bold text-white min-w-0">
                       Component Design System
                     </span>
-                    <span className="font-extrabold text-white">£2,450.00</span>
+                    <span className="font-extrabold text-white whitespace-nowrap">£2,450.00</span>
                   </div>
                   </StaggerItem>
                   <StaggerItem direction="right" distance={30}>
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
-                    <span className="font-bold text-white">
+                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
+                    <span className="font-bold text-white min-w-0">
                       Figma Prototype Review
                     </span>
-                    <span className="font-extrabold text-white">£600.00</span>
+                    <span className="font-extrabold text-white whitespace-nowrap">£600.00</span>
                   </div>
                   </StaggerItem>
                 </Stagger>
 
                 {/* Total Bar */}
-                <div className="pt-3 border-t border-[#252945] flex items-center justify-between">
+                <div className="pt-3 border-t border-[#252945] flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
                   <span className="text-xs font-bold text-[#888eb0] uppercase tracking-wider">
                     Total Invoiced
                   </span>
-                  <span className="text-2xl font-extrabold text-white tracking-tight">
+                  <span className="text-2xl font-extrabold text-white tracking-tight whitespace-nowrap">
                     £4,250
                     <span className="text-sm font-semibold text-[#888eb0]">
                       .00
@@ -110,14 +108,14 @@ export function HowItWorksSection() {
               </div>
 
               {/* Secondary Floating Overlapping Badge */}
-              <div className="mt-4 bg-[#1e2139]/95 backdrop-blur-md rounded-xl p-3.5 border border-[#252945] flex items-center justify-between text-xs shadow-lg">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-paid-text" />
+              <div className="mt-4 bg-[#1e2139]/95 backdrop-blur-md rounded-xl p-3.5 border border-[#252945] flex flex-wrap items-center justify-between gap-x-3 gap-y-1.5 text-xs shadow-lg">
+                <div className="flex items-center gap-2 min-w-0">
+                  <CheckCircle2 className="w-4 h-4 shrink-0 text-paid-text" />
                   <span className="font-bold text-white">
                     Deposit Verified in Monzo CSV
                   </span>
                 </div>
-                <span className="font-extrabold text-paid-text">
+                <span className="font-extrabold text-paid-text whitespace-nowrap">
                   +£4,250.00
                 </span>
               </div>
