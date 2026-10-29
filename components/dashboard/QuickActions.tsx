@@ -8,7 +8,6 @@ import {
   Users,
   TrendingUp,
   ArrowRight,
-  ArrowLeftRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -98,26 +97,6 @@ export function QuickActions({ onNewInvoice }: QuickActionsProps) {
                 </span>
                 <span className="text-[11px] text-text-secondary">
                   Customer profiles & terms
-                </span>
-              </div>
-            </div>
-            <ArrowRight className="w-3.5 h-3.5 text-text-muted group-hover:text-purple group-hover:translate-x-0.5 transition-all" />
-          </Link>
-
-          <Link
-            href="/transactions"
-            className="group flex items-center justify-between p-3 rounded-xl border border-border/40 hover:border-purple/40 bg-surface hover:bg-surface-alt/50 transition-all duration-200"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-pending-bg text-pending-text flex items-center justify-center group-hover:scale-105 transition-transform">
-                <ArrowLeftRight className="w-4 h-4" />
-              </div>
-              <div className="text-left">
-                <span className="text-xs font-bold text-text-primary group-hover:text-purple transition-colors block">
-                  Transactions
-                </span>
-                <span className="text-[11px] text-text-secondary">
-                  Cashflow bookkeeping
                 </span>
               </div>
             </div>

@@ -71,7 +71,7 @@ function RegisterForm() {
   const handleDemoSignIn = () => {
     enableDemoMode();
     toast.info("Entered Demo Workspace");
-    router.push("/invoices");
+    router.push("/dashboard");
   };
 
   return (

@@ -101,6 +101,7 @@ export default function Sidebar() {
         {/* Desktop Navigation Links (hidden on mobile/tablet) */}
         <nav
           aria-label="Workspace Sections"
+          data-tour="sidebar-nav"
           className={cn(
             "hidden lg:flex flex-col items-center gap-2 py-6 overflow-visible w-full",
             isExpanded ? "px-4" : "px-2"
