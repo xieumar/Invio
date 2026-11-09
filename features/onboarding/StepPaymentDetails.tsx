@@ -13,12 +13,32 @@ interface PaymentFieldConfig {
 
 export const PAYMENT_FIELDS: PaymentFieldConfig[] = [
   { key: "bankName", label: "Bank name", placeholder: "e.g. Monzo, GTBank" },
-  { key: "accountName", label: "Account name", placeholder: "e.g. Acme Studio Ltd" },
-  { key: "accountNumber", label: "Account number", placeholder: "e.g. 12345678" },
-  { key: "sortCode", label: "Sort code / routing number", placeholder: "e.g. 04-00-04" },
-  { key: "iban", label: "IBAN", placeholder: "e.g. GB29 NWBK 6016 1331 9268 19" },
+  {
+    key: "accountName",
+    label: "Account name",
+    placeholder: "e.g. Acme Studio Ltd",
+  },
+  {
+    key: "accountNumber",
+    label: "Account number",
+    placeholder: "e.g. 12345678",
+  },
+  {
+    key: "sortCode",
+    label: "Sort code / routing number",
+    placeholder: "e.g. 04-00-04",
+  },
+  {
+    key: "iban",
+    label: "IBAN",
+    placeholder: "e.g. GB29 NWBK 6016 1331 9268 19",
+  },
   { key: "swift", label: "SWIFT / BIC", placeholder: "e.g. NWBKGB2L" },
-  { key: "paymentLink", label: "Payment link", placeholder: "https://pay.example.com/acme" },
+  {
+    key: "paymentLink",
+    label: "Payment link",
+    placeholder: "https://pay.example.com/acme",
+  },
   {
     key: "instructions",
     label: "Payment instructions",

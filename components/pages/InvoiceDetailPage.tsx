@@ -172,7 +172,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
           Go back
         </Link>
 
-        <div className="bg-surface rounded-lg shadow-sm px-6 py-6 sm:px-8 sm:py-5 flex items-center justify-between mb-6">
+        <div className="sm:sticky sm:top-20 lg:top-4 z-40 bg-surface rounded-lg shadow-sm px-6 py-6 sm:px-8 sm:py-5 flex items-center justify-between mb-6">
           <div className="flex items-center justify-between sm:justify-start w-full sm:w-auto gap-5">
             <span className="text-[13px] text-text-secondary">Status</span>
             <StatusBadge status={invoice.status} />

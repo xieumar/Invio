@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Plus, Sparkles } from "lucide-react";
 import { nanoid } from "nanoid";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout";
 import { useInvoices } from "@/context/InvoiceContext";
 import {
   InvoiceCard,
@@ -118,7 +119,7 @@ export function InvoicesPage() {
     <>
       <div className="w-full max-w-182.5 mx-auto">
         {/* Header */}
-        <header className="flex items-center justify-between mb-6 sm:mb-8">
+        <PageHeader className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
             <h1 className="text-2xl sm:text-[36px] font-extrabold tracking-tight text-text-primary">
               Invoices
@@ -176,7 +177,7 @@ export function InvoicesPage() {
               </span>
             </Button>
           </div>
-        </header>
+        </PageHeader>
 
         {/* Search + Sort toolbar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">

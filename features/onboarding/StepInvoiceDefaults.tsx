@@ -93,35 +93,35 @@ export function StepInvoiceDefaults({
 
         {/* Live Summary Preview Card */}
         {showSummary && (
-        <div className="p-4 rounded-2xl bg-surface-alt dark:bg-[#1e2139] border border-border/70 space-y-2.5">
-          <span className="text-[10px] font-bold text-purple uppercase tracking-wider block">
-            Workspace Summary
-          </span>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-text-muted">Business:</span>
-            <span className="font-bold text-text-primary">
-              {values.businessName || "Not set"}
+          <div className="p-4 rounded-2xl bg-surface-alt dark:bg-[#1e2139] border border-border/70 space-y-2.5">
+            <span className="text-[10px] font-bold text-purple uppercase tracking-wider block">
+              Workspace Summary
             </span>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-text-muted">Business:</span>
+              <span className="font-bold text-text-primary">
+                {values.businessName || "Not set"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-text-muted">Billing Email:</span>
+              <span className="font-medium text-text-primary">
+                {values.email || "Not set"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-text-muted">Currency:</span>
+              <span className="font-bold text-text-primary">
+                {values.defaultCurrency}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-text-muted">Terms:</span>
+              <span className="font-bold text-text-primary">
+                Net {values.defaultPaymentTerms} Days
+              </span>
+            </div>
           </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-text-muted">Billing Email:</span>
-            <span className="font-medium text-text-primary">
-              {values.email || "Not set"}
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-text-muted">Currency:</span>
-            <span className="font-bold text-text-primary">
-              {values.defaultCurrency}
-            </span>
-          </div>
-          <div className="flex items-center justify-between text-xs">
-            <span className="text-text-muted">Terms:</span>
-            <span className="font-bold text-text-primary">
-              Net {values.defaultPaymentTerms} Days
-            </span>
-          </div>
-        </div>
         )}
       </div>
     </div>

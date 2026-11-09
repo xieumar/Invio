@@ -3,10 +3,12 @@
 import React, { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout";
 import {
   StepBusinessInfo,
   StepInvoiceDefaults,
   StepPaymentDetails,
+  LogoUploader,
   DEFAULT_ONBOARDING_VALUES,
   useBusinessProfile,
   useSaveBusinessProfile,
@@ -30,7 +32,28 @@ function toFormValues(
   };
 }
 
-function SettingsForm({ initial }: { initial: BusinessProfileFormData }) {
+function SettingsTitle({ isDirty = false }: { isDirty?: boolean }) {
+  return (
+    <div>
+      <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-primary">
+        Settings
+      </h1>
+      <p className="text-xs sm:text-sm text-text-secondary mt-1">
+        {isDirty
+          ? "You have unsaved changes"
+          : "Your business details, invoice defaults and payment information."}
+      </p>
+    </div>
+  );
+}
+
+function SettingsForm({
+  initial,
+  logoUrl,
+}: {
+  initial: BusinessProfileFormData;
+  logoUrl?: string | null;
+}) {
   const save = useSaveBusinessProfile();
   const [values, setValues] = useState(initial);
   const [saved, setSaved] = useState(initial);
@@ -86,6 +109,36 @@ function SettingsForm({ initial }: { initial: BusinessProfileFormData }) {
 
   return (
     <div className="space-y-6">
+      <PageHeader className="border-b border-border/40 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <SettingsTitle isDirty={isDirty} />
+        <div className="flex items-center gap-3">
+          <Button
+            type="button"
+            variant="outline"
+            disabled={!isDirty || save.isPending}
+            onClick={() => {
+              setValues(saved);
+              setErrors({});
+            }}
+            className="h-11 px-5 rounded-full text-xs font-semibold"
+          >
+            Discard
+          </Button>
+          <Button
+            type="button"
+            disabled={!isDirty || save.isPending}
+            onClick={handleSave}
+            className="h-11 px-6 rounded-full bg-purple hover:bg-purple-light text-white font-bold text-xs"
+          >
+            {save.isPending ? "Saving..." : "Save changes"}
+          </Button>
+        </div>
+      </PageHeader>
+
+      <section className={sectionClass}>
+        <LogoUploader logoUrl={logoUrl} businessName={values.businessName} />
+      </section>
+
       <section className={sectionClass}>
         <StepBusinessInfo values={values} onChange={update} errors={errors} />
       </section>
@@ -105,34 +158,6 @@ function SettingsForm({ initial }: { initial: BusinessProfileFormData }) {
           errors={errors}
         />
       </section>
-
-      <div className="sticky bottom-4 flex items-center justify-end gap-3 bg-surface/90 backdrop-blur border border-border/60 rounded-2xl p-3 shadow-sm">
-        {isDirty && (
-          <span className="text-xs text-text-secondary mr-auto pl-2">
-            You have unsaved changes
-          </span>
-        )}
-        <Button
-          type="button"
-          variant="outline"
-          disabled={!isDirty || save.isPending}
-          onClick={() => {
-            setValues(saved);
-            setErrors({});
-          }}
-          className="h-11 px-5 rounded-xl text-xs font-semibold"
-        >
-          Discard
-        </Button>
-        <Button
-          type="button"
-          disabled={!isDirty || save.isPending}
-          onClick={handleSave}
-          className="h-11 px-6 rounded-xl bg-purple hover:bg-purple-light text-white font-bold text-xs"
-        >
-          {save.isPending ? "Saving..." : "Save changes"}
-        </Button>
-      </div>
     </div>
   );
 }
@@ -141,20 +166,21 @@ export function SettingsPage() {
   const { data: profile, isLoading } = useBusinessProfile();
 
   return (
-    <div className="w-full max-w-3xl space-y-8">
-      <header className="pb-2 border-b border-border/40">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-primary">
-          Settings
-        </h1>
-        <p className="text-xs sm:text-sm text-text-secondary mt-1">
-          Your business details, invoice defaults and payment information.
-        </p>
-      </header>
-
+    <div className="w-full max-w-3xl">
       {isLoading ? (
-        <p className="text-sm text-text-secondary">Loading settings...</p>
+        <>
+          <PageHeader className="border-b border-border/40">
+            <SettingsTitle />
+          </PageHeader>
+          <p className="text-sm text-text-secondary mt-6">
+            Loading settings...
+          </p>
+        </>
       ) : (
-        <SettingsForm initial={toFormValues(profile)} />
+        <SettingsForm
+          initial={toFormValues(profile)}
+          logoUrl={profile?.logoUrl}
+        />
       )}
     </div>
   );

@@ -6,6 +6,7 @@ import { Plus, ArrowRight, Compass } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout";
 import {
   DashboardMetrics,
   RecentInvoices,
@@ -103,7 +104,7 @@ export function DashboardPage() {
     <>
       <div className="w-full space-y-8 sm:space-y-10">
         {/* Top Banner & Header */}
-        <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-2 border-b border-border/40">
+        <PageHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b border-border/40">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple/10 text-purple dark:text-purple-light text-xs font-bold uppercase tracking-wider mb-2">
               <span className="w-2 h-2 rounded-full bg-purple animate-pulse" />
@@ -156,7 +157,7 @@ export function DashboardPage() {
               <span>New Invoice</span>
             </Button>
           </div>
-        </header>
+        </PageHeader>
 
         {/* Overview Metric Summary Cards */}
         <div data-tour="metrics">

@@ -4,6 +4,7 @@ import React, { useState, useMemo } from "react";
 import { Search, Plus, X, Users, DollarSign, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout";
 import { Input } from "@/components/ui/input";
 import { MetricCard } from "@/components/ui/metric-card";
 import { ClientList, ClientFormModal } from "@/components/clients";
@@ -59,7 +60,7 @@ export function ClientsListPage() {
   return (
     <div className="w-full space-y-8 sm:space-y-10">
       {/* Page Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-border/40">
+      <PageHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border/40">
         <div>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple/10 text-purple dark:text-purple-light text-xs font-bold uppercase tracking-wider mb-2">
             <span className="w-2 h-2 rounded-full bg-purple animate-pulse" />
@@ -97,7 +98,7 @@ export function ClientsListPage() {
             <span className="pointer-events-none">New Client</span>
           </Button>
         </div>
-      </header>
+      </PageHeader>
 
       {/* Stats Summary Strip using shared MetricCard shell */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
