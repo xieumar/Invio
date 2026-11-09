@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth";
 import { queryKeys } from "@/lib/query";
 import { fetchInvoices } from "@/features/invoices";
+import { getEffectiveStatus } from "@/lib/invoice-status";
 import { getBusinessProfile } from "@/features/onboarding/api";
 import { convertAmount, type ExchangeRates } from "@/lib/money";
 import { fetchExchangeRates } from "./useExchangeRates";
@@ -52,16 +53,12 @@ export function calculateMetricsFromInvoices(
     // Total Invoiced includes all non-cancelled invoices
     totalInvoiced += amount;
 
-    if (inv.status === "paid") {
+    const status = getEffectiveStatus(inv, now);
+    if (status === "paid") {
       paidBalance += amount;
-    } else if (inv.status === "pending") {
+    } else if (status === "pending") {
       outstandingRevenue += amount;
-
-      // Check if past due date
-      if (inv.paymentDue && new Date(inv.paymentDue) < now) {
-        overdueCount += 1;
-      }
-    } else if (inv.status === "overdue") {
+    } else if (status === "overdue") {
       outstandingRevenue += amount;
       overdueCount += 1;
     }

@@ -18,6 +18,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
 import { nanoid } from "nanoid";
+import { toast } from "sonner";
 import { InvoiceDatePicker } from "./InvoiceDatePicker";
 import { InvoicePaymentTerms } from "./InvoicePaymentTerms";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
@@ -491,6 +492,12 @@ export function InvoiceForm({
     onSave(buildPayload(data), status);
   }
 
+  // Without this, a validation error on a field with no visible message
+  // (items, tax, discount...) makes Save appear to do nothing.
+  function onInvalid() {
+    toast.error("Couldn't save. Please check the highlighted fields.");
+  }
+
   return (
     <>
       <div
@@ -607,14 +614,19 @@ export function InvoiceForm({
                   />
                 </Field>
 
-                <Field label="Payment Terms" aiName="paymentTerms">
+                <Field
+                  label="Payment Terms"
+                  aiName="paymentTerms"
+                  error={errors.paymentTerms?.message}
+                >
                   <Controller
                     control={control}
                     name="paymentTerms"
                     render={({ field }) => (
                       <InvoicePaymentTerms
                         value={Number(field.value)}
-                        onChange={field.onChange}
+                        // The dropdown emits a string; the schema expects a number
+                        onChange={(v) => field.onChange(Number(v))}
                       />
                     )}
                   />
@@ -690,15 +702,19 @@ export function InvoiceForm({
 
             <button
               type="button"
-              onClick={handleSubmit((data) =>
-                submit(
-                  data,
-                  isEdit
-                    ? invoice?.status === "draft"
-                      ? "pending"
-                      : invoice?.status || "pending"
-                    : "pending"
-                )
+              onClick={handleSubmit(
+                (data) =>
+                  submit(
+                    data,
+                    isEdit
+                      ? invoice?.status === "draft" ||
+                        invoice?.status === "overdue"
+                        ? // "overdue" is derived from the due date, never stored
+                          "pending"
+                        : invoice?.status || "pending"
+                      : "pending"
+                  ),
+                onInvalid
               )}
               className="
                 px-4 pt-1 sm:px-6 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 

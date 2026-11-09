@@ -12,6 +12,7 @@ import {
 import { db } from "@/lib/firebase";
 import { generateId, calcPaymentDue } from "@/lib/utils";
 import { calculateInvoiceAmounts, getInvoiceAmounts } from "@/lib/money";
+import { getEffectiveStatus } from "@/lib/invoice-status";
 import { seedData } from "@/lib/seeddata";
 
 const DEMO_INVOICES_KEY = "invio_demo_invoices";
@@ -78,6 +79,8 @@ function normalizeInvoice(invoice: Invoice): Invoice {
   const amounts = getInvoiceAmounts(invoice);
   return {
     ...invoice,
+    // Overdue is derived from the due date; the stored status stays as-is.
+    status: getEffectiveStatus(invoice),
     items: (invoice.items ?? []).map((item) => ({
       ...item,
       total: lineTotal(item),

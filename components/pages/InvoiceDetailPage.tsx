@@ -76,7 +76,17 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
     status: InvoiceStatus
   ) => {
     if (updateInvoice) {
-      await updateInvoice(invoice.id, data, status);
+      try {
+        await updateInvoice(invoice.id, data, status);
+      } catch (err) {
+        console.error("Failed to update invoice:", err);
+        toast.error(
+          err instanceof Error
+            ? `Couldn't update invoice: ${err.message}`
+            : "Couldn't update invoice. Please try again."
+        );
+        return;
+      }
       toast.success(`Invoice #${invoice.id} updated!`);
     }
     setIsEditing(false);

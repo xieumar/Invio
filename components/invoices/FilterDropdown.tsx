@@ -11,6 +11,7 @@ interface FilterDropdownProps {
 const OPTIONS: { key: keyof FilterState; label: string }[] = [
   { key: "draft", label: "Draft" },
   { key: "pending", label: "Pending" },
+  { key: "overdue", label: "Overdue" },
   { key: "paid", label: "Paid" },
 ];
 

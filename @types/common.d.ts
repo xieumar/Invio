@@ -8,6 +8,7 @@ interface Address {
 interface FilterState {
   draft: boolean;
   pending: boolean;
+  overdue: boolean;
   paid: boolean;
 }
 

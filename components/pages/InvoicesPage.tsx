@@ -24,6 +24,7 @@ import { toast } from "sonner";
 const defaultFilter: FilterState = {
   draft: false,
   pending: false,
+  overdue: false,
   paid: false,
 };
 
@@ -52,7 +53,8 @@ export function InvoicesPage() {
     Partial<InvoiceFormValues> | undefined
   >(undefined);
 
-  const anyActive = filter.draft || filter.pending || filter.paid;
+  const anyActive =
+    filter.draft || filter.pending || filter.overdue || filter.paid;
 
   const filtered = useMemo(() => {
     let result = anyActive
@@ -72,7 +74,17 @@ export function InvoicesPage() {
   }, [invoices, filter, anyActive, search, sort]);
 
   async function handleCreate(data: InvoiceFormData, status: InvoiceStatus) {
-    await createInvoice(data, status);
+    try {
+      await createInvoice(data, status);
+    } catch (err) {
+      console.error("Failed to create invoice:", err);
+      toast.error(
+        err instanceof Error
+          ? `Couldn't save invoice: ${err.message}`
+          : "Couldn't save invoice. Please try again."
+      );
+      return;
+    }
     toast.success("New invoice created!");
     setShowForm(false);
     setAiDraftValues(undefined);
