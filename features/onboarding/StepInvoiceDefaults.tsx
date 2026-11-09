@@ -8,6 +8,8 @@ import type { OnboardingFormValues } from "./types";
 interface StepInvoiceDefaultsProps {
   values: OnboardingFormValues;
   onChange: (updates: Partial<OnboardingFormValues>) => void;
+  /** Hide the onboarding summary card (e.g. on the Settings page). */
+  showSummary?: boolean;
 }
 
 const PAYMENT_TERMS_OPTIONS = [
@@ -20,6 +22,7 @@ const PAYMENT_TERMS_OPTIONS = [
 export function StepInvoiceDefaults({
   values,
   onChange,
+  showSummary = true,
 }: StepInvoiceDefaultsProps) {
   return (
     <div className="space-y-6">
@@ -89,6 +92,7 @@ export function StepInvoiceDefaults({
         </div>
 
         {/* Live Summary Preview Card */}
+        {showSummary && (
         <div className="p-4 rounded-2xl bg-surface-alt dark:bg-[#1e2139] border border-border/70 space-y-2.5">
           <span className="text-[10px] font-bold text-purple uppercase tracking-wider block">
             Workspace Summary
@@ -118,6 +122,7 @@ export function StepInvoiceDefaults({
             </span>
           </div>
         </div>
+        )}
       </div>
     </div>
   );

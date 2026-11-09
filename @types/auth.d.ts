@@ -7,6 +7,33 @@ interface UserProfile {
   updatedAt: string;
 }
 
+type PaymentFieldKey =
+  | "bankName"
+  | "accountName"
+  | "accountNumber"
+  | "sortCode"
+  | "iban"
+  | "swift"
+  | "paymentLink"
+  | "instructions";
+
+/**
+ * Where clients should send money. Invio only displays these on invoices;
+ * it does not process payments.
+ */
+interface PaymentDetails {
+  bankName?: string | null;
+  accountName?: string | null;
+  accountNumber?: string | null;
+  sortCode?: string | null;
+  iban?: string | null;
+  swift?: string | null;
+  paymentLink?: string | null;
+  instructions?: string | null;
+  /** Per-field switch for printing on invoices. Missing key = shown. */
+  visibility?: Partial<Record<PaymentFieldKey, boolean>>;
+}
+
 interface BusinessProfile {
   id: string;
   businessName: string;
@@ -17,6 +44,8 @@ interface BusinessProfile {
   logoUrl?: string | null;
   defaultCurrency: CurrencyCode;
   defaultPaymentTerms: number;
+  defaultNotes?: string | null;
+  paymentDetails?: PaymentDetails | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -29,7 +58,8 @@ interface BusinessProfileFormData {
   address: Address;
   defaultCurrency: CurrencyCode;
   defaultPaymentTerms: number;
-  defaultNotes?: string;
+  defaultNotes?: string | null;
+  paymentDetails?: PaymentDetails | null;
 }
 
 interface UserPreferences {

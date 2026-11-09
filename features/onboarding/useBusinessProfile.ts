@@ -1,8 +1,8 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth";
-import { getBusinessProfile } from "./api";
+import { getBusinessProfile, saveBusinessProfile } from "./api";
 
 export function useBusinessProfile() {
   const { user } = useAuth();
@@ -12,5 +12,18 @@ export function useBusinessProfile() {
     queryKey: ["businessProfile", userId],
     queryFn: () => getBusinessProfile(userId),
     staleTime: 5 * 60 * 1000,
+  });
+}
+
+export function useSaveBusinessProfile() {
+  const { user } = useAuth();
+  const userId = user?.uid ?? "demo-user";
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: BusinessProfileFormData) =>
+      saveBusinessProfile(userId, data),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: ["businessProfile", userId] }),
   });
 }

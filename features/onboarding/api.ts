@@ -13,19 +13,26 @@ export async function saveBusinessProfile(
 
   if (userId === "demo-user" || (typeof window !== "undefined" && !userId)) {
     if (typeof window !== "undefined") {
-      localStorage.setItem(DEMO_PROFILE_KEY, JSON.stringify(validated));
+      // Merge so fields not on this form (e.g. logoUrl) survive a save
+      let existing = {};
+      try {
+        existing = JSON.parse(localStorage.getItem(DEMO_PROFILE_KEY) ?? "{}");
+      } catch {
+        // corrupt entry: overwrite it
+      }
+      localStorage.setItem(
+        DEMO_PROFILE_KEY,
+        JSON.stringify({ ...existing, ...validated })
+      );
     }
     return;
   }
 
+  // createdAt is set once, by completeOnboarding; updates must not reset it.
   const profileRef = doc(db, "users", userId, "businessProfile", "default");
   await setDoc(
     profileRef,
-    {
-      ...validated,
-      updatedAt: serverTimestamp(),
-      createdAt: serverTimestamp(),
-    },
+    { ...validated, updatedAt: serverTimestamp() },
     { merge: true }
   );
 }
@@ -69,6 +76,8 @@ export async function getBusinessProfile(
       logoUrl: data.logoUrl || null,
       defaultCurrency: data.defaultCurrency || "GBP",
       defaultPaymentTerms: data.defaultPaymentTerms || 14,
+      defaultNotes: data.defaultNotes || null,
+      paymentDetails: data.paymentDetails || null,
       createdAt: data.createdAt?.toDate
         ? data.createdAt.toDate().toISOString()
         : new Date().toISOString(),
