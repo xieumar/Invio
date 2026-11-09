@@ -24,6 +24,7 @@ import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
 import { ClientSelect } from "@/features/invoices";
 import {
   calculateInvoice,
+  calculateInvoiceAmounts,
   toMajorUnits,
   formatMoney,
   getCurrencyConfig,
@@ -457,21 +458,25 @@ export function InvoiceForm({
   }, [onDiscard]);
 
   function buildPayload(values: InvoiceFormValues): InvoiceFormData {
-    const { subtotal, taxAmount, discountAmount, total } = calculateInvoice(
-      values.items.map((i) => ({ quantity: Number(i.quantity) || 0, price: Number(i.price) || 0 })),
-      Number(values.taxRate) || 0,
-      Number(values.discount) || 0
-    );
+    // Amounts are persisted in MAJOR units (see features/invoices/api.ts)
+    const lines = values.items.map((i) => ({
+      quantity: Number(i.quantity) || 0,
+      price: Number(i.price) || 0,
+    }));
+    const taxRate = Number(values.taxRate) || 0;
+    const discount = Number(values.discount) || 0;
+    const { subtotal, taxAmount, discountAmount, total } =
+      calculateInvoiceAmounts(lines, taxRate, discount);
     return {
       ...values,
-      items: values.items.map((item) => ({
+      items: values.items.map((item, idx) => ({
         ...item,
-        // per-row total stored in minor units
-        total: calculateInvoice([{ quantity: Number(item.quantity) || 0, price: Number(item.price) || 0 }]).total,
+        total: calculateInvoiceAmounts([lines[idx]]).total,
       })),
       subtotal,
-      taxRate: Number(values.taxRate) || 0,
+      taxRate,
       taxAmount,
+      discount,
       discountAmount,
       total,
     };

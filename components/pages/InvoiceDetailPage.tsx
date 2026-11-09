@@ -277,6 +277,33 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
               </div>
             </div>
 
+            {((invoice.taxRate ?? 0) > 0 || (invoice.discountAmount ?? 0) > 0) && (
+              <div className="px-6 pb-6 sm:px-8 sm:pb-8 flex flex-col gap-3 text-[13px] text-text-secondary">
+                <div className="flex justify-between">
+                  <span>Subtotal</span>
+                  <span className="font-bold text-text-primary">
+                    {formatCurrency(invoice.subtotal ?? invoice.total, invoice.currency)}
+                  </span>
+                </div>
+                {(invoice.taxRate ?? 0) > 0 && (
+                  <div className="flex justify-between">
+                    <span>Tax ({invoice.taxRate}%)</span>
+                    <span className="font-bold text-text-primary">
+                      {formatCurrency(invoice.taxAmount ?? 0, invoice.currency)}
+                    </span>
+                  </div>
+                )}
+                {(invoice.discountAmount ?? 0) > 0 && (
+                  <div className="flex justify-between">
+                    <span>Discount</span>
+                    <span className="font-bold text-text-primary">
+                      -{formatCurrency(invoice.discountAmount ?? 0, invoice.currency)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="bg-sidebar-light dark:bg-text-primary-light px-6 py-6 sm:px-8 sm:py-8 flex justify-between items-center text-white">
               <span className="text-[13px]">Amount Due</span>
               <span className="text-2xl sm:text-[32px] font-bold leading-none">

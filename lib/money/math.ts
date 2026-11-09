@@ -75,3 +75,59 @@ export function calculateInvoice(
     total,
   };
 }
+
+/**
+ * Invoice amounts in MAJOR units (e.g. 12.50), the unit persisted on invoices.
+ * Maths runs in integer minor units to avoid float drift, then converts back.
+ */
+export interface InvoiceAmounts {
+  subtotal: number;
+  taxAmount: number;
+  discountAmount: number;
+  total: number;
+}
+
+export function calculateInvoiceAmounts(
+  items: Array<{ quantity: number; price: number }>,
+  taxRatePercent = 0,
+  discountMajor = 0
+): InvoiceAmounts {
+  const minor = calculateInvoice(items, taxRatePercent, discountMajor);
+  return {
+    subtotal: toMajorUnits(minor.subtotal),
+    taxAmount: toMajorUnits(minor.taxAmount),
+    discountAmount: toMajorUnits(minor.discountAmount),
+    total: toMajorUnits(minor.total),
+  };
+}
+
+/**
+ * Derives the amounts for a stored invoice from its line items, tax rate and
+ * discount, ignoring any stored totals. Older records saved totals without
+ * tax/discount and subtotal/tax/discount in minor units, so stored values
+ * cannot be trusted.
+ *
+ * Legacy records have `discountAmount` (minor units) but no `discount`;
+ * records written by the current code always have `discount` (major units).
+ */
+export function getInvoiceAmounts(
+  invoice: Pick<Invoice, "items" | "taxRate" | "discountAmount"> & {
+    discount?: number;
+  }
+): InvoiceAmounts {
+  const discountMajor =
+    typeof invoice.discount === "number"
+      ? invoice.discount
+      : typeof invoice.discountAmount === "number"
+        ? toMajorUnits(invoice.discountAmount)
+        : 0;
+
+  return calculateInvoiceAmounts(
+    (invoice.items ?? []).map((i) => ({
+      quantity: Number(i.quantity) || 0,
+      price: Number(i.price) || 0,
+    })),
+    Number(invoice.taxRate) || 0,
+    discountMajor
+  );
+}

@@ -10,7 +10,7 @@ import {
   pdf,
   Font,
 } from "@react-pdf/renderer";
-import { toMajorUnits } from "@/lib/money";
+import { formatCurrency } from "@/lib/utils";
 
 // Register font (optional: falls back to Helvetica if unavailable)
 Font.register({
@@ -198,12 +198,15 @@ const styles = StyleSheet.create({
   },
 });
 
-function formatAmount(minor: number, decimals = 2): string {
-  return `£${toMajorUnits(minor, decimals).toFixed(decimals)}`;
-}
-
-function formatSimple(amount: number): string {
-  return `£${amount.toFixed(2)}`;
+// Amounts are stored in major units. The built-in PDF font only covers
+// Latin-1 (plus €), so symbols outside it fall back to the ISO code.
+function makeFormatter(currency = "GBP") {
+  return (amount: number): string => {
+    const formatted = formatCurrency(amount, currency);
+    return /[^\u0000-\u00FF\u20AC]/.test(formatted)
+      ? `${currency.toUpperCase()} ${amount.toFixed(2)}`
+      : formatted;
+  };
 }
 
 interface InvoiceDocumentProps {
@@ -211,6 +214,7 @@ interface InvoiceDocumentProps {
 }
 
 function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
+  const formatSimple = makeFormatter(invoice.currency);
   const showTax = !!(invoice.taxRate && invoice.taxRate > 0 && invoice.taxAmount);
   const showDiscount = !!(invoice.discountAmount && invoice.discountAmount > 0);
   const showSubtotal = showTax || showDiscount;
@@ -285,19 +289,19 @@ function InvoiceDocument({ invoice }: InvoiceDocumentProps) {
           {showSubtotal && invoice.subtotal !== undefined && (
             <View style={styles.totalsRow}>
               <Text style={styles.totalsLabel}>Subtotal</Text>
-              <Text style={styles.totalsValue}>{formatAmount(invoice.subtotal)}</Text>
+              <Text style={styles.totalsValue}>{formatSimple(invoice.subtotal)}</Text>
             </View>
           )}
           {showTax && (
             <View style={styles.totalsRow}>
               <Text style={styles.totalsLabel}>Tax ({invoice.taxRate}%)</Text>
-              <Text style={styles.totalsValue}>{formatAmount(invoice.taxAmount!)}</Text>
+              <Text style={styles.totalsValue}>{formatSimple(invoice.taxAmount!)}</Text>
             </View>
           )}
           {showDiscount && (
             <View style={styles.totalsRow}>
               <Text style={styles.totalsLabel}>Discount</Text>
-              <Text style={styles.totalsValue}>-{formatAmount(invoice.discountAmount!)}</Text>
+              <Text style={styles.totalsValue}>-{formatSimple(invoice.discountAmount!)}</Text>
             </View>
           )}
           <View style={styles.grandTotalRow}>

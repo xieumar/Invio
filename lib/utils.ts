@@ -34,12 +34,6 @@ export function calcPaymentDue(createdAt: string, terms: number): string {
   }
 }
 
-export function calcTotal(
-  items: { quantity: number; price: number }[]
-): number {
-  return items.reduce((sum, item) => sum + item.quantity * item.price, 0);
-}
-
 export function formatCurrency(amount: number, currency = "GBP"): string {
   return new Intl.NumberFormat("en-GB", {
     style: "currency",

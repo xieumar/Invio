@@ -23,10 +23,16 @@ interface Invoice {
   clientAddress: Address;
   items: InvoiceItem[];
   currency?: CurrencyCode;
-  subtotal?: MinorUnitAmount;
+  /**
+   * All amounts below are in MAJOR units (e.g. 12.50), not minor units.
+   * Derived from items + taxRate + discount; see getInvoiceAmounts().
+   */
+  subtotal?: number;
   taxRate?: TaxRatePercent;
-  taxAmount?: MinorUnitAmount;
-  discountAmount?: MinorUnitAmount;
+  taxAmount?: number;
+  /** Discount entered by the user, in major units */
+  discount?: number;
+  discountAmount?: number;
   total: number;
   notes?: string | null;
   paidAt?: string | null;
@@ -44,10 +50,10 @@ interface InvoiceFormData {
   items: InvoiceItem[];
   clientId?: string | null;
   taxRate?: number;
-  taxAmount?: MinorUnitAmount;
-  subtotal?: MinorUnitAmount;
+  taxAmount?: number;
+  subtotal?: number;
   discount?: number;
-  discountAmount?: MinorUnitAmount;
+  discountAmount?: number;
   total: number;
   currency?: CurrencyCode;
   notes?: string;
