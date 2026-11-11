@@ -77,9 +77,10 @@ export function useCreateInvoice() {
     }: {
       data: InvoiceFormData;
       status?: InvoiceStatus;
-    }) => createSnapshot(userId).then((snapshot) =>
-      createInvoiceRecord(userId, { ...data, ...snapshot }, status)
-    ),
+    }) =>
+      createSnapshot(userId).then((snapshot) =>
+        createInvoiceRecord(userId, { ...data, ...snapshot }, status)
+      ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.metrics.all });

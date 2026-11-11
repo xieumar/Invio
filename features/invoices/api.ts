@@ -277,7 +277,8 @@ export async function updateInvoiceRecord(
         ...data,
         ...amountFields,
         paymentDue,
-        status: status ?? (existing.status === "draft" ? "pending" : existing.status),
+        status:
+          status ?? (existing.status === "draft" ? "pending" : existing.status),
         updatedAt: now,
       };
       saveLocalDemoInvoices(local);
@@ -303,7 +304,10 @@ export async function updateInvoiceRecord(
   }
 
   if (data.createdAt && data.paymentTerms) {
-    updatePayload.paymentDue = calcPaymentDue(data.createdAt, data.paymentTerms);
+    updatePayload.paymentDue = calcPaymentDue(
+      data.createdAt,
+      data.paymentTerms
+    );
   }
 
   if (status) {

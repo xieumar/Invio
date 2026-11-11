@@ -57,10 +57,12 @@ export function buildInvoiceView(
   const doc = buildInvoiceDocument(invoice, profile);
   const money = makeMoney(invoice.currency);
 
-  const showTax = !!(invoice.taxRate && invoice.taxRate > 0 && invoice.taxAmount);
-  const showDiscount = !!(
-    invoice.discountAmount && invoice.discountAmount > 0
+  const showTax = !!(
+    invoice.taxRate &&
+    invoice.taxRate > 0 &&
+    invoice.taxAmount
   );
+  const showDiscount = !!(invoice.discountAmount && invoice.discountAmount > 0);
 
   const adjustments: InvoiceView["adjustments"] = [];
   if ((showTax || showDiscount) && invoice.subtotal !== undefined) {

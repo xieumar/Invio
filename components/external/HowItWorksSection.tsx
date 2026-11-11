@@ -10,7 +10,10 @@ export function HowItWorksSection() {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
-        <FadeIn className="text-center max-w-2xl mx-auto mb-16 sm:mb-20" distance={40}>
+        <FadeIn
+          className="text-center max-w-2xl mx-auto mb-16 sm:mb-20"
+          distance={40}
+        >
           <span className="text-purple-light text-xs font-extrabold uppercase tracking-widest bg-purple/20 px-3.5 py-1 rounded-full">
             Simple Steps
           </span>
@@ -18,8 +21,8 @@ export function HowItWorksSection() {
             How Invio Works
           </h2>
           <p className="text-[#888eb0] mt-3.5 text-base sm:text-lg leading-relaxed">
-            No confusion or delays. Just fast, automated invoicing from initial
-            draft to settled bank deposit.
+            No confusion or delays. Just fast invoicing, from first draft to the
+            day you mark it paid.
           </p>
         </FadeIn>
 
@@ -38,7 +41,7 @@ export function HowItWorksSection() {
               <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 mb-5 sm:mb-6">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-paid-text text-[#0c0e16] text-xs font-extrabold whitespace-nowrap shadow-md shadow-paid-text/25">
                   <Sparkles className="w-3.5 h-3.5 shrink-0" />
-                  <span>Auto-Drafted in 2.4s</span>
+                  <span>AI draft · ready to review</span>
                 </div>
                 <span className="text-xs font-bold text-[#888eb0] whitespace-nowrap">
                   #INV-2026-089
@@ -68,28 +71,34 @@ export function HowItWorksSection() {
                   delay={0.5}
                 >
                   <StaggerItem direction="right" distance={30}>
-                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
-                    <span className="font-bold text-white min-w-0">
-                      UX Research & Discovery
-                    </span>
-                    <span className="font-extrabold text-white whitespace-nowrap">£1,200.00</span>
-                  </div>
+                    <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
+                      <span className="font-bold text-white min-w-0">
+                        UX Research & Discovery
+                      </span>
+                      <span className="font-extrabold text-white whitespace-nowrap">
+                        £1,200.00
+                      </span>
+                    </div>
                   </StaggerItem>
                   <StaggerItem direction="right" distance={30}>
-                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
-                    <span className="font-bold text-white min-w-0">
-                      Component Design System
-                    </span>
-                    <span className="font-extrabold text-white whitespace-nowrap">£2,450.00</span>
-                  </div>
+                    <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
+                      <span className="font-bold text-white min-w-0">
+                        Component Design System
+                      </span>
+                      <span className="font-extrabold text-white whitespace-nowrap">
+                        £2,450.00
+                      </span>
+                    </div>
                   </StaggerItem>
                   <StaggerItem direction="right" distance={30}>
-                  <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
-                    <span className="font-bold text-white min-w-0">
-                      Figma Prototype Review
-                    </span>
-                    <span className="font-extrabold text-white whitespace-nowrap">£600.00</span>
-                  </div>
+                    <div className="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#252945]/70 border border-[#252945]">
+                      <span className="font-bold text-white min-w-0">
+                        Figma Prototype Review
+                      </span>
+                      <span className="font-extrabold text-white whitespace-nowrap">
+                        £600.00
+                      </span>
+                    </div>
                   </StaggerItem>
                 </Stagger>
 
@@ -112,11 +121,11 @@ export function HowItWorksSection() {
                 <div className="flex items-center gap-2 min-w-0">
                   <CheckCircle2 className="w-4 h-4 shrink-0 text-paid-text" />
                   <span className="font-bold text-white">
-                    Deposit Verified in Monzo CSV
+                    PDF ready · Bold template
                   </span>
                 </div>
                 <span className="font-extrabold text-paid-text whitespace-nowrap">
-                  +£4,250.00
+                  Download
                 </span>
               </div>
             </div>
@@ -138,94 +147,92 @@ export function HowItWorksSection() {
 
             {/* Step 1 */}
             <StaggerItem direction="left" distance={70}>
-            <div className="relative flex items-start gap-5 sm:gap-6 group">
-              <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
-                <Image
-                  src="/icons/ai.png"
-                  alt="AI drafting"
-                  width={28}
-                  height={28}
-                  className="object-contain"
-                />
-              </div>
-              <div className="pt-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[11px] font-extrabold text-paid-text uppercase tracking-wider">
-                    Step 01
-                  </span>
+              <div className="relative flex items-start gap-5 sm:gap-6 group">
+                <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
+                  <Image
+                    src="/icons/ai.png"
+                    alt="AI drafting"
+                    width={28}
+                    height={28}
+                    className="object-contain"
+                  />
                 </div>
-                <h3 className="text-xl font-extrabold text-white tracking-tight mb-1.5">
-                  Describe or Draft with AI
-                </h3>
-                <p className="text-sm text-[#888eb0] leading-relaxed">
-                  Type a short summary of work completed or pick an existing
-                  client. Invio auto-generates line items, quantities, pricing,
-                  and VAT in seconds.
-                </p>
+                <div className="pt-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[11px] font-extrabold text-paid-text uppercase tracking-wider">
+                      Step 01
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-extrabold text-white tracking-tight mb-1.5">
+                    Describe or Draft with AI
+                  </h3>
+                  <p className="text-sm text-[#888eb0] leading-relaxed">
+                    Type a short summary of the work or pick a saved client. The
+                    assistant fills in line items, quantities and pricing for
+                    you to check and edit. Nothing is saved until you say so.
+                  </p>
+                </div>
               </div>
-            </div>
-
             </StaggerItem>
 
             {/* Step 2 */}
             <StaggerItem direction="left" distance={70}>
-            <div className="relative flex items-start gap-5 sm:gap-6 group">
-              <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
-                <Image
-                  src="/icons/client-invoice.png"
-                  alt="Send & Track"
-                  width={28}
-                  height={28}
-                  className="object-contain"
-                />
-              </div>
-              <div className="pt-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[11px] font-extrabold text-purple-light uppercase tracking-wider">
-                    Step 02
-                  </span>
+              <div className="relative flex items-start gap-5 sm:gap-6 group">
+                <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
+                  <Image
+                    src="/icons/client-invoice.png"
+                    alt="Download PDF"
+                    width={28}
+                    height={28}
+                    className="object-contain"
+                  />
                 </div>
-                <h3 className="text-xl font-extrabold text-white tracking-tight mb-1.5">
-                  Send & Track in Real-Time
-                </h3>
-                <p className="text-sm text-[#888eb0] leading-relaxed">
-                  Share a high-res PDF or custom payment portal link. Receive
-                  live notifications when clients open your invoice and review
-                  terms.
-                </p>
+                <div className="pt-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[11px] font-extrabold text-purple-light uppercase tracking-wider">
+                      Step 02
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-extrabold text-white tracking-tight mb-1.5">
+                    Download a Branded PDF
+                  </h3>
+                  <p className="text-sm text-[#888eb0] leading-relaxed">
+                    Export a polished PDF in the template you chose (Minimal,
+                    Classic or Bold) with your logo, tax details and payment
+                    instructions already on it, ready to send.
+                  </p>
+                </div>
               </div>
-            </div>
-
             </StaggerItem>
 
             {/* Step 3 */}
             <StaggerItem direction="left" distance={70}>
-            <div className="relative flex items-start gap-5 sm:gap-6 group">
-              <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
-                <Image
-                  src="/icons/csv.png"
-                  alt="Bank CSV reconciliation"
-                  width={28}
-                  height={28}
-                  className="object-contain"
-                />
-              </div>
-              <div className="pt-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[11px] font-extrabold text-pending-text uppercase tracking-wider">
-                    Step 03
-                  </span>
+              <div className="relative flex items-start gap-5 sm:gap-6 group">
+                <div className="w-12 h-12 rounded-2xl bg-[#1e2139] border border-[#252945] flex items-center justify-center shrink-0 shadow-md group-hover:scale-105 group-hover:border-purple/50 transition-all z-10 p-2.5">
+                  <Image
+                    src="/icons/csv.png"
+                    alt="Follow up and mark as paid"
+                    width={28}
+                    height={28}
+                    className="object-contain"
+                  />
                 </div>
-                <h3 className="text-xl font-extrabold text-white tracking-tight mb-1.5">
-                  Reconcile with Bank CSVs
-                </h3>
-                <p className="text-sm text-[#888eb0] leading-relaxed">
-                  Upload bank statement CSVs from Monzo or Revolut. Invio
-                  automatically cross-references deposits against open invoices
-                  to clear payments.
-                </p>
+                <div className="pt-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-[11px] font-extrabold text-pending-text uppercase tracking-wider">
+                      Step 03
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-extrabold text-white tracking-tight mb-1.5">
+                    Follow Up & Mark as Paid
+                  </h3>
+                  <p className="text-sm text-[#888eb0] leading-relaxed">
+                    Running late? Draft a friendly, firm or urgent reminder with
+                    one click. When the money lands, mark the invoice as paid
+                    and your dashboard updates.
+                  </p>
+                </div>
               </div>
-            </div>
             </StaggerItem>
           </Stagger>
         </div>

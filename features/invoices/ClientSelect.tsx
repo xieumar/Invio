@@ -18,15 +18,19 @@ export function ClientSelect({ value, onChange }: ClientSelectProps) {
 
   const selected = clients.find((c) => c.id === value) ?? null;
 
-  const filtered = clients.filter((c) =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.email.toLowerCase().includes(search.toLowerCase())
+  const filtered = clients.filter(
+    (c) =>
+      c.name.toLowerCase().includes(search.toLowerCase()) ||
+      c.email.toLowerCase().includes(search.toLowerCase())
   );
 
   // Close on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setOpen(false);
         setSearch("");
       }
@@ -122,7 +126,9 @@ export function ClientSelect({ value, onChange }: ClientSelectProps) {
           <ul className="max-h-56 overflow-y-auto py-1">
             {filtered.length === 0 ? (
               <li className="px-4 py-3 text-[13px] text-text-secondary text-center">
-                {clients.length === 0 ? "No clients yet — add one first" : "No matches found"}
+                {clients.length === 0
+                  ? "No clients yet — add one first"
+                  : "No matches found"}
               </li>
             ) : (
               filtered.map((client) => (
@@ -137,10 +143,16 @@ export function ClientSelect({ value, onChange }: ClientSelectProps) {
                     ${client.id === value ? "bg-purple/10 text-purple" : "text-text-primary"}
                   `}
                 >
-                  <UserCircle2 className={`w-5 h-5 shrink-0 ${client.id === value ? "text-purple" : "text-text-secondary"}`} />
+                  <UserCircle2
+                    className={`w-5 h-5 shrink-0 ${client.id === value ? "text-purple" : "text-text-secondary"}`}
+                  />
                   <div className="flex-1 min-w-0">
-                    <p className="text-[14px] font-bold truncate">{client.name}</p>
-                    <p className="text-[12px] text-text-secondary truncate">{client.email}</p>
+                    <p className="text-[14px] font-bold truncate">
+                      {client.name}
+                    </p>
+                    <p className="text-[12px] text-text-secondary truncate">
+                      {client.email}
+                    </p>
                   </div>
                 </li>
               ))

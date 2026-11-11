@@ -14,12 +14,48 @@ interface Blob {
 }
 
 const BLOBS: Blob[] = [
-  { top: "-4%", left: "50%", size: 900, color: "var(--color-purple)", speed: 0.15 },
-  { top: "14%", left: "-6%", size: 720, color: "var(--color-purple-light)", speed: -0.25 },
-  { top: "24%", left: "92%", size: 640, color: "var(--color-paid-text)", speed: 0.3 },
-  { top: "46%", left: "10%", size: 760, color: "var(--color-purple)", speed: 0.2 },
-  { top: "62%", left: "88%", size: 700, color: "var(--color-pending-text)", speed: -0.2 },
-  { top: "82%", left: "40%", size: 820, color: "var(--color-purple-light)", speed: 0.25 },
+  {
+    top: "-4%",
+    left: "50%",
+    size: 900,
+    color: "var(--color-purple)",
+    speed: 0.15,
+  },
+  {
+    top: "14%",
+    left: "-6%",
+    size: 720,
+    color: "var(--color-purple-light)",
+    speed: -0.25,
+  },
+  {
+    top: "24%",
+    left: "92%",
+    size: 640,
+    color: "var(--color-paid-text)",
+    speed: 0.3,
+  },
+  {
+    top: "46%",
+    left: "10%",
+    size: 760,
+    color: "var(--color-purple)",
+    speed: 0.2,
+  },
+  {
+    top: "62%",
+    left: "88%",
+    size: 700,
+    color: "var(--color-pending-text)",
+    speed: -0.2,
+  },
+  {
+    top: "82%",
+    left: "40%",
+    size: 820,
+    color: "var(--color-purple-light)",
+    speed: 0.25,
+  },
 ];
 
 // Fine film-grain texture, tiled; adds tactility so large gradients don't look flat

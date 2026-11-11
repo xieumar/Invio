@@ -29,7 +29,12 @@ const s = StyleSheet.create({
     letterSpacing: 5,
     color: INK,
   },
-  logo: { width: 140, height: 60, objectFit: "contain", objectPosition: "right" },
+  logo: {
+    width: 140,
+    height: 60,
+    objectFit: "contain",
+    objectPosition: "right",
+  },
   wordmark: { fontFamily: "Helvetica-Bold", fontSize: 16, color: INK },
 
   info: { flexDirection: "row", marginBottom: 44 },

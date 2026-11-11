@@ -25,8 +25,8 @@ export function Footer() {
               Automate your billing and master your cash flow.
             </h3>
             <p className="mt-2 text-white/80 text-[15px] leading-relaxed">
-              Create professional invoices, import transaction CSVs, and let AI
-              categorize your small business finances.
+              Create professional invoices, manage your clients, and let AI
+              draft the busywork. You approve everything.
             </p>
           </div>
 

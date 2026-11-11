@@ -2,18 +2,40 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   CheckCircle2,
-  ArrowUpRight,
   Sparkles,
-  FileText,
-  Share2,
-  Clock,
-  Building,
-  UploadCloud,
   FileCheck,
-  ShieldAlert,
+  Clock,
+  Landmark,
+  Link2,
+  Users,
+  BellRing,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/motion";
+import { TemplateShowcase } from "./TemplateShowcase";
+
+const ROADMAP = [
+  {
+    icon: Landmark,
+    title: "Bank CSV import",
+    body: "Upload a statement and match incoming payments to open invoices.",
+  },
+  {
+    icon: BellRing,
+    title: "Scheduled reminders",
+    body: "Reminder emails that go out on their own before and after the due date.",
+  },
+  {
+    icon: Link2,
+    title: "Shareable client links",
+    body: "A link your client can open to view their invoice online.",
+  },
+  {
+    icon: Users,
+    title: "Teams",
+    body: "Seats, roles and an activity log for studios and agencies.",
+  },
+];
 
 export function FeatureDetailSection() {
   return (
@@ -26,8 +48,12 @@ export function FeatureDetailSection() {
         className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Narrative */}
-          <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left">
+          <FadeIn
+            direction="right"
+            distance={80}
+            duration={0.9}
+            className="lg:col-span-5 flex flex-col gap-5 text-left"
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-purple/10 flex items-center justify-center p-1.5 shrink-0">
                 <Image
@@ -49,34 +75,34 @@ export function FeatureDetailSection() {
             </h2>
 
             <p className="text-text-secondary text-base leading-relaxed">
-              Standard accounting tools make you click through dozens of
-              confusing modal dialogs. Invio treats invoice creation as a
-              streamlined, distraction-free workflow with integer-accurate
-              minor-unit math.
+              Invoice creation is a single, distraction-free form. Amounts are
+              calculated in whole pence and cents, so subtotals, tax and
+              discounts always add up.
             </p>
 
             <ul className="flex flex-col gap-3 text-sm text-text-primary list-none p-0 m-0">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Flexible Payment Terms:</strong> Set Net 1, Net 7, Net
-                  14, Net 30, or custom terms with automated due-date
-                  resolution.
+                  <strong>Payment terms:</strong> Choose Net 1, 7, 14 or 30 days
+                  and the due date is worked out for you. Set your own default
+                  in Settings.
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Multi-Currency Support:</strong> Quote in GBP, USD, or
-                  EUR with exact conversion and integer pence/cents storage.
+                  <strong>Tax, discounts and currencies:</strong> Add a tax rate
+                  and a discount, and invoice in dozens of currencies, each
+                  stored exactly.
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Pixel-Perfect Exports:</strong> Generate vector PDFs
-                  or send clean, branded client review links that track views in
-                  real-time.
+                  <strong>Track every invoice:</strong> Draft, pending and paid
+                  statuses, with search, sort and filtering to find any invoice
+                  fast.
                 </span>
               </li>
             </ul>
@@ -86,15 +112,18 @@ export function FeatureDetailSection() {
                 asChild
                 className="rounded-full bg-purple hover:bg-purple-light text-white font-bold h-11 px-6 shadow-sm"
               >
-                <Link href="/invoices">Try Live Invoice Editor</Link>
+                <Link href="/invoices">Try the Invoice Editor</Link>
               </Button>
             </div>
           </FadeIn>
 
-          {/* Right Visual Mockup */}
-          <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-7">
+          <FadeIn
+            direction="left"
+            distance={80}
+            duration={0.9}
+            className="lg:col-span-7"
+          >
             <div className="bg-surface rounded-3xl p-6 sm:p-8 border border-border shadow-card flex flex-col gap-5">
-              {/* Mockup Header */}
               <div className="flex items-center justify-between pb-4 border-b border-border/60">
                 <div>
                   <span className="text-xs font-bold text-text-secondary uppercase">
@@ -109,7 +138,6 @@ export function FeatureDetailSection() {
                 </span>
               </div>
 
-              {/* Line Items Table */}
               <div className="flex flex-col gap-2.5">
                 <div className="grid grid-cols-6 text-[10px] font-extrabold uppercase tracking-wider text-text-secondary px-2">
                   <span className="col-span-3">Item Name</span>
@@ -118,55 +146,45 @@ export function FeatureDetailSection() {
                   <span className="text-right">Total</span>
                 </div>
 
-                <div className="grid grid-cols-6 items-center p-3 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 text-xs">
-                  <span className="col-span-3 font-bold text-text-primary truncate">
-                    Brand Strategy & Wireframes
-                  </span>
-                  <span className="text-center text-text-secondary font-medium">
-                    1
-                  </span>
-                  <span className="text-right text-text-secondary">
-                    £1,850.00
-                  </span>
-                  <span className="text-right font-extrabold text-text-primary">
-                    £1,850.00
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-6 items-center p-3 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 text-xs">
-                  <span className="col-span-3 font-bold text-text-primary truncate">
-                    Interactive Prototype Handover
-                  </span>
-                  <span className="text-center text-text-secondary font-medium">
-                    20h
-                  </span>
-                  <span className="text-right text-text-secondary">£85.00</span>
-                  <span className="text-right font-extrabold text-text-primary">
-                    £1,700.00
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-6 items-center p-3 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 text-xs">
-                  <span className="col-span-3 font-bold text-text-primary truncate">
-                    Design System Tokens
-                  </span>
-                  <span className="text-center text-text-secondary font-medium">
-                    1
-                  </span>
-                  <span className="text-right text-text-secondary">
-                    £700.00
-                  </span>
-                  <span className="text-right font-extrabold text-text-primary">
-                    £700.00
-                  </span>
-                </div>
+                {[
+                  [
+                    "Brand Strategy & Wireframes",
+                    "1",
+                    "£1,850.00",
+                    "£1,850.00",
+                  ],
+                  [
+                    "Interactive Prototype Handover",
+                    "20",
+                    "£85.00",
+                    "£1,700.00",
+                  ],
+                  ["Design System Tokens", "1", "£700.00", "£700.00"],
+                ].map(([name, qty, rate, total]) => (
+                  <div
+                    key={name}
+                    className="grid grid-cols-6 items-center p-3 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 text-xs"
+                  >
+                    <span className="col-span-3 font-bold text-text-primary truncate">
+                      {name}
+                    </span>
+                    <span className="text-center text-text-secondary font-medium">
+                      {qty}
+                    </span>
+                    <span className="text-right text-text-secondary">
+                      {rate}
+                    </span>
+                    <span className="text-right font-extrabold text-text-primary">
+                      {total}
+                    </span>
+                  </div>
+                ))}
               </div>
 
-              {/* Math Breakdown Box */}
               <div className="bg-surface-alt dark:bg-surface-alt/60 rounded-2xl p-4 border border-border/80 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs text-text-secondary">
                   <FileCheck className="w-4 h-4 text-paid-text" />
-                  <span>Integer precision verified (425,000 minor units)</span>
+                  <span>Exact to the penny, no rounding drift</span>
                 </div>
                 <div className="text-right">
                   <span className="text-xs text-text-secondary block">
@@ -183,7 +201,7 @@ export function FeatureDetailSection() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. AI INVOICE DRAFTING & SMART REMINDERS                                  */}
+      {/* 2. AI INVOICE DRAFTING & PAYMENT REMINDERS                                */}
       {/* ========================================================================= */}
       <section
         id="ai-copilot"
@@ -193,17 +211,17 @@ export function FeatureDetailSection() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Left Visual AI Chat Mockup */}
-            <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-7 order-2 lg:order-1">
+            <FadeIn
+              direction="right"
+              distance={80}
+              duration={0.9}
+              className="lg:col-span-7 order-2 lg:order-1"
+            >
               <div className="bg-[#1e2139] rounded-3xl p-6 sm:p-8 border border-[#252945] shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex flex-col gap-5">
-                {/* AI Input Prompt Bubble */}
                 <div className="bg-[#252945] rounded-2xl p-4 border border-white/5 flex flex-col gap-2">
-                  <div className="flex items-center justify-between text-xs text-purple-light font-bold">
+                  <div className="flex items-center text-xs text-purple-light font-bold">
                     <span className="flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5" /> Conversational Prompt
-                    </span>
-                    <span className="text-[#888eb0] text-[11px]">
-                      Invio Copilot v2.4
+                      <Sparkles className="w-3.5 h-3.5" /> Describe the work
                     </span>
                   </div>
                   <p className="text-sm text-white italic leading-relaxed">
@@ -213,16 +231,11 @@ export function FeatureDetailSection() {
                   </p>
                 </div>
 
-                {/* AI Processing Arrow */}
                 <div className="flex items-center justify-center gap-2 text-xs font-bold text-paid-text py-1">
                   <span className="w-2 h-2 rounded-full bg-paid-text animate-pulse" />
-                  <span>
-                    Parsed 2 line items • Verified Client: Acme Corp • Net 14
-                    Applied
-                  </span>
+                  <span>2 line items drafted • Net 14 applied</span>
                 </div>
 
-                {/* AI Generated Result Preview */}
                 <div className="bg-[#141625] rounded-2xl p-5 border border-[#252945] flex flex-col gap-3">
                   <div className="flex items-center justify-between pb-3 border-b border-[#252945]">
                     <div>
@@ -230,11 +243,11 @@ export function FeatureDetailSection() {
                         Acme Corp
                       </span>
                       <p className="text-[11px] text-[#888eb0]">
-                        Invoice #INV-9281 • Due in 14 days
+                        Draft invoice • Due in 14 days
                       </p>
                     </div>
-                    <span className="text-xs font-bold text-paid-text bg-paid-text/15 px-2.5 py-1 rounded-full">
-                      Ready for 1-Click Send
+                    <span className="text-xs font-bold text-purple-light bg-purple/20 px-2.5 py-1 rounded-full">
+                      Ready for your review
                     </span>
                   </div>
 
@@ -257,65 +270,75 @@ export function FeatureDetailSection() {
                   </div>
                 </div>
 
-                {/* Auto Reminders Footer Note */}
-                <div className="p-3.5 rounded-xl bg-purple/10 border border-purple/20 flex items-center gap-2.5 text-xs text-purple-light">
+                <div className="p-3.5 rounded-xl bg-purple/10 border border-purple/20 flex flex-wrap items-center gap-2.5 text-xs text-purple-light">
                   <Clock className="w-4 h-4 shrink-0" />
-                  <span>
-                    Automated follow-up reminder scheduled for Day 12 if unpaid.
-                  </span>
+                  <span>Overdue? Draft a reminder in your tone:</span>
+                  {["Friendly", "Firm", "Urgent"].map((t) => (
+                    <span
+                      key={t}
+                      className="px-2.5 py-0.5 rounded-full bg-purple/20 font-bold"
+                    >
+                      {t}
+                    </span>
+                  ))}
                 </div>
               </div>
             </FadeIn>
 
-            {/* Right Narrative */}
-            <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2">
+            <FadeIn
+              direction="left"
+              distance={80}
+              duration={0.9}
+              className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2"
+            >
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-purple/20 flex items-center justify-center p-1.5 shrink-0">
                   <Image
                     src="/icons/ai.png"
-                    alt="AI Copilot"
+                    alt="AI assistant"
                     width={24}
                     height={24}
                     className="object-contain"
                   />
                 </div>
                 <span className="text-xs font-extrabold uppercase tracking-widest text-purple-light">
-                  AI Intelligence
+                  AI Assistant
                 </span>
               </div>
 
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                Turn thoughts into invoices in under 3 seconds.
+                Describe the work. Review the draft.
               </h2>
 
               <p className="text-[#888eb0] text-base leading-relaxed">
-                Describe your work in plain English. Invio calculates hours,
-                itemizes rates, assigns payment terms, and even drafts polite
-                automated reminder sequences so you never have to send
-                uncomfortable debt-collection emails.
+                Describe your work in plain English and the assistant fills in
+                line items, quantities, prices and payment terms. When a payment
+                runs late, it drafts the awkward email for you.
               </p>
 
               <ul className="flex flex-col gap-3 text-sm text-[#dfe3fa] list-none p-0 m-0">
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                   <span>
-                    <strong>Natural Language Invoicing:</strong> Speak or type
-                    summaries — Invio maps descriptions directly to line items.
+                    <strong>Invoice drafting:</strong> Type a summary, or pick a
+                    preset, and the form is prefilled. Filled-in fields are
+                    highlighted until you edit them.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                   <span>
-                    <strong>Polite Auto-Reminders:</strong> Sends timely,
-                    friendly reminders before and on due dates without manual
-                    effort.
+                    <strong>Payment reminders:</strong> Generate a reminder
+                    email in a friendly, firm or urgent tone, aware of how
+                    overdue the invoice is. Copy it or open it in your email
+                    app.
                   </span>
                 </li>
                 <li className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                   <span>
-                    <strong>1-Click Approval:</strong> You always maintain
-                    complete control — AI drafts; you approve and send.
+                    <strong>You stay in control:</strong> The AI drafts and
+                    suggests. Nothing is saved or sent until you decide.
                   </span>
                 </li>
               </ul>
@@ -325,15 +348,19 @@ export function FeatureDetailSection() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 3. CLIENT MANAGEMENT & RETAINERS                                          */}
+      {/* 3. CLIENT DIRECTORY                                                       */}
       {/* ========================================================================= */}
       <section
         id="client-management"
         className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Narrative */}
-          <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left">
+          <FadeIn
+            direction="right"
+            distance={80}
+            duration={0.9}
+            className="lg:col-span-5 flex flex-col gap-5 text-left"
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-purple/10 flex items-center justify-center p-1.5 shrink-0">
                 <Image
@@ -350,45 +377,49 @@ export function FeatureDetailSection() {
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight leading-tight">
-              Manage client relationships <br />
-              and recurring retainers.
+              Save a client once. <br />
+              Invoice them in a click.
             </h2>
 
             <p className="text-text-secondary text-base leading-relaxed">
-              Keep client contact info, VAT numbers, currency defaults, and
-              payment history in one clean hub. Track ongoing retainer hours
-              with real-time balance transparency.
+              Keep your clients&apos; contact details and preferred currency in
+              one place, and see at a glance who you&apos;ve billed.
             </p>
 
             <ul className="flex flex-col gap-3 text-sm text-text-primary list-none p-0 m-0">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Dedicated Client Portals:</strong> Give clients a
-                  permanent link to view open, paid, and historical invoices.
+                  <strong>Client picker:</strong> Choose a saved client in the
+                  invoice form and their name, email and address fill in
+                  automatically.
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Retainer Hour Tracking:</strong> Monitor hours logged
-                  against monthly contracts with automatic rollover alerts.
+                  <strong>Add, edit and search:</strong> A simple directory with
+                  search and summary metrics.
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Lifetime Value Analytics:</strong> Know exactly which
-                  clients contribute most to your studio revenue.
+                  <strong>Currency per client:</strong> Set the currency each
+                  client pays in, and your dashboard converts everything into
+                  one total.
                 </span>
               </li>
             </ul>
           </FadeIn>
 
-          {/* Right Visual Client Directory Card */}
-          <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-7">
+          <FadeIn
+            direction="left"
+            distance={80}
+            duration={0.9}
+            className="lg:col-span-7"
+          >
             <div className="bg-surface rounded-3xl p-6 sm:p-8 border border-border shadow-card flex flex-col gap-5">
-              {/* Client Profile Card */}
               <div className="flex items-center justify-between pb-4 border-b border-border/60">
                 <div className="flex items-center gap-3.5">
                   <div className="w-12 h-12 rounded-2xl bg-purple/15 text-purple font-black text-base flex items-center justify-center">
@@ -399,80 +430,59 @@ export function FeatureDetailSection() {
                       Acme Corporation Ltd.
                     </h3>
                     <p className="text-xs text-text-secondary">
-                      billing@acmecorp.io • VAT: GB92819481
+                      billing@acmecorp.io • London, UK
                     </p>
                   </div>
                 </div>
-                <span className="text-xs font-bold text-paid-text bg-paid-text/10 px-3 py-1 rounded-full">
-                  Active Client
+                <span className="text-xs font-bold text-purple bg-purple/10 px-3 py-1 rounded-full">
+                  GBP
                 </span>
               </div>
 
-              {/* Retainer & Stats Grid */}
-              <div className="grid grid-cols-3 gap-3">
-                <div className="bg-surface-alt dark:bg-surface-alt/40 rounded-xl p-3.5 border border-border/60">
-                  <span className="text-[10px] font-bold uppercase text-text-secondary block">
-                    Monthly Retainer
-                  </span>
-                  <span className="text-lg font-black text-text-primary mt-0.5 block">
-                    180 hr/mo
-                  </span>
-                </div>
-                <div className="bg-surface-alt dark:bg-surface-alt/40 rounded-xl p-3.5 border border-border/60">
-                  <span className="text-[10px] font-bold uppercase text-text-secondary block">
-                    Hourly Rate
-                  </span>
-                  <span className="text-lg font-black text-text-primary mt-0.5 block">
-                    £85.00/hr
-                  </span>
-                </div>
-                <div className="bg-surface-alt dark:bg-surface-alt/40 rounded-xl p-3.5 border border-border/60">
-                  <span className="text-[10px] font-bold uppercase text-text-secondary block">
-                    Total Lifetime Billed
-                  </span>
-                  <span className="text-lg font-black text-paid-text mt-0.5 block">
-                    £34,850.00
-                  </span>
-                </div>
-              </div>
-
-              {/* Recent Invoices for this Client */}
               <div className="flex flex-col gap-2">
                 <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-secondary">
                   Recent Invoices
                 </span>
-                <div className="flex items-center justify-between p-3 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 text-xs">
-                  <div>
-                    <span className="font-bold text-text-primary">#RT3080</span>
-                    <span className="text-text-secondary ml-2">
-                      Brand Identity Handover
-                    </span>
+                {[
+                  [
+                    "#RT3080",
+                    "Brand Identity Handover",
+                    "£4,250.00",
+                    "Paid",
+                    "paid",
+                  ],
+                  [
+                    "#XM9141",
+                    "Monthly Design Retainer (Oct)",
+                    "£3,275.00",
+                    "Pending",
+                    "pending",
+                  ],
+                ].map(([id, desc, amount, status, kind]) => (
+                  <div
+                    key={id}
+                    className="flex items-center justify-between p-3 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 text-xs"
+                  >
+                    <div>
+                      <span className="font-bold text-text-primary">{id}</span>
+                      <span className="text-text-secondary ml-2">{desc}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="font-extrabold text-text-primary">
+                        {amount}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded ${
+                          kind === "paid"
+                            ? "text-paid-text bg-paid-text/10"
+                            : "text-pending-text bg-pending-text/10"
+                        }`}
+                      >
+                        {status}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-extrabold text-text-primary">
-                      £4,250.00
-                    </span>
-                    <span className="text-[10px] font-bold text-paid-text bg-paid-text/10 px-2 py-0.5 rounded">
-                      Paid
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between p-3 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 text-xs">
-                  <div>
-                    <span className="font-bold text-text-primary">#XM9141</span>
-                    <span className="text-text-secondary ml-2">
-                      Monthly Design Retainer (Oct)
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="font-extrabold text-text-primary">
-                      £3,275.00
-                    </span>
-                    <span className="text-[10px] font-bold text-pending-text bg-pending-text/10 px-2 py-0.5 rounded">
-                      Pending
-                    </span>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           </FadeIn>
@@ -480,148 +490,123 @@ export function FeatureDetailSection() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. CSV BANK STATEMENT RECONCILIATION                                     */}
+      {/* 4. PDF TEMPLATES & BRANDING                                               */}
       {/* ========================================================================= */}
       <section
-        id="csv-reconciliation"
+        id="templates"
         className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Visual CSV Upload & Reconciliation */}
-          <FadeIn direction="right" distance={80} duration={0.9} className="lg:col-span-7 order-2 lg:order-1">
-            <div className="bg-surface rounded-3xl p-6 sm:p-8 border border-border shadow-card flex flex-col gap-5">
-              {/* Dropzone Simulation */}
-              <div className="border-2 border-dashed border-purple/40 bg-purple/5 rounded-2xl p-6 text-center flex flex-col items-center gap-2">
-                <div className="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center text-purple">
-                  <UploadCloud className="w-5 h-5 stroke-[2.5]" />
-                </div>
-                <span className="text-sm font-extrabold text-text-primary">
-                  monzo_statement_october_2026.csv
-                </span>
-                <span className="text-xs text-text-secondary">
-                  Processed 14 transactions • Monzo format auto-detected
-                </span>
-              </div>
-
-              {/* Matched Transactions Feed */}
-              <div className="flex flex-col gap-2.5">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider text-text-secondary">
-                  Auto-Matched Deposit Records
-                </span>
-
-                <div className="p-3.5 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-paid-text" />
-                    <div>
-                      <span className="font-bold text-text-primary block">
-                        Acme Corp Direct Credit
-                      </span>
-                      <span className="text-[11px] text-text-secondary">
-                        Matched with Invoice #RT3080
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-extrabold text-paid-text block">
-                      +£4,250.00
-                    </span>
-                    <span className="text-[10px] text-text-secondary">
-                      Marked as Paid
-                    </span>
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl bg-surface-alt dark:bg-surface-alt/40 border border-border/60 flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2 h-2 rounded-full bg-paid-text" />
-                    <div>
-                      <span className="font-bold text-text-primary block">
-                        Stripe Payout Ref: 9812
-                      </span>
-                      <span className="text-[11px] text-text-secondary">
-                        Matched with Invoice #XM9141
-                      </span>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-extrabold text-paid-text block">
-                      +£1,800.90
-                    </span>
-                    <span className="text-[10px] text-text-secondary">
-                      Marked as Paid
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Reconciliation Status Bar */}
-              <div className="pt-2 flex items-center justify-between text-xs text-text-secondary">
-                <span>
-                  Total Reconciled: <strong>£6,050.90</strong>
-                </span>
-                <span className="text-paid-text font-bold">
-                  14/14 Matched (0 Discrepancies)
-                </span>
-              </div>
-            </div>
+          <FadeIn
+            direction="right"
+            distance={80}
+            duration={0.9}
+            className="lg:col-span-7 order-2 lg:order-1"
+          >
+            <TemplateShowcase />
           </FadeIn>
 
-          {/* Right Narrative */}
-          <FadeIn direction="left" distance={80} duration={0.9} className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2">
+          <FadeIn
+            direction="left"
+            distance={80}
+            duration={0.9}
+            className="lg:col-span-5 flex flex-col gap-5 text-left order-1 lg:order-2"
+          >
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-xl bg-purple/10 flex items-center justify-center p-1.5 shrink-0">
                 <Image
-                  src="/icons/csv.png"
-                  alt="CSV Import"
+                  src="/icons/client-invoice.png"
+                  alt="PDF templates"
                   width={24}
                   height={24}
                   className="object-contain"
                 />
               </div>
               <span className="text-xs font-extrabold uppercase tracking-widest text-purple">
-                Bank Reconciliation
+                PDF Templates & Branding
               </span>
             </div>
 
             <h2 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight leading-tight">
-              Reconcile bank accounts <br />
-              without Open Banking logins.
+              Invoices that look <br />
+              like your business.
             </h2>
 
             <p className="text-text-secondary text-base leading-relaxed">
-              Don&apos;t want to link your banking credentials to third-party
-              aggregators? Export standard CSVs from Monzo, Revolut, Starling,
-              or Stripe. Invio cross-checks deposits and clears invoices
-              automatically.
+              Set up your business details once, pick a template, and every PDF
+              you download is ready to send.
             </p>
 
             <ul className="flex flex-col gap-3 text-sm text-text-primary list-none p-0 m-0">
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>100% Bank Agnostic:</strong> Works with Monzo,
-                  Starling, Revolut, HSBC, Barclays, Stripe, Wise, and generic
-                  CSVs.
+                  <strong>Three templates:</strong> Minimal, Classic or Bold.
+                  Preview them in Settings and see your choice on every invoice
+                  page.
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Smart Fuzzy Matching:</strong> Detects invoice
-                  reference codes and settlement sums even if client names
-                  slightly differ.
+                  <strong>Your logo and details:</strong> Add your logo,
+                  business address and tax ID, and they appear on every invoice.
                 </span>
               </li>
               <li className="flex items-start gap-3">
                 <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5] mt-1 shrink-0" />
                 <span>
-                  <strong>Privacy First:</strong> Your CSV statement data stays
-                  in your personal workspace; we never train public AI models on
-                  your bank feeds.
+                  <strong>Payment details built in:</strong> Bank details, a
+                  payment link and your own notes print on the invoice, so
+                  clients know how to pay.
                 </span>
               </li>
             </ul>
           </FadeIn>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 5. ROADMAP                                                                */}
+      {/* ========================================================================= */}
+      <section
+        id="roadmap"
+        className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full"
+      >
+        <FadeIn className="text-center max-w-2xl mx-auto mb-10" distance={40}>
+          <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
+            On the Roadmap
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-text-primary tracking-tight mt-4">
+            What we&apos;re building next
+          </h2>
+          <p className="text-text-secondary mt-3 text-base">
+            These aren&apos;t in the app yet. We&apos;re listing them so you
+            know what to expect.
+          </p>
+        </FadeIn>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {ROADMAP.map(({ icon: Icon, title, body }) => (
+            <FadeIn key={title} distance={32}>
+              <div className="h-full bg-surface rounded-2xl p-6 border border-border shadow-xs">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-surface-alt text-text-secondary flex items-center justify-center">
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase text-text-secondary">
+                    <Clock className="w-3 h-3" /> Coming soon
+                  </span>
+                </div>
+                <h3 className="text-base font-extrabold text-text-primary">
+                  {title}
+                </h3>
+                <p className="text-xs text-text-secondary mt-1.5 leading-relaxed">
+                  {body}
+                </p>
+              </div>
+            </FadeIn>
+          ))}
         </div>
       </section>
     </div>

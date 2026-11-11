@@ -2,9 +2,9 @@ import type { Metadata, NextPage } from "next";
 import { PricingPage } from "@/components/pages";
 
 export const metadata: Metadata = {
-  title: "Pricing Plans — Invio | Simple & Transparent Accounting",
+  title: "Pricing — Invio | Free While in Development",
   description:
-    "Compare Invio's Starter, Professional, and Studio pricing tiers. Start for free or start a 14-day trial.",
+    "Everything in Invio is free today. See what's available now and which paid features are planned.",
 };
 
 const ExternalPricingPageRoute: NextPage = () => {

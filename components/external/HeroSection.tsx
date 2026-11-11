@@ -18,88 +18,88 @@ export function HeroSection() {
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[380px] bg-purple/15 blur-[130px] rounded-full pointer-events-none -z-10" />
 
       <ScrollFade>
-      <Stagger immediate stagger={0.12}>
-      {/* Badge with App Logo */}
-      <StaggerItem>
-      <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple/10 border border-purple/20 text-purple text-xs sm:text-sm font-bold tracking-wide uppercase mb-6">
-        <Image
-          src="/logo.svg"
-          alt="Invio"
-          width={16}
-          height={16}
-          className="w-4 h-4 object-contain"
-        />
-        <span>Next-Generation Invoicing & Finance</span>
-      </div>
-      </StaggerItem>
+        <Stagger immediate stagger={0.12}>
+          {/* Badge with App Logo */}
+          <StaggerItem>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple/10 border border-purple/20 text-purple text-xs sm:text-sm font-bold tracking-wide uppercase mb-6">
+              <Image
+                src="/logo.svg"
+                alt="Invio"
+                width={16}
+                height={16}
+                className="w-4 h-4 object-contain"
+              />
+              <span>AI-Assisted Invoicing for Freelancers</span>
+            </div>
+          </StaggerItem>
 
-      {/* Headline */}
-      <StaggerItem>
-      <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-text-primary max-w-4xl mx-auto leading-[1.08]">
-        Automate your billing. <br className="hidden sm:inline" />
-        <span className="text-purple">Get paid faster</span> with AI.
-      </h1>
-      </StaggerItem>
+          {/* Headline */}
+          <StaggerItem>
+            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-text-primary max-w-4xl mx-auto leading-[1.08]">
+              Automate your billing. <br className="hidden sm:inline" />
+              <span className="text-purple">Get paid faster</span> with AI.
+            </h1>
+          </StaggerItem>
 
-      {/* Description */}
-      <StaggerItem>
-      <p className="mt-6 text-base sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
-        The smart invoicing and small-business finance workspace. Create
-        professional invoices in seconds, reconcile bank CSVs effortlessly, and
-        let AI streamline your cash flow.
-      </p>
-      </StaggerItem>
+          {/* Description */}
+          <StaggerItem>
+            <p className="mt-6 text-base sm:text-xl text-text-secondary max-w-2xl mx-auto leading-relaxed">
+              Create professional invoices in seconds, choose a PDF template
+              that fits your brand, and let AI draft invoices and payment
+              reminders for you. Nothing is saved or sent until you approve it.
+            </p>
+          </StaggerItem>
 
-      {/* CTAs */}
-      <StaggerItem>
-      <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-        <Button
-          asChild
-          className="w-full sm:w-auto rounded-full bg-purple hover:bg-purple-light text-white font-bold text-base px-8 h-13 shadow-sm hover:opacity-95 transition-all duration-200"
-        >
-          <NextLink
-            href="/invoices"
-            className="no-underline flex items-center gap-2"
-          >
-            <span>Start Invoicing Free</span>
-            <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
-          </NextLink>
-        </Button>
+          {/* CTAs */}
+          <StaggerItem>
+            <div className="mt-8 sm:mt-10 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+              <Button
+                asChild
+                className="w-full sm:w-auto rounded-full bg-purple hover:bg-purple-light text-white font-bold text-base px-8 h-13 shadow-sm hover:opacity-95 transition-all duration-200"
+              >
+                <NextLink
+                  href="/invoices"
+                  className="no-underline flex items-center gap-2"
+                >
+                  <span>Start Invoicing Free</span>
+                  <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                </NextLink>
+              </Button>
 
-        <Button
-          asChild
-          variant="outline"
-          className="w-full sm:w-auto rounded-full border-border/80 hover:bg-surface-alt text-text-primary font-bold text-base px-7 h-13 transition-all duration-200"
-        >
-          <NextLink
-            href="/features"
-            className="no-underline flex items-center gap-2"
-          >
-            <span>Explore Features</span>
-            <ArrowRight className="w-4 h-4" />
-          </NextLink>
-        </Button>
-      </div>
-      </StaggerItem>
+              <Button
+                asChild
+                variant="outline"
+                className="w-full sm:w-auto rounded-full border-border/80 hover:bg-surface-alt text-text-primary font-bold text-base px-7 h-13 transition-all duration-200"
+              >
+                <NextLink
+                  href="/features"
+                  className="no-underline flex items-center gap-2"
+                >
+                  <span>Explore Features</span>
+                  <ArrowRight className="w-4 h-4" />
+                </NextLink>
+              </Button>
+            </div>
+          </StaggerItem>
 
-      {/* Proof Micro-badges */}
-      <StaggerItem>
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-text-secondary font-medium">
-        <span className="flex items-center gap-1.5">
-          <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
-          No credit card required
-        </span>
-        <span className="flex items-center gap-1.5">
-          <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
-          Free plan available
-        </span>
-        <span className="flex items-center gap-1.5">
-          <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
-          Set up in 60 seconds
-        </span>
-      </div>
-      </StaggerItem>
-      </Stagger>
+          {/* Proof Micro-badges */}
+          <StaggerItem>
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-text-secondary font-medium">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
+                No credit card required
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
+                Free plan available
+              </span>
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
+                Set up in 60 seconds
+              </span>
+            </div>
+          </StaggerItem>
+        </Stagger>
       </ScrollFade>
 
       {/* Interactive Dashboard Preview Frame */}
@@ -110,220 +110,218 @@ export function HeroSection() {
         duration={0.9}
         className="relative mx-auto mt-12 sm:mt-16 max-w-5xl"
       >
-      {/* Floating accent chips */}
-      <Float
-        className="hidden min-[1400px]:block absolute right-full mr-[-28px] top-24 z-10"
-        amplitude={10}
-        duration={6}
-      >
-        <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3 shadow-xl text-left">
-          <span className="w-8 h-8 rounded-full bg-paid-text/15 flex items-center justify-center">
-            <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
-          </span>
-          <span className="flex flex-col">
-            <span className="text-xs font-bold text-text-primary">
-              Payment received
+        {/* Floating accent chips */}
+        <Float
+          className="hidden min-[1400px]:block absolute right-full mr-[-28px] top-24 z-10"
+          amplitude={10}
+          duration={6}
+        >
+          <div className="flex items-center gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3 shadow-xl text-left">
+            <span className="w-8 h-8 rounded-full bg-paid-text/15 flex items-center justify-center">
+              <CheckCircle2 className="w-4 h-4 text-paid-text stroke-[2.5]" />
             </span>
-            <span className="text-[11px] text-text-secondary">
-              £1,800.90 · Acme Global
-            </span>
-          </span>
-        </div>
-      </Float>
-      <Float
-        className="hidden min-[1400px]:block absolute left-full ml-[-28px] bottom-28 z-10"
-        amplitude={8}
-        duration={5}
-        delay={1.2}
-      >
-        <div className="flex items-center gap-2.5 rounded-2xl border border-purple/25 bg-surface px-4 py-3 shadow-xl text-left">
-          <span className="w-8 h-8 rounded-full bg-purple/15 flex items-center justify-center">
-            <Sparkles className="w-4 h-4 text-purple" />
-          </span>
-          <span className="flex flex-col">
-            <span className="text-xs font-bold text-text-primary">
-              AI reminder drafted
-            </span>
-            <span className="text-[11px] text-text-secondary">
-              Ready for 1-click approval
-            </span>
-          </span>
-        </div>
-      </Float>
-
-      <ScrollTilt>
-      <div className="relative rounded-2xl sm:rounded-3xl border border-border/80 bg-surface/90 shadow-2xl overflow-hidden backdrop-blur-sm text-left">
-        {/* Window Title Bar */}
-        <div className="bg-surface-alt border-b border-border px-4 sm:px-6 py-3.5 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red/80" />
-            <span className="w-3 h-3 rounded-full bg-pending-text/80" />
-            <span className="w-3 h-3 rounded-full bg-paid-text/80" />
-            <span className="ml-3 text-xs font-semibold text-text-secondary hidden sm:inline">
-              invio.app/dashboard
-            </span>
-          </div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-text-secondary">
-            <span className="w-2 h-2 rounded-full bg-paid-text animate-pulse" />
-            <span>Live Workspace Active</span>
-          </div>
-        </div>
-
-        {/* Preview Content Inside */}
-        <div className="p-5 sm:p-8 flex flex-col gap-6">
-          {/* Metric Cards Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-            <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
-              <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-                Total Revenue
+            <span className="flex flex-col">
+              <span className="text-xs font-bold text-text-primary">
+                Payment received
               </span>
-              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
-                <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-text-primary whitespace-nowrap">
-                  £42,850.00
+              <span className="text-[11px] text-text-secondary">
+                £1,800.90 · Acme Global
+              </span>
+            </span>
+          </div>
+        </Float>
+        <Float
+          className="hidden min-[1400px]:block absolute left-full ml-[-28px] bottom-28 z-10"
+          amplitude={8}
+          duration={5}
+          delay={1.2}
+        >
+          <div className="flex items-center gap-2.5 rounded-2xl border border-purple/25 bg-surface px-4 py-3 shadow-xl text-left">
+            <span className="w-8 h-8 rounded-full bg-purple/15 flex items-center justify-center">
+              <Sparkles className="w-4 h-4 text-purple" />
+            </span>
+            <span className="flex flex-col">
+              <span className="text-xs font-bold text-text-primary">
+                AI reminder drafted
+              </span>
+              <span className="text-[11px] text-text-secondary">
+                Ready for your review
+              </span>
+            </span>
+          </div>
+        </Float>
+
+        <ScrollTilt>
+          <div className="relative rounded-2xl sm:rounded-3xl border border-border/80 bg-surface/90 shadow-2xl overflow-hidden backdrop-blur-sm text-left">
+            {/* Window Title Bar */}
+            <div className="bg-surface-alt border-b border-border px-4 sm:px-6 py-3.5 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-red/80" />
+                <span className="w-3 h-3 rounded-full bg-pending-text/80" />
+                <span className="w-3 h-3 rounded-full bg-paid-text/80" />
+                <span className="ml-3 text-xs font-semibold text-text-secondary hidden sm:inline">
+                  invio.app/dashboard
                 </span>
-                <span className="text-xs font-bold text-paid-text bg-paid-text/10 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  +18.4%
-                </span>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-text-secondary">
+                <span className="w-2 h-2 rounded-full bg-paid-text animate-pulse" />
+                <span>Live Workspace Active</span>
               </div>
             </div>
 
-            <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
-              <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-                Paid Invoices
-              </span>
-              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
-                <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-text-primary whitespace-nowrap">
-                  £36,400.00
-                </span>
-                <span className="text-xs font-bold text-purple bg-purple/10 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  28 Cleared
-                </span>
+            {/* Preview Content Inside */}
+            <div className="p-5 sm:p-8 flex flex-col gap-6">
+              {/* Metric Cards Row */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
+                  <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
+                    Total Revenue
+                  </span>
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
+                    <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-text-primary whitespace-nowrap">
+                      £42,850.00
+                    </span>
+                    <span className="text-xs font-bold text-paid-text bg-paid-text/10 px-2 py-0.5 rounded-full whitespace-nowrap">
+                      +18.4%
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
+                  <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
+                    Paid Invoices
+                  </span>
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
+                    <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-text-primary whitespace-nowrap">
+                      £36,400.00
+                    </span>
+                    <span className="text-xs font-bold text-purple bg-purple/10 px-2 py-0.5 rounded-full whitespace-nowrap">
+                      28 Cleared
+                    </span>
+                  </div>
+                </div>
+
+                <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
+                  <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
+                    Outstanding Due
+                  </span>
+                  <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
+                    <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-pending-text whitespace-nowrap">
+                      £6,450.00
+                    </span>
+                    <span className="text-xs font-bold text-pending-text bg-pending-text/10 px-2 py-0.5 rounded-full whitespace-nowrap">
+                      3 Pending
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            <div className="bg-surface-alt rounded-2xl p-5 sm:p-4 lg:p-5 border border-border/60 min-w-0">
-              <span className="text-xs font-bold uppercase tracking-wider text-text-secondary">
-                Outstanding Due
-              </span>
-              <div className="flex flex-wrap items-baseline justify-between gap-x-2 gap-y-1 mt-2">
-                <span className="text-2xl sm:text-xl lg:text-3xl font-extrabold text-pending-text whitespace-nowrap">
-                  £6,450.00
-                </span>
-                <span className="text-xs font-bold text-pending-text bg-pending-text/10 px-2 py-0.5 rounded-full whitespace-nowrap">
-                  3 Pending
-                </span>
+              {/* Simulated Live Invoice Cards */}
+              <div className="flex flex-col gap-3">
+                <div className="flex items-center justify-between text-xs font-bold text-text-secondary px-2">
+                  <span>RECENT INVOICES</span>
+                  <span>STATUS</span>
+                </div>
+
+                {/* Invoice Row 1 */}
+                <div className="bg-surface rounded-xl p-4 sm:p-5 border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs hover:border-purple/40 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center p-2">
+                      <Image
+                        src="/icons/client-invoice.png"
+                        alt="Invoice"
+                        width={24}
+                        height={24}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[15px] font-bold text-text-primary">
+                          #RT3080
+                        </span>
+                        <span className="text-xs text-text-secondary">
+                          Acme Global Design
+                        </span>
+                      </div>
+                      <span className="text-xs text-text-secondary">
+                        Due in 3 days • Net 30
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
+                    <span className="text-base font-extrabold text-text-primary">
+                      £1,800.90
+                    </span>
+                    <span className="px-3 py-1 rounded-md text-xs font-bold bg-[rgba(51,214,159,0.08)] text-paid-text flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-paid-text" />
+                      Paid
+                    </span>
+                  </div>
+                </div>
+
+                {/* Invoice Row 2 */}
+                <div className="bg-surface rounded-xl p-4 sm:p-5 border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs hover:border-purple/40 transition-colors">
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center p-2">
+                      <Image
+                        src="/icons/drafts.png"
+                        alt="Invoice"
+                        width={24}
+                        height={24}
+                        className="object-contain"
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[15px] font-bold text-text-primary">
+                          #XM9141
+                        </span>
+                        <span className="text-xs text-text-secondary">
+                          Vercel Cloud Ops
+                        </span>
+                      </div>
+                      <span className="text-xs text-text-secondary">
+                        Due in 7 days • Net 14
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
+                    <span className="text-base font-extrabold text-text-primary">
+                      £4,649.10
+                    </span>
+                    <span className="px-3 py-1 rounded-md text-xs font-bold bg-[rgba(255,143,0,0.08)] text-pending-text flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-pending-text" />
+                      Pending
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Simulated Live Invoice Cards */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between text-xs font-bold text-text-secondary px-2">
-              <span>RECENT INVOICES</span>
-              <span>STATUS</span>
-            </div>
-
-            {/* Invoice Row 1 */}
-            <div className="bg-surface rounded-xl p-4 sm:p-5 border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs hover:border-purple/40 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center p-2">
+              {/* AI Copilot Callout */}
+              <div className="p-4 rounded-xl bg-purple/10 border border-purple/20 flex items-center gap-3">
+                <div className="w-6 h-6 shrink-0 flex items-center justify-center">
                   <Image
-                    src="/icons/client-invoice.png"
-                    alt="Invoice"
-                    width={24}
-                    height={24}
+                    src="/icons/ai.png"
+                    alt="AI Copilot"
+                    width={20}
+                    height={20}
                     className="object-contain"
                   />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[15px] font-bold text-text-primary">
-                      #RT3080
-                    </span>
-                    <span className="text-xs text-text-secondary">
-                      Acme Global Design
-                    </span>
-                  </div>
-                  <span className="text-xs text-text-secondary">
-                    Due in 3 days • Net 30
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
-                <span className="text-base font-extrabold text-text-primary">
-                  £1,800.90
-                </span>
-                <span className="px-3 py-1 rounded-md text-xs font-bold bg-[rgba(51,214,159,0.08)] text-paid-text flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-paid-text" />
-                  Paid
-                </span>
-              </div>
-            </div>
-
-            {/* Invoice Row 2 */}
-            <div className="bg-surface rounded-xl p-4 sm:p-5 border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs hover:border-purple/40 transition-colors">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-purple/10 flex items-center justify-center p-2">
-                  <Image
-                    src="/icons/drafts.png"
-                    alt="Invoice"
-                    width={24}
-                    height={24}
-                    className="object-contain"
-                  />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[15px] font-bold text-text-primary">
-                      #XM9141
-                    </span>
-                    <span className="text-xs text-text-secondary">
-                      Vercel Cloud Ops
-                    </span>
-                  </div>
-                  <span className="text-xs text-text-secondary">
-                    Due in 7 days • Net 14
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-4">
-                <span className="text-base font-extrabold text-text-primary">
-                  £4,649.10
-                </span>
-                <span className="px-3 py-1 rounded-md text-xs font-bold bg-[rgba(255,143,0,0.08)] text-pending-text flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-pending-text" />
-                  Pending
-                </span>
+                <p className="text-xs sm:text-sm font-semibold text-text-primary">
+                  <strong className="text-purple">Invio AI Copilot:</strong>{" "}
+                  &quot;Invoice #XM9141 is approaching its due date. A polite
+                  reminder email has been drafted for you to review and
+                  send.&quot;
+                </p>
               </div>
             </div>
           </div>
-
-          {/* AI Copilot Callout */}
-          <div className="p-4 rounded-xl bg-purple/10 border border-purple/20 flex items-center gap-3">
-            <div className="w-6 h-6 shrink-0 flex items-center justify-center">
-              <Image
-                src="/icons/ai.png"
-                alt="AI Copilot"
-                width={20}
-                height={20}
-                className="object-contain"
-              />
-            </div>
-            <p className="text-xs sm:text-sm font-semibold text-text-primary">
-              <strong className="text-purple">Invio AI Copilot:</strong>{" "}
-              &quot;Invoice #XM9141 payment is approaching due date. A polite
-              automated email reminder has been prepared for your 1-click
-              approval.&quot;
-            </p>
-          </div>
-        </div>
-      </div>
-      </ScrollTilt>
+        </ScrollTilt>
       </FadeIn>
-
-    
     </section>
   );
 }

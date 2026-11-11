@@ -44,7 +44,12 @@ const s = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
   },
-  logo: { width: 110, height: 40, objectFit: "contain", objectPosition: "left" },
+  logo: {
+    width: 110,
+    height: 40,
+    objectFit: "contain",
+    objectPosition: "left",
+  },
   wordmark: { fontFamily: "Helvetica-Bold", fontSize: 18, color: "#FFFFFF" },
   titleBlock: { alignItems: "flex-end" },
   title: {
@@ -60,7 +65,11 @@ const s = StyleSheet.create({
     paddingHorizontal: 9,
     borderRadius: 10,
   },
-  badgeText: { fontFamily: "Helvetica-Bold", fontSize: 7.5, letterSpacing: 0.8 },
+  badgeText: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 7.5,
+    letterSpacing: 0.8,
+  },
 
   parties: { flexDirection: "row", marginBottom: 30 },
   party: { flex: 1, paddingRight: 14 },
@@ -72,7 +81,12 @@ const s = StyleSheet.create({
     textTransform: "uppercase",
     marginBottom: 7,
   },
-  name: { fontFamily: "Helvetica-Bold", fontSize: 11, color: INK, marginBottom: 3 },
+  name: {
+    fontFamily: "Helvetica-Bold",
+    fontSize: 11,
+    color: INK,
+    marginBottom: 3,
+  },
   line: { lineHeight: 1.55 },
   detailRow: { flexDirection: "row", marginBottom: 4 },
   detailLabel: { width: 54, color: MUTED },

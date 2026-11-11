@@ -21,10 +21,7 @@ export function InvoiceDocument({
   const author = buildInvoiceDocument(invoice, profile).issuer.name;
 
   return (
-    <Document
-      title={`Invoice ${invoice.id}`}
-      author={author ?? undefined}
-    >
+    <Document title={`Invoice ${invoice.id}`} author={author ?? undefined}>
       {template === "classic" ? (
         <ClassicTemplate v={view} />
       ) : template === "bold" ? (

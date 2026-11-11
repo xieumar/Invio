@@ -2,7 +2,7 @@ import {
   HeroSection,
   BenefitsSection,
   HowItWorksSection,
-  TestimonialsSection,
+  PrinciplesSection,
   PricingPreviewSection,
   FaqPreviewSection,
 } from "@/components/external";
@@ -19,7 +19,7 @@ export function LandingPage() {
       </div>
       <HowItWorksSection />
       <div className="py-16 sm:py-24">
-        <TestimonialsSection />
+        <PrinciplesSection />
       </div>
       <div className="py-16 sm:py-24">
         <PricingPreviewSection />

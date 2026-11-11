@@ -25,7 +25,12 @@ const s = StyleSheet.create({
     paddingHorizontal: 8,
     marginBottom: 34,
   },
-  logo: { width: 150, height: 56, objectFit: "contain", objectPosition: "left" },
+  logo: {
+    width: 150,
+    height: 56,
+    objectFit: "contain",
+    objectPosition: "left",
+  },
   wordmark: { fontFamily: "Helvetica-Bold", fontSize: 17, color: INK },
   title: {
     fontFamily: "Helvetica-Bold",

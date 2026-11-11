@@ -6,5 +6,5 @@ export { SortDropdown, SORT_OPTIONS, type SortKey } from "./SortDropdown";
 export { useDownloadInvoicePdf } from "./useDownloadInvoicePdf";
 export { TemplatePicker } from "./TemplatePicker";
 export { InvoicePreview } from "./InvoicePreview";
+export { SAMPLE_INVOICE_VIEW } from "./sampleView";
 export { INVOICE_TEMPLATES, DEFAULT_INVOICE_TEMPLATE } from "./templates";
-

@@ -1,417 +1,296 @@
 import Image from "next/image";
-import { Flag, CheckCircle2 } from "lucide-react";
-import { FadeIn, Grow, Stagger, StaggerItem } from "@/components/motion";
+import { CheckCircle2, Sparkles } from "lucide-react";
+import { FadeIn, Stagger, StaggerItem } from "@/components/motion";
+
+const CARD =
+  "bg-surface rounded-3xl p-6 sm:p-7 border border-border shadow-card h-full flex flex-col overflow-hidden group hover:border-purple/40 transition-all duration-300";
+const CANVAS =
+  "bg-surface-alt dark:bg-surface-alt/40 rounded-2xl p-4 sm:p-5 border border-border/70 flex-1 flex flex-col gap-3.5";
+const INNER = "bg-surface rounded-xl p-4 border border-border/70";
+
+function CardHeader({
+  icon,
+  alt,
+  title,
+  children,
+}: {
+  icon: string;
+  alt: string;
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="min-h-[96px] flex flex-col justify-start mb-6">
+      <div className="flex items-center gap-3 mb-2.5">
+        <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
+          <Image
+            src={icon}
+            alt={alt}
+            width={28}
+            height={28}
+            className="object-contain w-7 h-7"
+          />
+        </div>
+        <h3 className="text-lg sm:text-xl font-extrabold text-text-primary tracking-tight">
+          {title}
+        </h3>
+      </div>
+      <p className="text-text-secondary text-[13px] leading-relaxed">
+        {children}
+      </p>
+    </div>
+  );
+}
+
+/** A tiny page thumbnail for the template card. */
+function MiniTemplate({
+  name,
+  children,
+}: {
+  name: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-1.5 flex-1 min-w-0">
+      <div className="w-full aspect-[3/4] rounded-md bg-white border border-border shadow-xs p-1.5 overflow-hidden">
+        {children}
+      </div>
+      <span className="text-[10px] font-bold text-text-primary">{name}</span>
+    </div>
+  );
+}
+
+const line = "h-[3px] rounded-full bg-neutral-300";
 
 export function BenefitsSection() {
   return (
     <section className="px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto w-full">
-      {/* Section Header */}
-      <FadeIn className="text-center max-w-2xl mx-auto mb-14 sm:mb-16" distance={40}>
+      <FadeIn
+        className="text-center max-w-2xl mx-auto mb-14 sm:mb-16"
+        distance={40}
+      >
         <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
           Capabilities
         </span>
         <h2 className="text-3xl sm:text-5xl font-extrabold text-text-primary tracking-tight mt-4">
-          Banking & billing features to bring your business to life
+          Everything you need to invoice like a pro
         </h2>
         <p className="text-text-secondary mt-3.5 text-base sm:text-lg leading-relaxed">
-          Each of our features has the depth required to streamline your
-          workflow from project kickoff to settled payment.
+          From the first draft to a branded PDF in your client&apos;s inbox,
+          with AI on hand for the tedious parts.
         </p>
       </FadeIn>
 
-      {/* 3 Interactive Cards with Uniform Height and Balanced Content */}
       <Stagger
         className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch"
         stagger={0.2}
       >
-        {/* CARD 1: Client-facing portal */}
+        {/* CARD 1: PDF templates & branding */}
         <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
-        <div className="bg-surface rounded-3xl p-6 sm:p-7 border border-border shadow-card h-full flex flex-col justify-between overflow-hidden group hover:border-purple/40 transition-all duration-300">
-          {/* Header with uniform min-height */}
-          <div className="min-h-[84px] flex flex-col justify-start mb-6">
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
-                <Image
-                  src="/icons/client-invoice.png"
-                  alt="Client portal"
-                  width={28}
-                  height={28}
-                  className="object-contain w-7 h-7"
-                />
-              </div>
-              <h3 className="text-lg sm:text-xl font-extrabold text-text-primary tracking-tight">
-                Client-facing portal
-              </h3>
-            </div>
-            <p className="text-text-secondary text-[13px] leading-relaxed">
-              Integrate with the PM tools you love, manage the internal mess
-              behind.
-            </p>
-          </div>
+          <div className={CARD}>
+            <CardHeader
+              icon="/icons/client-invoice.png"
+              alt="PDF templates"
+              title="Branded PDF templates"
+            >
+              Pick Minimal, Classic or Bold, add your logo and payment details
+              once, and every PDF comes out looking professional.
+            </CardHeader>
 
-          {/* Mockup Canvas */}
-          <div className="bg-surface-alt dark:bg-surface-alt/40 rounded-2xl p-4 sm:p-5 border border-border/70 flex-1 flex flex-col justify-between gap-3.5">
-            {/* Top Metric Card (Agreement 180 hr/mo) */}
-            <div className="bg-surface rounded-xl p-4 border border-border/80 shadow-xs h-[76px] flex items-center justify-between">
-              <div>
-                <span className="text-[11px] font-semibold text-text-secondary block">
-                  Agreement
+            <div className={CANVAS}>
+              <div className="flex gap-2.5">
+                <MiniTemplate name="Minimal">
+                  <div className="h-1.5 w-1/2 rounded-full bg-neutral-700" />
+                  <div className="mt-3 space-y-1">
+                    <div className={`${line} w-full bg-neutral-700`} />
+                    <div className={`${line} w-5/6`} />
+                    <div className={`${line} w-4/6`} />
+                    <div className={`${line} w-full bg-neutral-700`} />
+                  </div>
+                </MiniTemplate>
+                <MiniTemplate name="Classic">
+                  <div className="h-1.5 w-1/3 rounded-full bg-neutral-700" />
+                  <div className="mt-2 rounded-sm bg-neutral-200 p-1 space-y-1">
+                    <div className={`${line} w-2/3 bg-neutral-500`} />
+                    <div className={`${line} w-1/2`} />
+                  </div>
+                  <div className="mt-2 space-y-1">
+                    <div className={`${line} w-5/6`} />
+                    <div className={`${line} w-4/6`} />
+                  </div>
+                </MiniTemplate>
+                <MiniTemplate name="Bold">
+                  <div className="h-3 rounded-sm bg-[#1E2139]" />
+                  <div className="mt-2 h-1.5 rounded-sm bg-purple/20" />
+                  <div className="mt-1.5 space-y-1">
+                    <div className={`${line} w-5/6`} />
+                    <div className={`${line} w-4/6`} />
+                  </div>
+                  <div className="mt-2 ml-auto h-2 w-3/5 rounded-sm bg-purple" />
+                </MiniTemplate>
+              </div>
+
+              <div className={`${INNER} flex flex-col gap-2 text-[11px]`}>
+                {[
+                  "Your logo on every invoice",
+                  "Bank & payment details",
+                  "One default, used for every PDF",
+                ].map((t) => (
+                  <div key={t} className="flex items-center gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-paid-text shrink-0" />
+                    <span className="text-text-primary font-medium">{t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </StaggerItem>
+
+        {/* CARD 2: AI assistant */}
+        <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
+          <div className={CARD}>
+            <CardHeader
+              icon="/icons/ai.png"
+              alt="AI assistant"
+              title="AI that drafts, you approve"
+            >
+              Describe the work in plain English and the form fills itself in.
+              Nothing is saved until you review it.
+            </CardHeader>
+
+            <div className={CANVAS}>
+              <div className={`${INNER} text-[11px]`}>
+                <span className="text-[10px] font-semibold text-text-secondary block mb-1">
+                  You typed
                 </span>
-                <div className="text-2xl sm:text-3xl font-extrabold text-text-primary tracking-tight mt-0.5">
-                  180{" "}
-                  <span className="text-xs text-text-secondary font-medium">
-                    hr/mo
+                <p className="text-text-primary font-medium leading-snug">
+                  &quot;Logo and brand guide for Acme, 2 days at £400, 20%
+                  VAT&quot;
+                </p>
+              </div>
+
+              <div
+                className={`${INNER} border-purple/30 bg-purple/5 text-[11px] flex flex-col gap-2`}
+              >
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-purple">
+                  <Sparkles className="w-3 h-3" /> Drafted for review
+                </span>
+                <div className="flex items-center justify-between">
+                  <span className="text-text-primary font-medium">
+                    Logo &amp; brand guide × 2
+                  </span>
+                  <span className="font-extrabold text-text-primary">
+                    £800.00
                   </span>
                 </div>
+                <div className="flex items-center justify-between text-text-secondary">
+                  <span>Tax (20%)</span>
+                  <span className="font-bold text-text-primary">£160.00</span>
+                </div>
               </div>
-              <div className="text-right">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-pending-text bg-pending-text/10 px-2.5 py-1 rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-pending-text" />
-                  10 days left
+
+              <div className={`${INNER} text-[11px]`}>
+                <span className="text-[10px] font-semibold text-text-secondary block mb-2">
+                  Payment reminders, your tone
                 </span>
-                <span className="text-[10px] text-text-secondary block mt-1">
-                  Rate: £85/hr
-                </span>
+                <div className="flex gap-1.5">
+                  {["Friendly", "Firm", "Urgent"].map((t, i) => (
+                    <span
+                      key={t}
+                      className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                        i === 0
+                          ? "bg-purple text-white"
+                          : "bg-surface-alt text-text-secondary border border-border"
+                      }`}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
+          </div>
+        </StaggerItem>
 
-            {/* Bottom Detail Card (Client Overview & Line Items) */}
-            <div className="bg-surface rounded-xl p-4 border border-border/60 flex-1 flex flex-col justify-between gap-2.5">
-              <div className="flex items-center justify-between pb-2 border-b border-border/50">
+        {/* CARD 3: Clients, currencies, tax */}
+        <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
+          <div className={CARD}>
+            <CardHeader
+              icon="/icons/drafts.png"
+              alt="Clients and currencies"
+              title="Clients, tax & currencies"
+            >
+              Save clients once, invoice in the currency they pay in, and let
+              Invio do the maths down to the last penny.
+            </CardHeader>
+
+            <div className={CANVAS}>
+              <div className={`${INNER} flex items-center justify-between`}>
                 <div>
                   <h4 className="text-[12px] font-bold text-text-primary">
-                    Alexander M. Whitfield
+                    Alexander Whitfield
                   </h4>
                   <p className="text-[10px] text-text-secondary">
-                    Workspace Client • Net 14
+                    Saved client · auto-fills the invoice
                   </p>
                 </div>
-                <div className="text-right">
-                  <span className="text-[10px] text-text-secondary block">
-                    Available
+                <div className="flex gap-1">
+                  {["GBP", "USD", "EUR"].map((c, i) => (
+                    <span
+                      key={c}
+                      className={`px-2 py-0.5 rounded-md text-[10px] font-bold ${
+                        i === 0
+                          ? "bg-purple/15 text-purple"
+                          : "bg-surface-alt text-text-secondary"
+                      }`}
+                    >
+                      {c}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              <div className={`${INNER} text-[11px] flex flex-col gap-2`}>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Subtotal</span>
+                  <span className="font-bold text-text-primary">£4,250.00</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Discount</span>
+                  <span className="font-bold text-text-primary">-£250.00</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-text-secondary">Tax (20%)</span>
+                  <span className="font-bold text-text-primary">£850.00</span>
+                </div>
+                <div className="pt-2 border-t border-border/50 flex justify-between">
+                  <span className="text-text-secondary font-medium">
+                    Total due
                   </span>
-                  <span className="text-[12px] font-extrabold text-text-primary">
-                    136 hr
+                  <span className="font-extrabold text-text-primary">
+                    £4,850.00
                   </span>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 text-[11px] pt-0.5">
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-text-primary font-medium truncate max-w-[125px]">
-                    Brand identity sprint
+              <div
+                className={`${INNER} flex items-center justify-between text-[11px]`}
+              >
+                <span className="text-text-secondary font-medium">Status</span>
+                <div className="flex gap-1.5 text-[10px] font-bold">
+                  <span className="px-2 py-0.5 rounded-md bg-surface-alt text-text-secondary">
+                    Draft
                   </span>
-                  <span className="text-[#3b82f6] flex items-center gap-1 font-semibold text-[10px] bg-[#3b82f6]/10 px-1.5 py-0.5 rounded">
-                    <Flag className="w-2.5 h-2.5 fill-[#3b82f6]" /> Med
+                  <span className="px-2 py-0.5 rounded-md bg-pending-text/10 text-pending-text">
+                    Pending
                   </span>
-                  <span className="font-extrabold text-text-primary text-[11px]">
-                    £2,450
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-text-primary font-medium truncate max-w-[125px]">
-                    Design tokens & export
-                  </span>
-                  <span className="text-pending-text flex items-center gap-1 font-semibold text-[10px] bg-pending-text/10 px-1.5 py-0.5 rounded">
-                    <Flag className="w-2.5 h-2.5 fill-pending-text" /> High
-                  </span>
-                  <span className="font-extrabold text-text-primary text-[11px]">
-                    £1,200
+                  <span className="px-2 py-0.5 rounded-md bg-paid-text/10 text-paid-text">
+                    Paid
                   </span>
                 </div>
-
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-text-primary font-medium truncate max-w-[125px]">
-                    Figma review & handover
-                  </span>
-                  <span className="text-paid-text flex items-center gap-1 font-semibold text-[10px] bg-paid-text/10 px-1.5 py-0.5 rounded">
-                    <Flag className="w-2.5 h-2.5 fill-paid-text" /> Done
-                  </span>
-                  <span className="font-extrabold text-text-primary text-[11px]">
-                    £600
-                  </span>
-                </div>
-              </div>
-
-              {/* Summary Footer Line */}
-              <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px]">
-                <span className="text-text-secondary font-medium">
-                  Total Billed:
-                </span>
-                <span className="font-extrabold text-text-primary">
-                  £4,250.00
-                </span>
               </div>
             </div>
           </div>
-        </div>
-
-        </StaggerItem>
-
-        {/* CARD 2: Task collaboration */}
-        <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
-        <div className="bg-surface rounded-3xl p-6 sm:p-7 border border-border shadow-card h-full flex flex-col justify-between overflow-hidden group hover:border-purple/40 transition-all duration-300">
-          {/* Header with uniform min-height */}
-          <div className="min-h-[84px] flex flex-col justify-start mb-6">
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
-                <Image
-                  src="/icons/drafts.png"
-                  alt="Task collaboration"
-                  width={28}
-                  height={28}
-                  className="object-contain w-7 h-7"
-                />
-              </div>
-              <h3 className="text-lg sm:text-xl font-extrabold text-text-primary tracking-tight">
-                Task collaboration
-              </h3>
-            </div>
-            <p className="text-text-secondary text-[13px] leading-relaxed">
-              Integrate with the PM tools you love, manage the internal mess
-              behind.
-            </p>
-          </div>
-
-          {/* Mockup Canvas */}
-          <div className="bg-surface-alt dark:bg-surface-alt/40 rounded-2xl p-4 sm:p-5 border border-border/70 flex-1 flex flex-col justify-between gap-3.5">
-            {/* Top Metric Card (Active Tasks + Avatars) */}
-            <div className="bg-surface rounded-xl p-4 border border-border/80 shadow-xs h-[76px] flex items-center justify-between">
-              <div>
-                <span className="text-[11px] font-semibold text-text-secondary block">
-                  Active Tasks
-                </span>
-                <div className="text-2xl sm:text-3xl font-extrabold text-text-primary tracking-tight mt-0.5">
-                  32{" "}
-                  <span className="text-xs text-text-secondary font-medium">
-                    sprint items
-                  </span>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-2">
-                  <div className="w-6 h-6 rounded-full overflow-hidden border-2 border-surface shrink-0">
-                    <Image
-                      src="/avatar.png"
-                      alt="Assignee"
-                      width={24}
-                      height={24}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="w-6 h-6 rounded-full bg-purple text-[10px] font-bold text-white flex items-center justify-center border-2 border-surface shrink-0">
-                    JD
-                  </div>
-                </div>
-                <span className="text-[10px] text-purple font-bold bg-purple/10 px-2 py-1 rounded-full">
-                  Live Sync
-                </span>
-              </div>
-            </div>
-
-            {/* Bottom Detail Card (Task's status with 4 Bars & Activity) */}
-            <div className="bg-surface rounded-xl p-4 border border-border/60 flex-1 flex flex-col justify-between gap-2.5">
-              <div className="flex items-center justify-between pb-1">
-                <h5 className="text-[12px] font-bold text-text-primary">
-                  Task&apos;s status
-                </h5>
-                <span className="text-[10px] font-bold text-text-secondary">
-                  03:30h logged
-                </span>
-              </div>
-
-              <div className="flex flex-col gap-2 pt-0.5">
-                {/* To do */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-medium text-text-secondary mb-1">
-                    <span>To do</span>
-                    <span className="font-bold text-text-primary">5</span>
-                  </div>
-                  <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <Grow className="bg-[#4285f4] h-full rounded-full w-[45%]" delay={0.7} />
-                  </div>
-                </div>
-
-                {/* In design */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-medium text-text-secondary mb-1">
-                    <span>In design</span>
-                    <span className="font-bold text-text-primary">12</span>
-                  </div>
-                  <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <Grow className="bg-purple h-full rounded-full w-[85%]" delay={0.85} />
-                  </div>
-                </div>
-
-                {/* In dev */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-medium text-text-secondary mb-1">
-                    <span>In dev</span>
-                    <span className="font-bold text-text-primary">10</span>
-                  </div>
-                  <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <Grow className="bg-pending-text h-full rounded-full w-[65%]" delay={1} />
-                  </div>
-                </div>
-
-                {/* In client */}
-                <div>
-                  <div className="flex justify-between text-[10px] font-medium text-text-secondary mb-1">
-                    <span>In client</span>
-                    <span className="font-bold text-text-primary">5</span>
-                  </div>
-                  <div className="w-full bg-border/50 h-1.5 rounded-full overflow-hidden">
-                    <Grow className="bg-[#f4b400] h-full rounded-full w-[40%]" delay={1.15} />
-                  </div>
-                </div>
-              </div>
-
-              {/* Summary Footer Line */}
-              <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px]">
-                <span className="text-text-secondary font-medium">
-                  Weekly Target:
-                </span>
-                <span className="font-extrabold text-paid-text">
-                  24.5 / 30 hrs logged
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        </StaggerItem>
-
-        {/* CARD 3: Retainer tracking (Shortened, punchy title) */}
-        <StaggerItem className="h-full" distance={64} scale={0.94} hoverLift>
-        <div className="bg-surface rounded-3xl p-6 sm:p-7 border border-border shadow-card h-full flex flex-col justify-between overflow-hidden group hover:border-purple/40 transition-all duration-300">
-          {/* Header with uniform min-height */}
-          <div className="min-h-[84px] flex flex-col justify-start mb-6">
-            <div className="flex items-center gap-3 mb-2.5">
-              <div className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0">
-                <Image
-                  src="/icons/csv.png"
-                  alt="Retainer tracking"
-                  width={28}
-                  height={28}
-                  className="object-contain w-7 h-7"
-                />
-              </div>
-              <h3 className="text-lg sm:text-xl font-extrabold text-text-primary tracking-tight">
-                Retainer tracking
-              </h3>
-            </div>
-            <p className="text-text-secondary text-[13px] leading-relaxed">
-              Integrate with the PM tools you love, manage the internal mess
-              behind.
-            </p>
-          </div>
-
-          {/* Mockup Canvas */}
-          <div className="bg-surface-alt dark:bg-surface-alt/40 rounded-2xl p-4 sm:p-5 border border-border/70 flex-1 flex flex-col justify-between gap-3.5">
-            {/* Top Metric Card (Available hours 136 hr) */}
-            <div className="bg-surface rounded-xl p-4 border border-border/80 shadow-xs h-[76px] flex items-center justify-between">
-              <div>
-                <span className="text-[11px] font-semibold text-text-secondary block">
-                  Available hours
-                </span>
-                <div className="text-2xl sm:text-3xl font-extrabold text-text-primary tracking-tight mt-0.5">
-                  136{" "}
-                  <span className="text-xs text-text-secondary font-medium">
-                    hr
-                  </span>
-                </div>
-              </div>
-              <div className="text-right">
-                <span className="inline-flex items-center gap-1.5 text-[10px] font-bold text-pending-text bg-pending-text/10 px-2.5 py-1 rounded-full">
-                  <span className="w-1.5 h-1.5 rounded-full bg-pending-text" />
-                  10 days left
-                </span>
-                <span className="text-[10px] text-text-secondary block mt-1">
-                  Cap: 180 hr
-                </span>
-              </div>
-            </div>
-
-            {/* Bottom Detail Card (Hours Usage + 4 Metrics + Bank Statement Matching) */}
-            <div className="bg-surface rounded-xl p-4 border border-border/60 flex-1 flex flex-col justify-between gap-2.5">
-              <div className="flex items-center justify-between">
-                <h5 className="text-[12px] font-bold text-text-primary">
-                  Hours Usage
-                </h5>
-                <span className="text-[10px] font-bold text-text-secondary">
-                  October Cycle
-                </span>
-              </div>
-
-              {/* Segmented Colorful Bar */}
-              <div className="w-full h-2 rounded-full flex gap-1 overflow-hidden bg-border/40 my-0.5">
-                <Grow className="bg-[#4285f4] h-full w-[25%]" delay={1.2} />
-                <Grow className="bg-purple h-full w-[35%]" delay={1.35} />
-                <Grow className="bg-paid-text h-full w-[25%]" delay={1.5} />
-                <Grow className="bg-pending-text h-full w-[15%]" delay={1.65} />
-              </div>
-
-              {/* 4 Usage Metric Columns */}
-              <div className="grid grid-cols-4 gap-2 text-left py-1 border-b border-border/50">
-                <div>
-                  <div className="text-base sm:text-lg font-extrabold text-text-primary">
-                    8
-                  </div>
-                  <div className="text-[10px] text-text-secondary font-medium">
-                    Spent
-                  </div>
-                </div>
-                <div>
-                  <div className="text-base sm:text-lg font-extrabold text-text-primary">
-                    15
-                  </div>
-                  <div className="text-[10px] text-text-secondary font-medium">
-                    Projected
-                  </div>
-                </div>
-                <div>
-                  <div className="text-base sm:text-lg font-extrabold text-text-primary">
-                    23
-                  </div>
-                  <div className="text-[10px] text-text-secondary font-medium">
-                    Available
-                  </div>
-                </div>
-                <div>
-                  <div className="text-base sm:text-lg font-extrabold text-text-primary">
-                    12
-                  </div>
-                  <div className="text-[10px] text-text-secondary font-medium">
-                    Rollover
-                  </div>
-                </div>
-              </div>
-
-              {/* Statement Matching Feed */}
-              <div className="flex flex-col gap-1 text-[11px]">
-                <div className="flex items-center justify-between py-0.5">
-                  <span className="text-text-primary font-medium truncate max-w-[130px]">
-                    Monzo Statement CSV
-                  </span>
-                  <span className="text-paid-text font-bold text-[10px] flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-paid-text" /> +£2,450
-                  </span>
-                </div>
-              </div>
-
-              {/* Summary Footer Line */}
-              <div className="pt-2 border-t border-border/50 flex items-center justify-between text-[11px]">
-                <span className="text-text-secondary font-medium">
-                  CSV Reconciliation:
-                </span>
-                <span className="font-extrabold text-paid-text">
-                  100% Cleared
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
         </StaggerItem>
       </Stagger>
     </section>
