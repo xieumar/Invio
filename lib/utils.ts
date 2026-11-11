@@ -38,5 +38,6 @@ export function formatCurrency(amount: number, currency = "GBP"): string {
   return new Intl.NumberFormat("en-GB", {
     style: "currency",
     currency: currency || "GBP",
+    currencyDisplay: "narrowSymbol",
   }).format(amount);
 }

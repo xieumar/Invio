@@ -126,6 +126,7 @@ export const businessProfileSchema = z.object({
     .default(14),
   defaultNotes: optionalText(1000, "Keep notes under 1000 characters"),
   paymentDetails: paymentDetailsSchema.nullable().optional(),
+  invoiceTemplate: z.enum(["minimal", "classic", "bold"]).nullable().optional(),
 });
 
 export type BusinessProfileFormSchema = z.infer<typeof businessProfileSchema>;

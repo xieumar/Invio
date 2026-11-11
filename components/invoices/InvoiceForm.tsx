@@ -31,6 +31,7 @@ import {
   getCurrencyConfig,
 } from "@/lib/money";
 import { CurrencyCombobox } from "@/components/ui/currency-combobox";
+import { Textarea } from "@/components/ui/textarea";
 import { useBusinessProfile } from "@/features/onboarding/useBusinessProfile";
 
 interface InvoiceFormProps {
@@ -385,7 +386,9 @@ export function InvoiceForm({
 
   const methods = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: invoice || {
+    defaultValues: invoice
+      ? { ...invoice, notes: invoice.notes ?? "" }
+      : {
       clientId: null,
       description: initialValues?.description || "",
       paymentTerms: initialValues?.paymentTerms || 30,
@@ -401,6 +404,7 @@ export function InvoiceForm({
       taxRate: initialValues?.taxRate ?? 0,
       discount: initialValues?.discount ?? 0,
       currency: initialValues?.currency,
+      notes: initialValues?.notes ?? "",
     },
   });
 
@@ -413,6 +417,10 @@ export function InvoiceForm({
     }
     if (!initialValues?.senderAddress && profile.address) {
       methods.setValue("senderAddress", profile.address);
+    }
+    // Prefill notes from Settings, without overwriting anything already typed
+    if (profile.defaultNotes && !methods.getValues("notes")) {
+      methods.setValue("notes", profile.defaultNotes);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile, isEdit]);
@@ -647,6 +655,19 @@ export function InvoiceForm({
 
               <ItemList />
               <TotalsSection />
+
+              <Field
+                label="Notes"
+                error={errors.notes?.message}
+                className="mt-10"
+              >
+                <Textarea
+                  rows={3}
+                  placeholder="Shown on the invoice, e.g. thank-you message or late-payment terms"
+                  {...register("notes")}
+                  aria-invalid={!!errors.notes}
+                />
+              </Field>
             </form>
           </FormProvider>
           </AiHighlightContext.Provider>

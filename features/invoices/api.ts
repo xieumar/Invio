@@ -138,6 +138,8 @@ export async function fetchInvoices(
         discountAmount: data.discountAmount,
         total: data.total,
         notes: data.notes || null,
+        issuer: data.issuer || null,
+        paymentInfo: data.paymentInfo || null,
         paidAt: data.paidAt || null,
         updatedAt: data.updatedAt?.toDate
           ? data.updatedAt.toDate().toISOString()
@@ -190,6 +192,8 @@ export async function fetchInvoiceById(
       discountAmount: data.discountAmount,
       total: data.total,
       notes: data.notes || null,
+      issuer: data.issuer || null,
+      paymentInfo: data.paymentInfo || null,
       paidAt: data.paidAt || null,
       updatedAt: data.updatedAt?.toDate
         ? data.updatedAt.toDate().toISOString()

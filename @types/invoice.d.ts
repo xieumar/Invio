@@ -8,6 +8,20 @@ interface InvoiceItem {
   total: number;
 }
 
+type InvoiceTemplate = "minimal" | "classic" | "bold";
+
+/** Business details frozen onto an invoice when it is issued. */
+interface InvoiceIssuer {
+  businessName: string;
+  email?: string | null;
+  phone?: string | null;
+  taxId?: string | null;
+  logoUrl?: string | null;
+}
+
+/** Payment details frozen onto an invoice; hidden/empty fields are null. */
+type InvoicePaymentInfo = Partial<Record<PaymentFieldKey, string | null>>;
+
 interface Invoice {
   id: string;
   userId?: string;
@@ -35,6 +49,9 @@ interface Invoice {
   discountAmount?: number;
   total: number;
   notes?: string | null;
+  /** Snapshot of the business profile at issue time (absent on old invoices) */
+  issuer?: InvoiceIssuer | null;
+  paymentInfo?: InvoicePaymentInfo | null;
   paidAt?: string | null;
   updatedAt?: string;
 }
@@ -57,4 +74,6 @@ interface InvoiceFormData {
   total: number;
   currency?: CurrencyCode;
   notes?: string;
+  issuer?: InvoiceIssuer | null;
+  paymentInfo?: InvoicePaymentInfo | null;
 }

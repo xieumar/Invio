@@ -14,8 +14,16 @@ import {
   InvoiceForm,
   DeleteConfirmModal,
 } from "@/components/invoices";
-import { useDownloadInvoicePdf } from "@/features/invoices";
+import {
+  useDownloadInvoicePdf,
+  InvoicePreview,
+  INVOICE_TEMPLATES,
+  DEFAULT_INVOICE_TEMPLATE,
+} from "@/features/invoices";
+import { buildInvoiceView } from "@/features/invoices/pdf/view";
 import { PaymentReminderModal } from "@/features/ai";
+import { useBusinessProfile } from "@/features/onboarding/useBusinessProfile";
+import { buildInvoiceDocument } from "@/lib/invoice-document";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
 interface InvoiceDetailPageProps {
@@ -34,6 +42,7 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isReminderOpen, setIsReminderOpen] = useState(false);
   const { downloadPdf, isGenerating } = useDownloadInvoicePdf();
+  const { data: profile } = useBusinessProfile();
 
   const invoice = invoices.find((inv) => inv.id === id);
 
@@ -70,6 +79,9 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
       </div>
     );
   }
+
+  const doc = buildInvoiceDocument(invoice, profile);
+  const template = profile?.invoiceTemplate ?? DEFAULT_INVOICE_TEMPLATE;
 
   const handleEditSave = async (
     data: InvoiceFormData,
@@ -108,7 +120,9 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
   };
 
   const ActionButtons = ({ className = "" }: { className?: string }) => (
-    <div className={`flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 ${className}`}>
+    <div
+      className={`flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 ${className}`}
+    >
       <Button
         variant="secondary"
         onClick={() => downloadPdf(invoice)}
@@ -116,10 +130,14 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
         aria-label="Download invoice as PDF"
         className="px-3 sm:px-5 pt-1 h-12 rounded-3xl text-[14px] sm:text-[15px] font-bold bg-surface-alt text-text-muted dark:text-text-secondary hover:bg-border-light dark:hover:bg-white dark:hover:text-text-muted transition-colors border-none cursor-pointer flex items-center gap-2 disabled:opacity-60"
       >
-        {isGenerating
-          ? <Loader2 className="w-4 h-4 animate-spin" />
-          : <Download className="w-4 h-4" />}
-        <span className="hidden sm:inline">{isGenerating ? "Generating…" : "PDF"}</span>
+        {isGenerating ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Download className="w-4 h-4" />
+        )}
+        <span className="hidden sm:inline">
+          {isGenerating ? "Generating…" : "PDF"}
+        </span>
       </Button>
 
       <Button
@@ -181,7 +199,27 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
           <ActionButtons className="hidden sm:flex" />
         </div>
 
-        <div className="bg-surface rounded-lg shadow-sm p-6 sm:p-12 flex flex-col gap-10 sm:gap-12">
+        {/* Tablet/desktop: the invoice as it will look in the PDF, in the template chosen in Settings */}
+        <div className="hidden sm:block">
+          <p className="text-[13px] text-text-secondary mb-3">
+            Template:{" "}
+            <span className="font-bold text-text-primary">
+              {INVOICE_TEMPLATES.find((t) => t.id === template)?.name}
+            </span>
+            {" · "}
+            <Link href="/settings" className="text-purple hover:underline">
+              Change in Settings
+            </Link>
+          </p>
+          <InvoicePreview
+            view={buildInvoiceView(invoice, profile)}
+            template={template}
+            className="rounded-lg"
+          />
+        </div>
+
+        {/* Mobile: the page is too small to show a scaled PDF, so keep the responsive layout */}
+        <div className="sm:hidden bg-surface rounded-lg shadow-sm p-6 sm:p-12 flex flex-col gap-10 sm:gap-12">
           <div className="flex flex-col sm:flex-row sm:justify-between gap-8">
             <div>
               <h2 className="text-[16px] font-bold text-text-primary mb-1">
@@ -193,11 +231,32 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
               </p>
             </div>
 
-            <div className="text-[13px] text-text-secondary sm:text-right leading-6">
-              <p>{invoice.senderAddress.street}</p>
-              <p>{invoice.senderAddress.city}</p>
-              <p>{invoice.senderAddress.postCode}</p>
-              <p>{invoice.senderAddress.country}</p>
+            <div className="text-[13px] text-text-secondary sm:text-right leading-6 flex flex-col sm:items-end">
+              {doc.issuer.logoUrl && (
+                // eslint-disable-next-line @next/next/no-img-element -- data URL from the business profile
+                <img
+                  src={doc.issuer.logoUrl}
+                  alt={
+                    doc.issuer.name
+                      ? `${doc.issuer.name} logo`
+                      : "Business logo"
+                  }
+                  className="h-12 max-w-40 object-contain object-left sm:object-right mb-2"
+                />
+              )}
+              {doc.issuer.name && (
+                <p className="text-[15px] font-bold text-text-primary">
+                  {doc.issuer.name}
+                </p>
+              )}
+              {doc.issuer.email && <p>{doc.issuer.email}</p>}
+              {doc.issuer.phone && <p>{doc.issuer.phone}</p>}
+              {doc.issuer.taxId && <p>Tax ID: {doc.issuer.taxId}</p>}
+              <div className="mt-2">
+                {doc.issuer.address.map((line, i) => (
+                  <p key={i}>{line}</p>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -270,7 +329,8 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
                         {item.name}
                       </span>
                       <span className="text-[15px] font-bold text-text-secondary sm:hidden">
-                        {item.quantity} x {formatCurrency(item.price, invoice.currency)}
+                        {item.quantity} x{" "}
+                        {formatCurrency(item.price, invoice.currency)}
                       </span>
                     </div>
                     <span className="hidden sm:block text-[15px] font-bold text-text-secondary text-center w-8">
@@ -287,12 +347,16 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
               </div>
             </div>
 
-            {((invoice.taxRate ?? 0) > 0 || (invoice.discountAmount ?? 0) > 0) && (
+            {((invoice.taxRate ?? 0) > 0 ||
+              (invoice.discountAmount ?? 0) > 0) && (
               <div className="px-6 pb-6 sm:px-8 sm:pb-8 flex flex-col gap-3 text-[13px] text-text-secondary">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
                   <span className="font-bold text-text-primary">
-                    {formatCurrency(invoice.subtotal ?? invoice.total, invoice.currency)}
+                    {formatCurrency(
+                      invoice.subtotal ?? invoice.total,
+                      invoice.currency
+                    )}
                   </span>
                 </div>
                 {(invoice.taxRate ?? 0) > 0 && (
@@ -307,7 +371,11 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
                   <div className="flex justify-between">
                     <span>Discount</span>
                     <span className="font-bold text-text-primary">
-                      -{formatCurrency(invoice.discountAmount ?? 0, invoice.currency)}
+                      -
+                      {formatCurrency(
+                        invoice.discountAmount ?? 0,
+                        invoice.currency
+                      )}
                     </span>
                   </div>
                 )}
@@ -321,6 +389,52 @@ export function InvoiceDetailPage({ invoiceId }: InvoiceDetailPageProps) {
               </span>
             </div>
           </div>
+
+          {doc.paymentLines.length > 0 && (
+            <section aria-labelledby="payment-details-heading">
+              <h3
+                id="payment-details-heading"
+                className="text-[13px] text-text-secondary mb-4"
+              >
+                Payment Details
+              </h3>
+              <dl className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 text-[13px]">
+                {doc.paymentLines.map((line) => (
+                  <div key={line.key} className="contents">
+                    <dt className="text-text-secondary">{line.label}</dt>
+                    <dd className="font-bold text-text-primary break-words">
+                      {line.isLink ? (
+                        <a
+                          href={line.value}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-purple hover:underline"
+                        >
+                          {line.value}
+                        </a>
+                      ) : (
+                        line.value
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+
+          {doc.notes && (
+            <section aria-labelledby="invoice-notes-heading">
+              <h3
+                id="invoice-notes-heading"
+                className="text-[13px] text-text-secondary mb-2"
+              >
+                Notes
+              </h3>
+              <p className="text-[13px] text-text-primary whitespace-pre-wrap">
+                {doc.notes}
+              </p>
+            </section>
+          )}
         </div>
       </div>
 

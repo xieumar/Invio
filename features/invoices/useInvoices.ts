@@ -3,6 +3,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth";
 import { queryKeys } from "@/lib/query";
+import { buildInvoiceSnapshot } from "@/lib/invoice-snapshot";
+import { getBusinessProfile } from "@/features/onboarding/api";
 import {
   fetchInvoices,
   fetchInvoiceById,
@@ -39,6 +41,30 @@ export function useInvoice(invoiceId: string) {
   });
 }
 
+/** Current business details/payment info, frozen for a new or draft invoice. */
+async function createSnapshot(userId: string | null | undefined) {
+  const profile = await getBusinessProfile(userId ?? "demo-user");
+  return buildInvoiceSnapshot(profile);
+}
+
+/**
+ * Drafts (and old invoices that never got a snapshot) pick up the current
+ * business details on save. Once an invoice is issued its snapshot is frozen.
+ */
+async function updateWithSnapshot(
+  userId: string | null | undefined,
+  id: string,
+  data: Partial<InvoiceFormData>,
+  status?: InvoiceStatus
+) {
+  const existing = await fetchInvoiceById(userId, id);
+  const snapshot =
+    !existing || existing.status === "draft" || !existing.issuer
+      ? await createSnapshot(userId)
+      : {};
+  return updateInvoiceRecord(userId, id, { ...data, ...snapshot }, status);
+}
+
 export function useCreateInvoice() {
   const { user } = useAuth();
   const userId = user?.uid;
@@ -51,7 +77,9 @@ export function useCreateInvoice() {
     }: {
       data: InvoiceFormData;
       status?: InvoiceStatus;
-    }) => createInvoiceRecord(userId, data, status),
+    }) => createSnapshot(userId).then((snapshot) =>
+      createInvoiceRecord(userId, { ...data, ...snapshot }, status)
+    ),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
       queryClient.invalidateQueries({ queryKey: queryKeys.metrics.all });
@@ -73,7 +101,7 @@ export function useUpdateInvoice() {
       id: string;
       data: Partial<InvoiceFormData>;
       status?: InvoiceStatus;
-    }) => updateInvoiceRecord(userId, id, data, status),
+    }) => updateWithSnapshot(userId, id, data, status),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.invoices.all });
       queryClient.invalidateQueries({

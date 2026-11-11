@@ -46,6 +46,8 @@ interface BusinessProfile {
   defaultPaymentTerms: number;
   defaultNotes?: string | null;
   paymentDetails?: PaymentDetails | null;
+  /** Default PDF template for new downloads */
+  invoiceTemplate?: InvoiceTemplate | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -60,6 +62,7 @@ interface BusinessProfileFormData {
   defaultPaymentTerms: number;
   defaultNotes?: string | null;
   paymentDetails?: PaymentDetails | null;
+  invoiceTemplate?: InvoiceTemplate | null;
 }
 
 interface UserPreferences {

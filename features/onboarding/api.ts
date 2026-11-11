@@ -134,6 +134,7 @@ export async function getBusinessProfile(
       defaultPaymentTerms: data.defaultPaymentTerms || 14,
       defaultNotes: data.defaultNotes || null,
       paymentDetails: data.paymentDetails || null,
+      invoiceTemplate: data.invoiceTemplate || null,
       createdAt: data.createdAt?.toDate
         ? data.createdAt.toDate().toISOString()
         : new Date().toISOString(),

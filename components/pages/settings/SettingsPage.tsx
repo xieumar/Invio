@@ -13,6 +13,7 @@ import {
   useBusinessProfile,
   useSaveBusinessProfile,
 } from "@/features/onboarding";
+import { TemplatePicker } from "@/features/invoices";
 import { businessProfileSchema } from "@/lib/validations";
 
 function toFormValues(
@@ -29,6 +30,7 @@ function toFormValues(
     defaultPaymentTerms: profile.defaultPaymentTerms,
     defaultNotes: profile.defaultNotes ?? "",
     paymentDetails: profile.paymentDetails ?? {},
+    invoiceTemplate: profile.invoiceTemplate ?? "minimal",
   };
 }
 
@@ -148,6 +150,13 @@ function SettingsForm({
           values={values}
           onChange={update}
           showSummary={false}
+        />
+      </section>
+
+      <section className={sectionClass}>
+        <TemplatePicker
+          value={values.invoiceTemplate ?? "minimal"}
+          onChange={(invoiceTemplate) => update({ invoiceTemplate })}
         />
       </section>
 
