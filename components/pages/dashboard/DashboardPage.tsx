@@ -1,26 +1,87 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, ArrowRight } from "lucide-react";
+import { Plus, ArrowRight, Compass } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout";
 import {
   DashboardMetrics,
   RecentInvoices,
   QuickActions,
 } from "@/components/dashboard";
 import { InvoiceForm } from "@/components/invoices/InvoiceForm";
+import { ProductTour, type TourStep } from "@/components/tour";
 import { useInvoices } from "@/context/InvoiceContext";
 import { useAuth } from "@/features/auth";
 import { queryKeys } from "@/lib/query";
 
+const TOUR_DONE_KEY = "invio_demo_tour_done";
+
+const TOUR_STEPS: TourStep[] = [
+  {
+    title: "Welcome to the Invio demo",
+    body: "This workspace is filled with sample data so you can explore freely. Nothing here is saved to an account. Here's a quick look around.",
+  },
+  {
+    target: '[data-tour="sidebar-nav"]',
+    title: "Navigate your workspace",
+    body: "Switch between your dashboard, invoices and client directory from the sidebar.",
+  },
+  {
+    target: '[data-tour="metrics"]',
+    title: "Your finances at a glance",
+    body: "Total invoiced, outstanding revenue, what's been paid and what's overdue. Amounts in other currencies are converted to your default currency.",
+  },
+  {
+    target: '[data-tour="new-invoice"]',
+    title: "Create an invoice",
+    body: "Start a new invoice here. On the Invoices page you can also describe the work in plain English and let the AI assistant draft it for you to review.",
+  },
+  {
+    target: '[data-tour="recent-invoices"]',
+    title: "Recent invoices",
+    body: "Your latest invoices and their status. Open one to edit it, download a PDF, mark it paid or generate a payment reminder.",
+  },
+  {
+    target: '[data-tour="quick-actions"]',
+    title: "Quick actions",
+    body: "Shortcuts to the places you'll use most. You can restart this tour any time with the Take a tour button.",
+  },
+];
+
 export function DashboardPage() {
-  const { user } = useAuth();
+  const { user, isDemoUser } = useAuth();
   const { createInvoice } = useInvoices();
   const queryClient = useQueryClient();
   const [showInvoiceForm, setShowInvoiceForm] = useState(false);
+  const [tourOpen, setTourOpen] = useState(false);
+
+  // Offer the tour automatically the first time someone opens the demo
+  useEffect(() => {
+    if (!isDemoUser) return;
+    let done = false;
+    try {
+      done = localStorage.getItem(TOUR_DONE_KEY) === "true";
+    } catch {
+      // Storage unavailable (private browsing); just skip auto-start
+      return;
+    }
+    if (done) return;
+    const timer = setTimeout(() => setTourOpen(true), 600);
+    return () => clearTimeout(timer);
+  }, [isDemoUser]);
+
+  const closeTour = () => {
+    setTourOpen(false);
+    try {
+      localStorage.setItem(TOUR_DONE_KEY, "true");
+    } catch {
+      // Ignore storage errors
+    }
+  };
 
   const userName = user?.displayName?.split(" ")[0] || "there";
 
@@ -43,7 +104,7 @@ export function DashboardPage() {
     <>
       <div className="w-full space-y-8 sm:space-y-10">
         {/* Top Banner & Header */}
-        <header className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 pb-2 border-b border-border/40">
+        <PageHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b border-border/40">
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple/10 text-purple dark:text-purple-light text-xs font-bold uppercase tracking-wider mb-2">
               <span className="w-2 h-2 rounded-full bg-purple animate-pulse" />
@@ -58,7 +119,17 @@ export function DashboardPage() {
           </div>
 
           {/* Header Action Buttons */}
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            {isDemoUser && (
+              <Button
+                variant="outline"
+                onClick={() => setTourOpen(true)}
+                className="rounded-full border-border/80 hover:border-purple text-text-secondary hover:text-text-primary transition-colors text-xs font-bold px-4 sm:px-5 h-11"
+              >
+                <Compass className="w-3.5 h-3.5 mr-1.5" />
+                Take a tour
+              </Button>
+            )}
             <Link href="/invoices">
               <Button
                 variant="outline"
@@ -70,6 +141,7 @@ export function DashboardPage() {
             </Link>
 
             <Button
+              data-tour="new-invoice"
               onClick={() => setShowInvoiceForm(true)}
               className="
                 relative flex items-center gap-2.5
@@ -85,10 +157,12 @@ export function DashboardPage() {
               <span>New Invoice</span>
             </Button>
           </div>
-        </header>
+        </PageHeader>
 
         {/* Overview Metric Summary Cards */}
-        <DashboardMetrics />
+        <div data-tour="metrics">
+          <DashboardMetrics />
+        </div>
 
         {/* Recent Invoices & Quick Actions Section */}
         <section
@@ -96,16 +170,18 @@ export function DashboardPage() {
           className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 items-start"
         >
           {/* Recent Invoices Widget (2 Columns on large screens) */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2" data-tour="recent-invoices">
             <RecentInvoices onNewInvoice={() => setShowInvoiceForm(true)} />
           </div>
 
           {/* Quick Actions Panel (1 Column on large screens) */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1" data-tour="quick-actions">
             <QuickActions onNewInvoice={() => setShowInvoiceForm(true)} />
           </div>
         </section>
       </div>
+
+      {tourOpen && <ProductTour steps={TOUR_STEPS} onClose={closeTour} />}
 
       {/* Invoice Creation Drawer/Modal */}
       {showInvoiceForm && (

@@ -144,7 +144,7 @@ export function PaymentReminderModal({
           clientName: invoice.clientName,
           clientEmail: invoice.clientEmail,
           description: invoice.description,
-          total: formatCurrency(invoice.total),
+          total: formatCurrency(invoice.total, invoice.currency),
           paymentDue: formatDate(invoice.paymentDue),
           status: invoice.status,
           daysOverdue,
@@ -223,7 +223,7 @@ export function PaymentReminderModal({
                   Draft Payment Reminder
                 </h3>
                 <p className="text-[13px] text-text-secondary mt-0.5">
-                  Invoice <span className="font-bold text-text-primary">#{invoice.id}</span> · {invoice.clientName} ({formatCurrency(invoice.total)})
+                  Invoice <span className="font-bold text-text-primary">#{invoice.id}</span> · {invoice.clientName} ({formatCurrency(invoice.total, invoice.currency)})
                 </p>
               </div>
             </div>

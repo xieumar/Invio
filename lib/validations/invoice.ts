@@ -28,6 +28,7 @@ export const invoiceSchema = z.object({
   taxRate: z.number().min(0).max(100).optional(),
   discount: z.number().min(0).optional(),
   currency: z.string().optional(),
+  notes: z.string().max(1000, "Keep notes under 1000 characters").optional(),
 });
 
 export type InvoiceFormValues = z.infer<typeof invoiceSchema>;

@@ -61,27 +61,27 @@ export function LegalDocument({
       {/* Header */}
       <header className="max-w-3xl mb-12 sm:mb-16">
         <Stagger immediate stagger={0.1}>
-        <StaggerItem>
-        <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
-          {badge}
-        </span>
-        </StaggerItem>
-        <StaggerItem>
-        <h1 className="text-4xl sm:text-6xl font-extrabold text-text-primary tracking-tight mt-4">
-          {title}
-        </h1>
-        </StaggerItem>
-        <StaggerItem>
-        <p className="text-text-secondary mt-3.5 text-base sm:text-lg leading-relaxed">
-          {subtitle}
-        </p>
-        </StaggerItem>
-        <StaggerItem>
-        <div className="flex items-center gap-2 mt-4 text-xs font-semibold text-text-secondary">
-          <Clock className="w-4 h-4 text-purple" />
-          <span>Last modified: {lastUpdated}</span>
-        </div>
-        </StaggerItem>
+          <StaggerItem>
+            <span className="text-purple text-xs font-extrabold uppercase tracking-widest bg-purple/10 px-3.5 py-1 rounded-full">
+              {badge}
+            </span>
+          </StaggerItem>
+          <StaggerItem>
+            <h1 className="text-4xl sm:text-6xl font-extrabold text-text-primary tracking-tight mt-4">
+              {title}
+            </h1>
+          </StaggerItem>
+          <StaggerItem>
+            <p className="text-text-secondary mt-3.5 text-base sm:text-lg leading-relaxed">
+              {subtitle}
+            </p>
+          </StaggerItem>
+          <StaggerItem>
+            <div className="flex items-center gap-2 mt-4 text-xs font-semibold text-text-secondary">
+              <Clock className="w-4 h-4 text-purple" />
+              <span>Last modified: {lastUpdated}</span>
+            </div>
+          </StaggerItem>
         </Stagger>
       </header>
 
@@ -90,47 +90,47 @@ export function LegalDocument({
         {/* Table of Contents Sticky Sidebar */}
         <aside className="lg:col-span-4 sticky top-28 hidden lg:block">
           <FadeIn direction="right" distance={50} immediate delay={0.3}>
-          <div className="bg-surface rounded-2xl p-6 border border-border shadow-card">
-            <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-border text-text-primary font-extrabold text-sm">
-              <FileText className="w-4 h-4 text-purple" />
-              <span>Table of Contents</span>
-            </div>
-            <nav
-              className="flex flex-col gap-1.5"
-              aria-label="Table of contents"
-            >
-              {sections.map((section, idx) => {
-                const isActive = activeSection === section.id;
-                return (
-                  <button
-                    key={section.id}
-                    onClick={() => scrollToSection(section.id)}
-                    className={`text-left text-xs font-bold px-3 py-2 rounded-xl transition-all flex items-center justify-between group ${
-                      isActive
-                        ? "bg-purple text-white shadow-sm"
-                        : "text-text-secondary hover:text-text-primary hover:bg-surface-alt dark:hover:bg-surface-alt/50"
-                    }`}
-                  >
-                    <span className="truncate">
-                      {idx + 1}. {section.title}
-                    </span>
-                    <ChevronRight
-                      className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+            <div className="bg-surface rounded-2xl p-6 border border-border shadow-card">
+              <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-border text-text-primary font-extrabold text-sm">
+                <FileText className="w-4 h-4 text-purple" />
+                <span>Table of Contents</span>
+              </div>
+              <nav
+                className="flex flex-col gap-1.5"
+                aria-label="Table of contents"
+              >
+                {sections.map((section, idx) => {
+                  const isActive = activeSection === section.id;
+                  return (
+                    <button
+                      key={section.id}
+                      onClick={() => scrollToSection(section.id)}
+                      className={`text-left text-xs font-bold px-3 py-2 rounded-xl transition-all flex items-center justify-between group ${
                         isActive
-                          ? "text-white"
-                          : "text-text-secondary/50 group-hover:translate-x-0.5"
+                          ? "bg-purple text-white shadow-sm"
+                          : "text-text-secondary hover:text-text-primary hover:bg-surface-alt dark:hover:bg-surface-alt/50"
                       }`}
-                    />
-                  </button>
-                );
-              })}
-            </nav>
+                    >
+                      <span className="truncate">
+                        {idx + 1}. {section.title}
+                      </span>
+                      <ChevronRight
+                        className={`w-3.5 h-3.5 shrink-0 transition-transform ${
+                          isActive
+                            ? "text-white"
+                            : "text-text-secondary/50 group-hover:translate-x-0.5"
+                        }`}
+                      />
+                    </button>
+                  );
+                })}
+              </nav>
 
-            <div className="mt-6 pt-4 border-t border-border flex items-center gap-3 text-xs text-text-secondary">
-              <ShieldCheck className="w-4 h-4 text-paid-text shrink-0" />
-              <span>GDPR, CCPA & SOC-2 compliance certified</span>
+              <div className="mt-6 pt-4 border-t border-border flex items-center gap-3 text-xs text-text-secondary">
+                <ShieldCheck className="w-4 h-4 text-paid-text shrink-0" />
+                <span>GDPR, CCPA & SOC-2 compliance certified</span>
+              </div>
             </div>
-          </div>
           </FadeIn>
         </aside>
 
@@ -138,18 +138,18 @@ export function LegalDocument({
         <div className="lg:col-span-8 flex flex-col gap-12 bg-surface rounded-3xl p-6 sm:p-12 border border-border shadow-card">
           {sections.map((section, idx) => (
             <FadeIn key={section.id} distance={32}>
-            <section
-              id={section.id}
-              className="scroll-mt-28 flex flex-col gap-4 text-text-secondary text-sm sm:text-base leading-relaxed"
-            >
-              <h2 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight flex items-center gap-3">
-                <span className="text-purple text-base font-extrabold bg-purple/10 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">
-                  {idx + 1}
-                </span>
-                <span>{section.title}</span>
-              </h2>
-              <div className="space-y-4 pt-1">{section.content}</div>
-            </section>
+              <section
+                id={section.id}
+                className="scroll-mt-28 flex flex-col gap-4 text-text-secondary text-sm sm:text-base leading-relaxed"
+              >
+                <h2 className="text-xl sm:text-2xl font-extrabold text-text-primary tracking-tight flex items-center gap-3">
+                  <span className="text-purple text-base font-extrabold bg-purple/10 w-8 h-8 rounded-lg flex items-center justify-center shrink-0">
+                    {idx + 1}
+                  </span>
+                  <span>{section.title}</span>
+                </h2>
+                <div className="space-y-4 pt-1">{section.content}</div>
+              </section>
             </FadeIn>
           ))}
         </div>

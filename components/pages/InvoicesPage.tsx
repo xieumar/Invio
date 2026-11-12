@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Plus, Sparkles } from "lucide-react";
 import { nanoid } from "nanoid";
 import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/layout";
 import { useInvoices } from "@/context/InvoiceContext";
 import {
   InvoiceCard,
@@ -24,6 +25,7 @@ import { toast } from "sonner";
 const defaultFilter: FilterState = {
   draft: false,
   pending: false,
+  overdue: false,
   paid: false,
 };
 
@@ -52,7 +54,8 @@ export function InvoicesPage() {
     Partial<InvoiceFormValues> | undefined
   >(undefined);
 
-  const anyActive = filter.draft || filter.pending || filter.paid;
+  const anyActive =
+    filter.draft || filter.pending || filter.overdue || filter.paid;
 
   const filtered = useMemo(() => {
     let result = anyActive
@@ -72,7 +75,17 @@ export function InvoicesPage() {
   }, [invoices, filter, anyActive, search, sort]);
 
   async function handleCreate(data: InvoiceFormData, status: InvoiceStatus) {
-    await createInvoice(data, status);
+    try {
+      await createInvoice(data, status);
+    } catch (err) {
+      console.error("Failed to create invoice:", err);
+      toast.error(
+        err instanceof Error
+          ? `Couldn't save invoice: ${err.message}`
+          : "Couldn't save invoice. Please try again."
+      );
+      return;
+    }
     toast.success("New invoice created!");
     setShowForm(false);
     setAiDraftValues(undefined);
@@ -87,6 +100,7 @@ export function InvoicesPage() {
       createdAt: new Date().toISOString().split("T")[0],
       senderAddress: draft.senderAddress,
       clientAddress: draft.clientAddress,
+      currency: draft.currency,
       taxRate: draft.taxRate ?? 0,
       discount: draft.discount ?? 0,
       items: draft.items.map((item) => ({
@@ -105,7 +119,7 @@ export function InvoicesPage() {
     <>
       <div className="w-full max-w-182.5 mx-auto">
         {/* Header */}
-        <header className="flex items-center justify-between mb-6 sm:mb-8">
+        <PageHeader className="flex items-center justify-between mb-6 sm:mb-8">
           <div>
             <h1 className="text-2xl sm:text-[36px] font-extrabold tracking-tight text-text-primary">
               Invoices
@@ -163,7 +177,7 @@ export function InvoicesPage() {
               </span>
             </Button>
           </div>
-        </header>
+        </PageHeader>
 
         {/* Search + Sort toolbar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mb-6">

@@ -4,7 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/features/auth";
 import { queryKeys } from "@/lib/query";
 import { fetchInvoices } from "@/features/invoices";
+import { getEffectiveStatus } from "@/lib/invoice-status";
 import { getBusinessProfile } from "@/features/onboarding/api";
+import { convertAmount, type ExchangeRates } from "@/lib/money";
+import { fetchExchangeRates } from "./useExchangeRates";
 
 export interface DashboardMetricsSummary {
   totalInvoiced: number;
@@ -12,41 +15,54 @@ export interface DashboardMetricsSummary {
   paidBalance: number;
   overdueCount: number;
   totalInvoicesCount: number;
+  /** Currency every amount above is expressed in */
   currency: CurrencyCode;
+  /** True when at least one invoice in another currency was converted */
+  hasConverted: boolean;
+  /** Foreign-currency invoices left out because no rate was available */
+  unconvertedCount: number;
+  ratesUpdatedAt?: string;
 }
 
 export function calculateMetricsFromInvoices(
   invoices: Invoice[],
-  defaultCurrency: CurrencyCode = "GBP"
+  defaultCurrency: CurrencyCode = "GBP",
+  rates?: ExchangeRates | null
 ): DashboardMetricsSummary {
   const now = new Date();
   let totalInvoiced = 0;
   let outstandingRevenue = 0;
   let paidBalance = 0;
   let overdueCount = 0;
+  let hasConverted = false;
+  let unconvertedCount = 0;
 
   for (const inv of invoices) {
     if (inv.status === "cancelled") continue;
 
+    const invCurrency = inv.currency || defaultCurrency;
+    const amount = convertAmount(inv.total, invCurrency, defaultCurrency, rates);
+    if (amount === null) {
+      unconvertedCount += 1;
+      continue;
+    }
+    if (invCurrency.toUpperCase() !== defaultCurrency.toUpperCase()) {
+      hasConverted = true;
+    }
+
     // Total Invoiced includes all non-cancelled invoices
-    totalInvoiced += inv.total;
+    totalInvoiced += amount;
 
-    if (inv.status === "paid") {
-      paidBalance += inv.total;
-    } else if (inv.status === "pending") {
-      outstandingRevenue += inv.total;
-
-      // Check if past due date
-      if (inv.paymentDue && new Date(inv.paymentDue) < now) {
-        overdueCount += 1;
-      }
-    } else if (inv.status === "overdue") {
-      outstandingRevenue += inv.total;
+    const status = getEffectiveStatus(inv, now);
+    if (status === "paid") {
+      paidBalance += amount;
+    } else if (status === "pending") {
+      outstandingRevenue += amount;
+    } else if (status === "overdue") {
+      outstandingRevenue += amount;
       overdueCount += 1;
     }
   }
-
-  const currency = invoices[0]?.currency || defaultCurrency || "GBP";
 
   return {
     totalInvoiced,
@@ -54,7 +70,10 @@ export function calculateMetricsFromInvoices(
     paidBalance,
     overdueCount,
     totalInvoicesCount: invoices.length,
-    currency,
+    currency: defaultCurrency || "GBP",
+    hasConverted,
+    unconvertedCount,
+    ratesUpdatedAt: rates?.updatedAt,
   };
 }
 
@@ -73,14 +92,23 @@ export function useDashboardMetrics() {
     queryFn: async (): Promise<DashboardMetricsSummary> => {
       const [invoices, profile] = await Promise.all([
         fetchDashboardInvoices(userId),
-        userId
-          ? getBusinessProfile(userId).catch(() => null)
-          : Promise.resolve(null),
+        getBusinessProfile(userId ?? "demo-user").catch(() => null),
       ]);
 
       const defaultCurrency =
         (profile?.defaultCurrency as CurrencyCode) || "GBP";
-      return calculateMetricsFromInvoices(invoices, defaultCurrency);
+
+      const needsRates = invoices.some(
+        (inv) =>
+          inv.status !== "cancelled" &&
+          (inv.currency || defaultCurrency).toUpperCase() !==
+            defaultCurrency.toUpperCase()
+      );
+      const rates = needsRates
+        ? await fetchExchangeRates(defaultCurrency)
+        : null;
+
+      return calculateMetricsFromInvoices(invoices, defaultCurrency, rates);
     },
     staleTime: 5 * 60 * 1000,
   });

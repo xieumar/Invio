@@ -43,6 +43,28 @@ export function DashboardMetrics() {
         <span className="text-xs text-text-muted">Updated in real-time</span>
       </div>
 
+      {metrics?.hasConverted && (
+        <p className="text-xs text-text-muted mb-4">
+          Amounts in other currencies are converted to {currency} at today&apos;s
+          rates, so totals are approximate.{" "}
+          <a
+            href="https://www.exchangerate-api.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline hover:text-text-secondary"
+          >
+            Rates By Exchange Rate API
+          </a>
+        </p>
+      )}
+      {metrics && metrics.unconvertedCount > 0 && (
+        <p role="status" className="text-xs text-red mb-4">
+          {metrics.unconvertedCount}{" "}
+          {metrics.unconvertedCount === 1 ? "invoice is" : "invoices are"} not
+          included in these totals because exchange rates are unavailable.
+        </p>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6">
         <MetricCard
           title="Total Invoiced"

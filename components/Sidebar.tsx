@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   FileText,
   Users,
+  Settings,
   Moon,
   Sun,
   ChevronLeft,
@@ -38,7 +39,8 @@ const navItems: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { label: "Invoices", href: "/invoices", icon: FileText },
   { label: "Clients", href: "/clients", icon: Users },
-  // Hidden until built: Transactions (PR-11), Insights (PR-16), Settings (PR-17)
+  { label: "Settings", href: "/settings", icon: Settings },
+  // Hidden until built: Transactions (PR-11), Insights (PR-16)
 ];
 
 export default function Sidebar() {
@@ -101,6 +103,7 @@ export default function Sidebar() {
         {/* Desktop Navigation Links (hidden on mobile/tablet) */}
         <nav
           aria-label="Workspace Sections"
+          data-tour="sidebar-nav"
           className={cn(
             "hidden lg:flex flex-col items-center gap-2 py-6 overflow-visible w-full",
             isExpanded ? "px-4" : "px-2"

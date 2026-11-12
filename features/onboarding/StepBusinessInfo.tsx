@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Building2, Mail, Phone, Hash, Globe2, MapPin } from "lucide-react";
+import { Building2, Mail, Phone, Hash, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { SUPPORTED_CURRENCIES } from "@/lib/money";
+import { CurrencyCombobox } from "@/components/ui/currency-combobox";
+import { CountryCombobox } from "@/components/ui/country-combobox";
 import type { OnboardingFormValues } from "./types";
 
 interface StepBusinessInfoProps {
@@ -147,25 +148,11 @@ export function StepBusinessInfo({
             >
               Default Currency <span className="text-red">*</span>
             </label>
-            <div className="relative">
-              <Globe2 className="w-4 h-4 text-text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-              <select
-                id="biz-currency"
-                value={values.defaultCurrency}
-                onChange={(e) => onChange({ defaultCurrency: e.target.value })}
-                className="h-11 w-full pl-10 pr-4 rounded-xl border border-input bg-transparent text-sm text-text-primary outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 transition-colors"
-              >
-                {Object.entries(SUPPORTED_CURRENCIES).map(([code, config]) => (
-                  <option
-                    key={code}
-                    value={code}
-                    className="bg-surface text-text-primary"
-                  >
-                    {config.code} ({config.symbol}) — {config.name}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <CurrencyCombobox
+              id="biz-currency"
+              value={values.defaultCurrency}
+              onChange={(code) => onChange({ defaultCurrency: code })}
+            />
           </div>
         </div>
 
@@ -223,13 +210,12 @@ export function StepBusinessInfo({
               </div>
 
               <div>
-                <Input
-                  placeholder="Country (e.g. United Kingdom)"
+                <CountryCombobox
                   value={values.address.country}
-                  onChange={(e) =>
-                    handleAddressChange("country", e.target.value)
+                  onChange={(country) =>
+                    handleAddressChange("country", country)
                   }
-                  className={`h-11 rounded-xl ${errors["address.country"] ? "border-red" : ""}`}
+                  hasError={Boolean(errors["address.country"])}
                 />
                 {errors["address.country"] && (
                   <p className="text-xs text-red mt-1 font-medium">

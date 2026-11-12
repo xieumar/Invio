@@ -10,7 +10,9 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { generateId, calcPaymentDue, calcTotal } from "@/lib/utils";
+import { generateId, calcPaymentDue } from "@/lib/utils";
+import { calculateInvoiceAmounts, getInvoiceAmounts } from "@/lib/money";
+import { getEffectiveStatus } from "@/lib/invoice-status";
 import { seedData } from "@/lib/seeddata";
 
 const DEMO_INVOICES_KEY = "invio_demo_invoices";
@@ -34,6 +36,64 @@ function getLocalDemoInvoices(): Invoice[] {
   }
 }
 
+/**
+ * Money convention: every amount persisted on an invoice (item price/total,
+ * subtotal, taxAmount, discount, discountAmount, total) is in MAJOR units.
+ */
+function lineTotal(item: { quantity: number; price: number }): number {
+  return calculateInvoiceAmounts([
+    { quantity: Number(item.quantity) || 0, price: Number(item.price) || 0 },
+  ]).total;
+}
+
+function buildAmountFields(items: InvoiceItem[], taxRate = 0, discount = 0) {
+  const normalizedItems = items.map((item) => ({
+    ...item,
+    total: lineTotal(item),
+  }));
+  const amounts = calculateInvoiceAmounts(
+    normalizedItems.map((i) => ({
+      quantity: Number(i.quantity) || 0,
+      price: Number(i.price) || 0,
+    })),
+    taxRate,
+    discount
+  );
+  return {
+    items: normalizedItems,
+    taxRate,
+    discount: amounts.discountAmount,
+    subtotal: amounts.subtotal,
+    taxAmount: amounts.taxAmount,
+    discountAmount: amounts.discountAmount,
+    total: amounts.total,
+  };
+}
+
+/**
+ * Re-derives amounts from the line items on every read. Records saved by
+ * older versions stored a total without tax/discount and mixed minor/major
+ * units, so stored totals are not trusted.
+ */
+function normalizeInvoice(invoice: Invoice): Invoice {
+  const amounts = getInvoiceAmounts(invoice);
+  return {
+    ...invoice,
+    // Overdue is derived from the due date; the stored status stays as-is.
+    status: getEffectiveStatus(invoice),
+    items: (invoice.items ?? []).map((item) => ({
+      ...item,
+      total: lineTotal(item),
+    })),
+    taxRate: invoice.taxRate ?? 0,
+    subtotal: amounts.subtotal,
+    taxAmount: amounts.taxAmount,
+    discount: amounts.discountAmount,
+    discountAmount: amounts.discountAmount,
+    total: amounts.total,
+  };
+}
+
 function saveLocalDemoInvoices(invoices: Invoice[]): void {
   if (typeof window !== "undefined") {
     localStorage.setItem(DEMO_INVOICES_KEY, JSON.stringify(invoices));
@@ -44,7 +104,7 @@ export async function fetchInvoices(
   userId?: string | null
 ): Promise<Invoice[]> {
   if (!userId || userId === "demo-user") {
-    return getLocalDemoInvoices();
+    return getLocalDemoInvoices().map(normalizeInvoice);
   }
 
   try {
@@ -52,24 +112,9 @@ export async function fetchInvoices(
     const q = query(invoicesRef, orderBy("createdAt", "desc"));
     const snapshot = await getDocs(q);
 
-    if (snapshot.empty) {
-      // First time user: seed initial demo invoices into Firestore
-      const batchPromises = initialSeedInvoices.map((inv) => {
-        const invoiceDocRef = doc(db, "users", userId, "invoices", inv.id);
-        return setDoc(invoiceDocRef, {
-          ...inv,
-          userId,
-          createdAt: inv.createdAt,
-          updatedAt: new Date().toISOString(),
-        });
-      });
-      await Promise.all(batchPromises);
-      return initialSeedInvoices.map((inv) => ({ ...inv, userId }));
-    }
-
     return snapshot.docs.map((d) => {
       const data = d.data();
-      return {
+      return normalizeInvoice({
         id: d.id,
         userId,
         clientId: data.clientId || null,
@@ -89,21 +134,21 @@ export async function fetchInvoices(
         subtotal: data.subtotal,
         taxRate: data.taxRate,
         taxAmount: data.taxAmount,
+        discount: data.discount,
         discountAmount: data.discountAmount,
         total: data.total,
         notes: data.notes || null,
+        issuer: data.issuer || null,
+        paymentInfo: data.paymentInfo || null,
         paidAt: data.paidAt || null,
         updatedAt: data.updatedAt?.toDate
           ? data.updatedAt.toDate().toISOString()
           : data.updatedAt || new Date().toISOString(),
-      } as Invoice;
+      } as Invoice);
     });
   } catch (error) {
-    console.warn(
-      "Failed to fetch invoices from Firestore, falling back to local demo:",
-      error
-    );
-    return getLocalDemoInvoices();
+    console.warn("Failed to fetch invoices from Firestore:", error);
+    return [];
   }
 }
 
@@ -113,7 +158,8 @@ export async function fetchInvoiceById(
 ): Promise<Invoice | null> {
   if (!userId || userId === "demo-user") {
     const local = getLocalDemoInvoices();
-    return local.find((inv) => inv.id === invoiceId) || null;
+    const found = local.find((inv) => inv.id === invoiceId);
+    return found ? normalizeInvoice(found) : null;
   }
 
   try {
@@ -122,7 +168,7 @@ export async function fetchInvoiceById(
     if (!snapshot.exists()) return null;
 
     const data = snapshot.data();
-    return {
+    return normalizeInvoice({
       id: snapshot.id,
       userId,
       clientId: data.clientId || null,
@@ -142,14 +188,17 @@ export async function fetchInvoiceById(
       subtotal: data.subtotal,
       taxRate: data.taxRate,
       taxAmount: data.taxAmount,
+      discount: data.discount,
       discountAmount: data.discountAmount,
       total: data.total,
       notes: data.notes || null,
+      issuer: data.issuer || null,
+      paymentInfo: data.paymentInfo || null,
       paidAt: data.paidAt || null,
       updatedAt: data.updatedAt?.toDate
         ? data.updatedAt.toDate().toISOString()
         : data.updatedAt || new Date().toISOString(),
-    } as Invoice;
+    } as Invoice);
   } catch {
     return null;
   }
@@ -162,20 +211,19 @@ export async function createInvoiceRecord(
 ): Promise<Invoice> {
   const invoiceId = generateId();
   const paymentDue = calcPaymentDue(data.createdAt, data.paymentTerms);
-  const formattedItems = data.items.map((item) => ({
-    ...item,
-    total: (item.quantity || 0) * (item.price || 0),
-  }));
-  const total = calcTotal(formattedItems);
+  const amountFields = buildAmountFields(
+    data.items,
+    Number(data.taxRate) || 0,
+    Number(data.discount) || 0
+  );
 
   const newInvoice: Invoice = {
     ...data,
+    ...amountFields,
     id: invoiceId,
     userId: userId || "demo-user",
     status,
     paymentDue,
-    items: formattedItems,
-    total,
     currency: data.currency || "GBP",
     notes: data.notes || null,
     clientId: data.clientId || null,
@@ -212,14 +260,13 @@ export async function updateInvoiceRecord(
     const index = local.findIndex((inv) => inv.id === invoiceId);
     if (index !== -1) {
       const existing = local[index];
-      const items = data.items
-        ? data.items.map((item) => ({
-            ...item,
-            total: (item.quantity || 0) * (item.price || 0),
-          }))
-        : existing.items;
-
-      const total = data.items ? calcTotal(items) : existing.total;
+      const amountFields = data.items
+        ? buildAmountFields(
+            data.items,
+            Number(data.taxRate ?? existing.taxRate) || 0,
+            Number(data.discount ?? existing.discount) || 0
+          )
+        : {};
       const paymentDue =
         data.createdAt && data.paymentTerms
           ? calcPaymentDue(data.createdAt, data.paymentTerms)
@@ -228,10 +275,10 @@ export async function updateInvoiceRecord(
       local[index] = {
         ...existing,
         ...data,
-        items,
-        total,
+        ...amountFields,
         paymentDue,
-        status: status ?? (existing.status === "draft" ? "pending" : existing.status),
+        status:
+          status ?? (existing.status === "draft" ? "pending" : existing.status),
         updatedAt: now,
       };
       saveLocalDemoInvoices(local);
@@ -246,16 +293,21 @@ export async function updateInvoiceRecord(
   };
 
   if (data.items) {
-    const formattedItems = data.items.map((item) => ({
-      ...item,
-      total: (item.quantity || 0) * (item.price || 0),
-    }));
-    updatePayload.items = formattedItems;
-    updatePayload.total = calcTotal(formattedItems);
+    Object.assign(
+      updatePayload,
+      buildAmountFields(
+        data.items,
+        Number(data.taxRate) || 0,
+        Number(data.discount) || 0
+      )
+    );
   }
 
   if (data.createdAt && data.paymentTerms) {
-    updatePayload.paymentDue = calcPaymentDue(data.createdAt, data.paymentTerms);
+    updatePayload.paymentDue = calcPaymentDue(
+      data.createdAt,
+      data.paymentTerms
+    );
   }
 
   if (status) {

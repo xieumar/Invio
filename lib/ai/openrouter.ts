@@ -24,10 +24,10 @@ Rules:
    - price: unit price in standard currency units (e.g. 75.00 for $75/hour).
 7. taxRate: Percentage number (e.g. 20 for 20% VAT/Tax) if mentioned or implied, otherwise 0.
 8. discount: Total discount amount in standard currency units if mentioned, otherwise 0.
-9. senderAddress: The billing sender address. If not mentioned in the prompt, default to:
-   { "street": "19 Union Terrace", "city": "London", "postCode": "E1 3EZ", "country": "United Kingdom" }
+9. senderAddress: The billing sender address. Only include it if the prompt explicitly states the sender's address; otherwise return null.
 10. clientAddress: Complete address for the client. If not fully specified in the prompt, generate realistic details (street, city, postCode, country) so that no address fields are left blank.
 11. notes: Helpful payment remittance notes or terms.
+12. currency: The ISO 4217 code (e.g. "USD", "GBP", "EUR", "NGN") of the currency the invoice is billed in, taken from a symbol or word in the prompt ($ = USD, £ = GBP, € = EUR, ₦ or naira = NGN). If the prompt names no currency, return null.
 
 JSON Output Schema:
 {
@@ -40,12 +40,13 @@ JSON Output Schema:
   ],
   "taxRate": number,
   "discount": number,
+  "currency": string | null,
   "senderAddress": {
     "street": string,
     "city": string,
     "postCode": string,
     "country": string
-  },
+  } | null,
   "clientAddress": {
     "street": string,
     "city": string,

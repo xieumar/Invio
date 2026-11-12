@@ -79,7 +79,9 @@ export function SortDropdown({ value, onChange }: SortDropdownProps) {
                 `}
               >
                 {opt.label}
-                {isActive && <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={3} />}
+                {isActive && (
+                  <Check className="w-3.5 h-3.5 shrink-0" strokeWidth={3} />
+                )}
               </button>
             );
           })}

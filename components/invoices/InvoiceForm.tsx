@@ -18,11 +18,21 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Trash2 } from "lucide-react";
 import { nanoid } from "nanoid";
+import { toast } from "sonner";
 import { InvoiceDatePicker } from "./InvoiceDatePicker";
 import { InvoicePaymentTerms } from "./InvoicePaymentTerms";
 import { invoiceSchema, InvoiceFormValues } from "@/lib/validations";
 import { ClientSelect } from "@/features/invoices";
-import { calculateInvoice, toMajorUnits, formatMoney } from "@/lib/money";
+import {
+  calculateInvoice,
+  calculateInvoiceAmounts,
+  toMajorUnits,
+  formatMoney,
+  getCurrencyConfig,
+} from "@/lib/money";
+import { CurrencyCombobox } from "@/components/ui/currency-combobox";
+import { Textarea } from "@/components/ui/textarea";
+import { useBusinessProfile } from "@/features/onboarding/useBusinessProfile";
 
 interface InvoiceFormProps {
   invoice?: Invoice;
@@ -43,6 +53,7 @@ const AI_FIELD_KEYS = [
   "items",
   "taxRate",
   "discount",
+  "currency",
 ];
 
 interface AiHighlightState {
@@ -181,6 +192,7 @@ function TotalsSection() {
   const items = watch("items") ?? [];
   const taxRate = Number(watch("taxRate")) || 0;
   const discount = Number(watch("discount")) || 0;
+  const currency = watch("currency") || "GBP";
 
   const { subtotal, taxAmount, discountAmount, total } = calculateInvoice(
     items.map((i) => ({ quantity: Number(i.quantity) || 0, price: Number(i.price) || 0 })),
@@ -208,7 +220,7 @@ function TotalsSection() {
             })}
           />
         </Field>
-        <Field label="Discount (£)">
+        <Field label={`Discount (${getCurrencyConfig(currency).symbol})`}>
           <Input
             inputMode="decimal"
             placeholder="0.00"
@@ -228,7 +240,7 @@ function TotalsSection() {
                 {label}
               </span>
               <span className={`tabular-nums font-bold ${highlight ? "text-text-primary text-[20px]" : "text-text-secondary text-[15px]"}`}>
-                {formatMoney(Math.abs(value))}
+                {formatMoney(Math.abs(value), currency)}
                 {value < 0 ? " off" : ""}
               </span>
             </div>
@@ -374,7 +386,9 @@ export function InvoiceForm({
 
   const methods = useForm<InvoiceFormValues>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: invoice || {
+    defaultValues: invoice
+      ? { ...invoice, notes: invoice.notes ?? "" }
+      : {
       clientId: null,
       description: initialValues?.description || "",
       paymentTerms: initialValues?.paymentTerms || 30,
@@ -389,8 +403,27 @@ export function InvoiceForm({
         : [{ id: nanoid(), name: "", quantity: 1, price: 0, total: 0 }],
       taxRate: initialValues?.taxRate ?? 0,
       discount: initialValues?.discount ?? 0,
+      currency: initialValues?.currency,
+      notes: initialValues?.notes ?? "",
     },
   });
+
+  // New invoices default to the currency and address from the business profile
+  const { data: profile } = useBusinessProfile();
+  useEffect(() => {
+    if (isEdit || !profile) return;
+    if (!initialValues?.currency) {
+      methods.setValue("currency", profile.defaultCurrency || "GBP");
+    }
+    if (!initialValues?.senderAddress && profile.address) {
+      methods.setValue("senderAddress", profile.address);
+    }
+    // Prefill notes from Settings, without overwriting anything already typed
+    if (profile.defaultNotes && !methods.getValues("notes")) {
+      methods.setValue("notes", profile.defaultNotes);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [profile, isEdit]);
 
   const {
     register,
@@ -434,21 +467,25 @@ export function InvoiceForm({
   }, [onDiscard]);
 
   function buildPayload(values: InvoiceFormValues): InvoiceFormData {
-    const { subtotal, taxAmount, discountAmount, total } = calculateInvoice(
-      values.items.map((i) => ({ quantity: Number(i.quantity) || 0, price: Number(i.price) || 0 })),
-      Number(values.taxRate) || 0,
-      Number(values.discount) || 0
-    );
+    // Amounts are persisted in MAJOR units (see features/invoices/api.ts)
+    const lines = values.items.map((i) => ({
+      quantity: Number(i.quantity) || 0,
+      price: Number(i.price) || 0,
+    }));
+    const taxRate = Number(values.taxRate) || 0;
+    const discount = Number(values.discount) || 0;
+    const { subtotal, taxAmount, discountAmount, total } =
+      calculateInvoiceAmounts(lines, taxRate, discount);
     return {
       ...values,
-      items: values.items.map((item) => ({
+      items: values.items.map((item, idx) => ({
         ...item,
-        // per-row total stored in minor units
-        total: calculateInvoice([{ quantity: Number(item.quantity) || 0, price: Number(item.price) || 0 }]).total,
+        total: calculateInvoiceAmounts([lines[idx]]).total,
       })),
       subtotal,
-      taxRate: Number(values.taxRate) || 0,
+      taxRate,
       taxAmount,
+      discount,
       discountAmount,
       total,
     };
@@ -461,6 +498,12 @@ export function InvoiceForm({
 
   function submit(data: InvoiceFormValues, status: InvoiceStatus) {
     onSave(buildPayload(data), status);
+  }
+
+  // Without this, a validation error on a field with no visible message
+  // (items, tax, discount...) makes Save appear to do nothing.
+  function onInvalid() {
+    toast.error("Couldn't save. Please check the highlighted fields.");
   }
 
   return (
@@ -549,7 +592,22 @@ export function InvoiceForm({
 
               <AddressFields type="clientAddress" />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 mt-12">
+              <div className="mb-6 mt-12">
+                <Field label="Currency" aiName="currency">
+                  <Controller
+                    control={control}
+                    name="currency"
+                    render={({ field }) => (
+                      <CurrencyCombobox
+                        value={field.value ?? "GBP"}
+                        onChange={field.onChange}
+                      />
+                    )}
+                  />
+                </Field>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                 <Field label="Issue Date">
                   <Controller
                     control={control}
@@ -564,14 +622,19 @@ export function InvoiceForm({
                   />
                 </Field>
 
-                <Field label="Payment Terms" aiName="paymentTerms">
+                <Field
+                  label="Payment Terms"
+                  aiName="paymentTerms"
+                  error={errors.paymentTerms?.message}
+                >
                   <Controller
                     control={control}
                     name="paymentTerms"
                     render={({ field }) => (
                       <InvoicePaymentTerms
                         value={Number(field.value)}
-                        onChange={field.onChange}
+                        // The dropdown emits a string; the schema expects a number
+                        onChange={(v) => field.onChange(Number(v))}
                       />
                     )}
                   />
@@ -592,6 +655,19 @@ export function InvoiceForm({
 
               <ItemList />
               <TotalsSection />
+
+              <Field
+                label="Notes"
+                error={errors.notes?.message}
+                className="mt-10"
+              >
+                <Textarea
+                  rows={3}
+                  placeholder="Shown on the invoice, e.g. thank-you message or late-payment terms"
+                  {...register("notes")}
+                  aria-invalid={!!errors.notes}
+                />
+              </Field>
             </form>
           </FormProvider>
           </AiHighlightContext.Provider>
@@ -647,15 +723,19 @@ export function InvoiceForm({
 
             <button
               type="button"
-              onClick={handleSubmit((data) =>
-                submit(
-                  data,
-                  isEdit
-                    ? invoice?.status === "draft"
-                      ? "pending"
-                      : invoice?.status || "pending"
-                    : "pending"
-                )
+              onClick={handleSubmit(
+                (data) =>
+                  submit(
+                    data,
+                    isEdit
+                      ? invoice?.status === "draft" ||
+                        invoice?.status === "overdue"
+                        ? // "overdue" is derived from the due date, never stored
+                          "pending"
+                        : invoice?.status || "pending"
+                      : "pending"
+                  ),
+                onInvalid
               )}
               className="
                 px-4 pt-1 sm:px-6 h-12 rounded-3xl text-[13px] sm:text-[15px] font-bold 

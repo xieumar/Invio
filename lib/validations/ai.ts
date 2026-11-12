@@ -28,20 +28,34 @@ export const aiInvoiceDraftSchema = z.object({
     )
     .default(30),
   items: z.array(aiItemSchema).min(1, "At least one item is required"),
+  // Only present when the prompt states a sender address; otherwise the form
+  // falls back to the business profile.
   senderAddress: z
     .object({
-      street: z.string().nullish().transform((v) => v || "19 Union Terrace"),
-      city: z.string().nullish().transform((v) => v || "London"),
-      postCode: z.string().nullish().transform((v) => v || "E1 3EZ"),
-      country: z.string().nullish().transform((v) => v || "United Kingdom"),
+      street: z.string().nullish(),
+      city: z.string().nullish(),
+      postCode: z.string().nullish(),
+      country: z.string().nullish(),
     })
     .nullish()
-    .transform((v) => ({
-      street: v?.street || "19 Union Terrace",
-      city: v?.city || "London",
-      postCode: v?.postCode || "E1 3EZ",
-      country: v?.country || "United Kingdom",
-    })),
+    .transform((v) =>
+      v && v.street && v.city && v.postCode && v.country
+        ? {
+            street: v.street,
+            city: v.city,
+            postCode: v.postCode,
+            country: v.country,
+          }
+        : undefined
+    ),
+  // ISO 4217 code inferred from the prompt; undefined falls back to the default
+  currency: z
+    .string()
+    .nullish()
+    .transform((v) => {
+      const code = v?.trim().toUpperCase();
+      return code && /^[A-Z]{3}$/.test(code) ? code : undefined;
+    }),
   clientAddress: z
     .object({
       street: z.string().nullish().transform((v) => v ?? ""),

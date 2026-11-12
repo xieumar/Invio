@@ -37,7 +37,7 @@ export function Header() {
           {/* Brand Logo with App Logo */}
           <Link
             href="/"
-            className="flex items-center gap-2.5 no-underline group pl-1 sm:pl-2"
+            className="flex shrink-0 items-center gap-2 sm:gap-2.5 no-underline group sm:pl-2"
           >
             <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden flex items-center justify-center group-hover:scale-105 transition-transform shrink-0">
               <Image
@@ -85,7 +85,7 @@ export function Header() {
               size="icon"
               onClick={toggleTheme}
               aria-label="Toggle color theme"
-              className="rounded-full w-9 h-9 text-text-secondary hover:text-purple hover:bg-surface-alt cursor-pointer"
+              className="max-[379px]:hidden rounded-full w-9 h-9 text-text-secondary hover:text-purple hover:bg-surface-alt cursor-pointer"
             >
               {theme === "dark" ? (
                 <Sun className="w-4 h-4 text-[#888EB0] hover:text-[#dfe3fa]" />
@@ -115,8 +115,8 @@ export function Header() {
               className="
                 rounded-full bg-purple hover:bg-purple-light text-white 
                 font-bold text-[13px] sm:text-[14px] 
-                px-4 sm:px-5 h-9 sm:h-10 
-                shadow-sm hover:opacity-95 
+                px-3 min-[380px]:px-4 sm:px-5 h-9 sm:h-10 shrink-0
+                shadow-sm hover:opacity-95
                 transition-all duration-200
               "
             >
@@ -124,8 +124,8 @@ export function Header() {
                 href="/invoices"
                 className="no-underline flex items-center gap-1.5"
               >
-                <span>Get Started</span>
-                <ArrowUpRight className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span className="whitespace-nowrap">Get Started</span>
+                <ArrowUpRight className="hidden min-[380px]:block w-3.5 h-3.5 stroke-[2.5]" />
               </Link>
             </Button>
 
@@ -135,7 +135,7 @@ export function Header() {
               size="icon"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-label="Toggle navigation menu"
-              className="md:hidden rounded-full w-9 h-9 text-text-secondary hover:text-text-primary hover:bg-surface-alt cursor-pointer"
+              className="md:hidden shrink-0 rounded-full w-9 h-9 text-text-secondary hover:text-text-primary hover:bg-surface-alt cursor-pointer"
             >
               {mobileMenuOpen ? (
                 <X className="w-5 h-5 text-text-primary" />
@@ -191,6 +191,24 @@ export function Header() {
                 <span>Login</span>
                 <ArrowUpRight className="w-4 h-4" />
               </Link>
+
+              {/* The header toggle is hidden on very narrow screens */}
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="
+                  min-[380px]:hidden flex items-center justify-between px-4 py-2.5
+                  text-[15px] font-bold text-text-primary hover:text-purple
+                  transition-colors cursor-pointer
+                "
+              >
+                <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>
+                {theme === "dark" ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+              </button>
             </div>
           </div>
         )}

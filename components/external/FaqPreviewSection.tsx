@@ -8,19 +8,19 @@ import { Collapse, FadeIn, Stagger, StaggerItem } from "@/components/motion";
 const FAQ_ITEMS = [
   {
     q: "What makes Invio different from traditional invoice tools?",
-    a: "Invio combines beautiful typography with integer-accurate math and built-in AI assistance. Instead of filling out tedious forms, you can draft invoices using conversational AI and automatically reconcile bank statements using CSV imports.",
+    a: "Invio combines beautiful typography with integer-accurate math and built-in AI assistance. Instead of filling out tedious forms, you can draft invoices with conversational AI, then export them as branded PDFs in your choice of three templates.",
   },
   {
     q: "How does the AI assistant help me with billing?",
-    a: "Invio's AI can generate full invoice line items from a short work description, calculate payment milestones, detect overdue payments, and draft polite follow-up reminders.",
+    a: "Describe the work in plain English and the assistant prefills your invoice's line items for you to review. For late payments it drafts a reminder email in a friendly, firm or urgent tone. It never saves or sends anything on its own.",
   },
   {
-    q: "Can I import bank statements to track expenses?",
-    a: "Yes! You can upload standard CSV bank exports from Monzo, Starling, Revolut, HSBC, Barclays, or Stripe. Invio auto-categorizes transactions and matches incoming credits to open invoices.",
+    q: "Can I customise how my invoices look?",
+    a: "Yes. Add your logo and payment details in Settings, then choose Minimal, Classic or Bold as your PDF template. The invoice page shows your invoice in the template you picked, and the downloaded PDF matches it.",
   },
   {
     q: "Is my financial data secure?",
-    a: "Absolutely. All data is encrypted in transit and at rest. We never sell your financial records or train public AI models on your private accounting data.",
+    a: "Your invoices, clients and business details are stored per account in Google's Firestore, and AI requests run server-side with rate limiting, so your API keys never reach the browser. You can also try Invio in demo mode, where data stays in your own browser.",
   },
 ];
 
@@ -45,27 +45,25 @@ export function FaqPreviewSection() {
       <Stagger className="flex flex-col gap-4" stagger={0.1}>
         {FAQ_ITEMS.map((faq, i) => (
           <StaggerItem key={i} distance={28}>
-          <div
-            className="bg-surface rounded-2xl border border-border p-6 shadow-xs transition-colors hover:border-purple/40"
-          >
-            <button
-              type="button"
-              onClick={() => toggle(i)}
-              className="w-full flex items-center justify-between text-left gap-4 font-bold text-base text-text-primary cursor-pointer outline-none"
-            >
-              <span>{faq.q}</span>
-              <ChevronDown
-                className={`w-4 h-4 text-purple shrink-0 transition-transform duration-200 ${
-                  openIndex === i ? "-rotate-180" : ""
-                }`}
-              />
-            </button>
-            <Collapse open={openIndex === i}>
-              <p className="mt-3 text-sm text-text-secondary leading-relaxed">
-                {faq.a}
-              </p>
-            </Collapse>
-          </div>
+            <div className="bg-surface rounded-2xl border border-border p-6 shadow-xs transition-colors hover:border-purple/40">
+              <button
+                type="button"
+                onClick={() => toggle(i)}
+                className="w-full flex items-center justify-between text-left gap-4 font-bold text-base text-text-primary cursor-pointer outline-none"
+              >
+                <span>{faq.q}</span>
+                <ChevronDown
+                  className={`w-4 h-4 text-purple shrink-0 transition-transform duration-200 ${
+                    openIndex === i ? "-rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <Collapse open={openIndex === i}>
+                <p className="mt-3 text-sm text-text-secondary leading-relaxed">
+                  {faq.a}
+                </p>
+              </Collapse>
+            </div>
           </StaggerItem>
         ))}
       </Stagger>
